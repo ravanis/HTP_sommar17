@@ -1,7 +1,6 @@
 function run_1
 %RUN_1
 %   Run example 1
-% hej
     olddir = pwd;
     [rootpath,~,~] = fileparts(mfilename('fullpath'));
     cd([rootpath filesep '..'])
