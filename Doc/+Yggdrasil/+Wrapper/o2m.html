@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of o2m</title>
+  <meta name="keywords" content="o2m">
+  <meta name="description" content="[ mat ] = O2M( oct ), an internal octree 2 mat function.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html +Wrapper -->
+<h1>o2m
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>[ mat ] = O2M( oct ), an internal octree 2 mat function.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function mat = o2m( oct ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">[ mat ] = O2M( oct ), an internal octree 2 mat function.
+ INTERNAL USE
+ An internal function to handle the most basic case of transforming an
+ octree into a matrix. The matrix will have a sidelength of 2^N.
+ INPUT:
+    oct - any octree
+ OUTPUT
+    mat - a 2^oct.N size matrix represented by the octree</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <span class="comment">%[ mat ] = O2M( oct ), an internal octree 2 mat function.</span>
+0002 <span class="comment">% INTERNAL USE</span>
+0003 <span class="comment">% An internal function to handle the most basic case of transforming an</span>
+0004 <span class="comment">% octree into a matrix. The matrix will have a sidelength of 2^N.</span>
+0005 <span class="comment">% INPUT:</span>
+0006 <span class="comment">%    oct - any octree</span>
+0007 <span class="comment">% OUTPUT</span>
+0008 <span class="comment">%    mat - a 2^oct.N size matrix represented by the octree</span>
+0009 <a name="_sub0" href="#_subfunctions" class="code">function mat = o2m( oct )</a>
+0010 
+0011     <span class="keyword">if</span> nargin ~= 1
+0012         error(<span class="string">'This function uses one input argument.'</span>)
+0013     <span class="keyword">end</span>
+0014     
+0015     <span class="keyword">if</span> ~isa(oct,<span class="string">'Yggdrasil.Octree'</span>)
+0016         error(<span class="string">'The input needs to be an octree.'</span>)
+0017     <span class="keyword">end</span>
+0018 
+0019     mat = Yggdrasil.C.oct_to_mat(<span class="keyword">...</span>
+0020                    complex(single(oct.data)),<span class="keyword">...</span>
+0021                    uint64(oct.adr),<span class="keyword">...</span>
+0022                    oct.meta.enum_order,<span class="keyword">...</span>
+0023                    uint32(size(oct.data,1)),<span class="keyword">...</span>
+0024                    oct.meta.N);
+0025 <span class="keyword">end</span>
+0026 
+0027</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

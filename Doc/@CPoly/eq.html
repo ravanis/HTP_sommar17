@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of eq</title>
+  <meta name="keywords" content="eq">
+  <meta name="description" content="equal = EQ(a,b)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html @CPoly -->
+<h1>eq
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>equal = EQ(a,b)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function equal = eq(a,b) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre class="comment">equal = EQ(a,b)
+   Checks if two polynomials are the same</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="reduce.html" class="code" title="function b = reduce(a)">reduce</a>	b = REDUCE(a)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="CPoly.html" class="code" title="">CPoly</a>	This class handles complex polynomials of the type</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function equal = eq(a,b)</a>
+0002 <span class="comment">%equal = EQ(a,b)</span>
+0003 <span class="comment">%   Checks if two polynomials are the same</span>
+0004 
+0005 <span class="keyword">if</span> ~isa(a,<span class="string">'CPoly'</span>) | ~isa(b,<span class="string">'CPoly'</span>)
+0006     error(<span class="string">'CPoly can only be compared with CPoly.'</span>);
+0007 <span class="keyword">end</span>
+0008 
+0009 a = <a href="reduce.html" class="code" title="function b = reduce(a)">reduce</a>(a);
+0010 b = <a href="reduce.html" class="code" title="function b = reduce(a)">reduce</a>(b);
+0011 
+0012 equal = isequal(a,b);
+0013 
+0014 <span class="keyword">end</span>
+0015</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

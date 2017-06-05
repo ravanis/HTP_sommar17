@@ -1,0 +1,43 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  CPoly -> CPoly;
+  CPoly -> conj;
+  CPoly -> eq;
+  CPoly -> evaluate;
+  CPoly -> isconst;
+  CPoly -> minus;
+  CPoly -> mtimes;
+  CPoly -> ne;
+  CPoly -> plus;
+  CPoly -> reduce;
+  CPoly -> uminus;
+  CPoly -> unique_index;
+  CPoly -> uplus;
+  absSq -> conj;
+  conj -> conj;
+  disp -> disp;
+  disp -> reduce;
+  eq -> reduce;
+  evaluate -> conj;
+  minus -> plus;
+  mtimes -> CPoly;
+  reduce -> CPoly;
+
+  CPoly [URL="CPoly.html"];
+  absSq [URL="absSq.html"];
+  conj [URL="conj.html"];
+  disp [URL="disp.html"];
+  eq [URL="eq.html"];
+  evaluate [URL="evaluate.html"];
+  isconst [URL="isconst.html"];
+  leq [URL="leq.html"];
+  minus [URL="minus.html"];
+  mtimes [URL="mtimes.html"];
+  ne [URL="ne.html"];
+  plus [URL="plus.html"];
+  prod [URL="prod.html"];
+  reduce [URL="reduce.html"];
+  uminus [URL="uminus.html"];
+  unique_index [URL="unique_index.html"];
+  uplus [URL="uplus.html"];
+}

@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mat_to_oct</title>
+  <meta name="keywords" content="mat_to_oct">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html +C -->
+<h1>mat_to_oct
+&nbsp;&nbsp;<img src="../../c.png" alt="Linux AMD Opteron" border="0" title="Linux AMD Opteron"></h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 #include &quot;mat_to_oct.h&quot;
+0002 
+0003 #define IN_N           prhs[0]
+0004 #define IN_DATA_LEN    prhs[1]
+0005 #define IN_MAT         prhs[2]
+0006 #define IN_EPS         prhs[3]
+0007 #define IN_ENUM_ORDER  prhs[4]
+0008 
+0009 #define OUT_DATA    plhs[0]
+0010 #define OUT_ADR     plhs[1]
+0011 
+0012 #define CUBE(x) (x)*(x)*(x)
+0013 
+0014 
+0015 #ifdef MATLAB
+0016 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
+0017 { 
+0018     // Setup pointers
+0019     float  *eps_ptr;
+0020     uint8_t *enum_order;
+0021     uint64_t *oct_keep, *oct_adr;
+0022     float   *real_mat, *imag_mat;
+0023     float   *oct_real_data, *oct_imag_data;
+0024   
+0025     // Setup non-pointers
+0026     float eps_sq; 
+0027     uint64_t numel_mat;
+0028     uint32_t data_dim;
+0029     uint8_t N;
+0030   
+0031     // Process input data
+0032     real_mat = (float*)  mxGetData(IN_MAT);
+0033     imag_mat = (float*)  mxGetImagData(IN_MAT);  
+0034   
+0035     // Calculate the square of the eps but keep the sign
+0036     eps_ptr  = (float*) mxGetData(IN_EPS);
+0037     <span class="keyword">if</span> (eps_ptr[0] &gt; 0) {
+0038         eps_sq = eps_ptr[0]*eps_ptr[0];
+0039     } <span class="keyword">else</span> {
+0040         eps_sq = -eps_ptr[0]*eps_ptr[0];
+0041     }
+0042   
+0043     enum_order =  (uint8_t*)  mxGetData(IN_ENUM_ORDER);
+0044     N          = *(uint8_t*)  mxGetData(IN_N);
+0045     data_dim   = *(uint32_t*) mxGetData(IN_DATA_LEN); 
+0046     numel_mat  = 1 &lt;&lt; (3*N); // Number of elements in mat, 8^N
+0047 
+0048 #ifdef DEBUG
+0049     mexPrintf(&quot;N: <span class="comment">%d \ndata_dim: %d \nnumel_mat: %ld \n&quot;,\</span>
+0050               N, data_dim, numel_mat);
+0051     mexPrintf(&quot;mat[0]: <span class="comment">%f + %fi \n&quot;,\</span>
+0052               real_mat[0], imag_mat[0]);
+0053     mexPrintf(&quot;eps_sq: <span class="comment">%f\n&quot;,\</span>
+0054               eps_sq);
+0055     mexPrintf(&quot;enum_order: <span class="comment">%d, %d, %d, %d, %d, %d, %d, %d\n&quot;,\</span>
+0056               enum_order[0],enum_order[1],enum_order[2],enum_order[3],
+0057               enum_order[4],enum_order[5],enum_order[6],enum_order[7]);
+0058     mexPrintf(&quot;2^N: <span class="comment">%ld\n&quot;,(uint64_t)(1 &lt;&lt; N));</span>
+0059 #endif
+0060 
+0061     // Worst <span class="keyword">case</span> size
+0062     uint64_t max_data_size = data_dim * numel_mat;
+0063     uint64_t max_adr_size  = numel_mat + 1;
+0064   
+0065     // Create output arguments data and adr
+0066     OUT_DATA = mxCreateNumericMatrix(data_dim, numel_mat,
+0067                                      mxSINGLE_CLASS, mxCOMPLEX);
+0068     OUT_ADR  = mxCreateNumericMatrix(1, max_adr_size, mxUINT64_CLASS, mxREAL);
+0069   
+0070     <span class="keyword">if</span> (OUT_DATA == NULL || OUT_ADR == NULL) {
+0071         mexErrMsgTxt(&quot;Failed to create matrix/matrices.&quot;);
+0072     }
+0073   
+0074     // Get pointers to output data <span class="keyword">...</span>
+0075     // <span class="keyword">...</span><span class="comment"> for real and imag data</span>
+0076     oct_real_data = (float*) mxGetData(OUT_DATA);   
+0077     oct_imag_data = (float*) mxGetImagData(OUT_DATA);
+0078     //<span class="keyword">...</span><span class="comment"> for adresses</span>
+0079     oct_adr = (uint64_t*) mxGetData(OUT_ADR);
+0080       
+0081     uint64_t vac_pos = 
+0082         do_stitching(real_mat, imag_mat, oct_real_data, oct_imag_data,
+0083                      oct_adr, data_dim, N, eps_sq, enum_order);
+0084 
+0085     // Too much data was allocated before, time to cut off the unneeded parts
+0086     // Set new dimension
+0087     mxSetN(OUT_ADR, vac_pos);
+0088     mxSetN(OUT_DATA, vac_pos-1);
+0089 
+0090     // Shrink allocated data
+0091     void *new_oct_adr = mxRealloc(oct_adr, sizeof(uint64_t)*vac_pos);
+0092     void *new_oct_real_data = mxRealloc(oct_real_data, data_dim*sizeof(float)*(vac_pos-1));
+0093     void *new_oct_imag_data = mxRealloc(oct_imag_data, data_dim*sizeof(float)*(vac_pos-1));
+0094   
+0095     // Maximum paranoia
+0096     <span class="keyword">if</span> (new_oct_adr == NULL ||
+0097         new_oct_real_data == NULL ||
+0098         new_oct_imag_data == NULL) {
+0099         <span class="keyword">if</span> (new_oct_adr != NULL)       mxFree(new_oct_adr);
+0100         <span class="keyword">else</span>                           mxFree(oct_adr);
+0101         <span class="keyword">if</span> (new_oct_real_data != NULL) mxFree(new_oct_real_data);
+0102         <span class="keyword">else</span>                           mxFree(oct_real_data);
+0103         <span class="keyword">if</span> (new_oct_imag_data != NULL) mxFree(new_oct_imag_data);
+0104         <span class="keyword">else</span>                           mxFree(oct_imag_data);
+0105         mexErrMsgTxt(&quot;Failed to re-allocate array.&quot;);
+0106     }
+0107     
+0108     // Replace data pointers
+0109     mxSetData(OUT_ADR, new_oct_adr);
+0110     mxSetData(OUT_DATA, new_oct_real_data);
+0111     mxSetImagData(OUT_DATA, new_oct_imag_data);
+0112 }
+0113 #endif
+0114 
+0115 uint64_t do_stitching(float *real_mat,      float *imag_mat,
+0116                       float *oct_real_data, float *oct_imag_data,
+0117                       uint64_t *oct_adr, 
+0118                       uint32_t data_dim,
+0119                       uint8_t  N, 
+0120                       float    eps_sq, 
+0121                       uint8_t  enum_order[])
+0122 {
+0123   
+0124     // Translate enumeration order to 1d displacements
+0125     uint64_t L = 1 &lt;&lt; N; // Side length of input matrix
+0126     uint64_t look_up[8] = {0, 1, L, 1+L, L*L, L*L+1, L*L+L, L*L+L+1};
+0127   
+0128     uint64_t modified_enum[8];
+0129     <span class="keyword">for</span> (int i = 0; i &lt; 8; ++i) {
+0130         modified_enum[i] = look_up[enum_order[i]-1];
+0131     }
+0132   
+0133     uint64_t numel_mat = CUBE(L);
+0134 
+0135     // Nice package of data in complex vectorfields
+0136     complex_v mat = cv_create(real_mat, imag_mat, numel_mat, 1, data_dim);
+0137     complex_v oct = cv_create(oct_real_data, oct_imag_data, 1, data_dim, data_dim);
+0138 
+0139     // Run the recursive <span class="keyword">function</span> to transfer mat to oct and at
+0140     // the same time stitch the octree
+0141     fix_stitch(mat, oct, oct_adr, L, eps_sq, modified_enum);
+0142 
+0143     // First vacant position
+0144     uint64_t vac_pos = 0;
+0145     uint64_t *oct_keep = oct_adr;
+0146     // All the values to be kept in the final octree
+0147     // has been marked in oct_keep
+0148     <span class="keyword">for</span> (uint64_t i = 0; i &lt; numel_mat; ++i) {
+0149         <span class="keyword">if</span> (oct_keep[i]) { // Keep all
+0150             oct_adr[vac_pos] = i; // Save adress
+0151             cv_set_rel(&amp;oct, vac_pos, &amp;oct, i); // Save data element
+0152             ++vac_pos;
+0153         }
+0154     }
+0155   
+0156     // Set final element
+0157     oct_adr[vac_pos] = numel_mat;
+0158     ++vac_pos;
+0159   
+0160     <span class="keyword">return</span> vac_pos;
+0161 }
+0162 
+0163 
+0164 /*
+0165  * Fix stitches is a recursive <span class="keyword">function</span> that tries to collapse 8 sub-blocks
+0166  * into a single block <span class="keyword">if</span> they are similar enough, which we call &quot;Stitching&quot;.
+0167  * Returns true <span class="keyword">if</span> stitch possible and false when not possible.
+0168  * block_len is a decreasing variable during the recursion andrecursion
+0169  * ends when block_len reaches 2.
+0170  */
+0171 bool fix_stitch(complex_v mat,
+0172                 complex_v oct,
+0173                 uint64_t*  oct_keep,
+0174                 const uint64_t  block_len,
+0175                 const float    eps_sq,
+0176                 const uint64_t  enum_order[]) {
+0177     complex_v mean;
+0178     
+0179     <span class="keyword">if</span> (block_len == 2) {
+0180         // On next to last level (end condition) 
+0181         mean = cv_alloc(1,1,1,mat.dim); // Allocate complec vector <span class="keyword">for</span> mean
+0182         
+0183         // Go through the next 8 values 
+0184         <span class="keyword">for</span> (size_t i = 0; i&lt;8; ++i) {
+0185             cv_set_rel(&amp;oct, i, &amp;mat, enum_order[i]); // Copy element from mat to oct
+0186             cv_addto(&amp;mean, &amp;oct, i);                 // Track sum <span class="keyword">for</span> mean calc
+0187         }
+0188         cv_scale(&amp;mean, 0.125f); // Scale sum to get mean
+0189 
+0190         // If <span class="keyword">for</span> any vec, abs(mean - vec) &gt;= eps, stiching cannot be done.
+0191         <span class="keyword">for</span> (size_t i = 0; i&lt;8; ++i) {
+0192             <span class="keyword">if</span> (!cv_isdiffzero(&amp;mean, &amp;oct, i, eps_sq)) {
+0193                 // Can not stitch. Then keep all 8 values
+0194                 <span class="keyword">for</span> (size_t j = oct.ix; j &lt; 8 + oct.ix; ++j)
+0195                     oct_keep[j] = 1; 
+0196                 cv_free(&amp;mean);
+0197                 <span class="keyword">return</span> false;
+0198             }
+0199         }
+0200         
+0201         // It is possible to stitch! Mark one value to keep
+0202         oct_keep[oct.ix] = 1;
+0203         
+0204     } <span class="keyword">else</span> { // block_len &gt; 2
+0205         // Precalculate values <span class="keyword">for</span> translations
+0206         uint64_t block_vol = CUBE(block_len);
+0207         uint64_t sub_block_len = block_len / 2;
+0208         uint64_t sub_block_vol = block_vol / 8;
+0209         
+0210         // Check <span class="keyword">if</span> all sub-blocks are constant
+0211         bool isConst = true;
+0212         <span class="keyword">for</span> (size_t i = 0; i &lt; 8; ++i) {
+0213             isConst &amp;= fix_stitch(   
+0214                 cv_jump(mat, sub_block_len*enum_order[i]),
+0215                 cv_jump(oct, sub_block_vol*i),
+0216                 oct_keep,
+0217                 sub_block_len,
+0218                 eps_sq,
+0219                 enum_order);
+0220         }
+0221         
+0222         <span class="keyword">if</span> (!isConst)
+0223             <span class="keyword">return</span> false;
+0224         
+0225         // All sub-blocks constant. Are they the same constant?
+0226 
+0227         // Calc mean
+0228         mean = cv_alloc(1,1,1,mat.dim);
+0229         <span class="keyword">for</span> (size_t i = 0; i &lt; block_vol; i += sub_block_vol) {
+0230             cv_addto(&amp;mean, &amp;oct, i);
+0231         }
+0232         cv_scale(&amp;mean, 0.125f);
+0233         
+0234         // Compare to mean
+0235         <span class="keyword">for</span> (size_t i = 0; i &lt; block_vol; i+=sub_block_vol) {
+0236             <span class="keyword">if</span> (!cv_isdiffzero(&amp;mean, &amp;oct, i, eps_sq)) {
+0237                 // It is not possible to stitch, <span class="keyword">return</span>
+0238                 cv_free(&amp;mean);
+0239                 <span class="keyword">return</span> false;
+0240             }
+0241         }
+0242 
+0243         // All sub-blocks same constant, ok to stitch.
+0244         // Mark blocks not to keep.
+0245         <span class="keyword">for</span> (size_t i = sub_block_vol; i &lt; block_vol; i += sub_block_vol) {
+0246             oct_keep[oct.ix + i] = 0;
+0247         }
+0248     }
+0249     
+0250     // Stitch is ok, set new value
+0251     <span class="keyword">if</span> (cv_iszero(&amp;mean, eps_sq)) {
+0252         // |mean| &lt; eps, set to zero
+0253         cv_set_const(&amp;oct,0,0);
+0254     } <span class="keyword">else</span> {
+0255         // otherwize, set mean
+0256         cv_set(&amp;oct, &amp;mean);
+0257     }
+0258     
+0259     cv_free(&amp;mean);
+0260     <span class="keyword">return</span> true;
+0261 }</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

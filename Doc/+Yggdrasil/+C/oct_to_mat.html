@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of oct_to_mat</title>
+  <meta name="keywords" content="oct_to_mat">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html +C -->
+<h1>oct_to_mat
+&nbsp;&nbsp;<img src="../../c.png" alt="Linux AMD Opteron" border="0" title="Linux AMD Opteron"></h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 #include &quot;oct_to_mat.h&quot;
+0002 
+0003 #define IN_DATA       prhs[0]
+0004 #define IN_ADR        prhs[1]
+0005 #define IN_ENUM_ORDER prhs[2]
+0006 #define IN_DATA_LEN   prhs[3]
+0007 #define IN_N          prhs[4]
+0008 
+0009 #define OUT_MAT       plhs[0]
+0010 
+0011 #define CUBE(x) (x)*(x)*(x)
+0012 
+0013 // Transforms an octree adress to the corresponding matrix index
+0014 size_t get_index_from_oct_adr(uint64_t vol, size_t *modified_enum);
+0015 // Transform a number 8^n to 2^n, this is used to go from volume to lengths
+0016 uint64_t vol_to_len(uint64_t eight_n);
+0017 
+0018 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
+0019 { 
+0020     float *real_mat, *imag_mat;
+0021     float *oct_real_data, *oct_imag_data;
+0022     uint64_t *oct_adr;
+0023     uint8_t *enum_order;
+0024 
+0025     uint8_t N;
+0026     uint32_t data_dim; 
+0027 
+0028     // Load input arguments
+0029     oct_real_data =    (float*)mxGetData(IN_DATA);
+0030     oct_imag_data =    (float*)mxGetImagData(IN_DATA);
+0031     oct_adr       = (uint64_t*)mxGetData(IN_ADR);
+0032     enum_order    =  (uint8_t*)mxGetData(IN_ENUM_ORDER);
+0033     N             = *(uint8_t*)mxGetData(IN_N);
+0034     data_dim      = *(uint32_t*)mxGetData(IN_DATA_LEN);
+0035   
+0036     // Transform the enum_order into a single index, corresponing to indecies
+0037     // of a 2x2x2 cube.
+0038     size_t modified_enum[8];
+0039     uint64_t L = 1 &lt;&lt; N;
+0040     uint64_t look_up[8] = {0, 1, L, 1+L, L*L, L*L+1, L*L+L, L*L+L+1};
+0041     <span class="keyword">for</span> (int i = 0; i &lt; 8; ++i) {
+0042         modified_enum[i] = look_up[enum_order[i]-1];
+0043     }
+0044 
+0045     // Create the output matrix
+0046     int dims[4] = {L, L, L, data_dim};
+0047     OUT_MAT = mxCreateNumericArray(4,dims,mxSINGLE_CLASS,mxCOMPLEX);   
+0048   
+0049     real_mat = (float*)mxGetData(    OUT_MAT);   
+0050     imag_mat = (float*)mxGetImagData(OUT_MAT);
+0051 
+0052     // Calculate the total volume of the octree, used <span class="keyword">for</span> end conditions and
+0053     // indexing of vector data
+0054     uint64_t total_vol = CUBE(L);
+0055     // Nice package of data in complex vectorfields
+0056     complex_v mat = cv_create(real_mat, imag_mat, total_vol, 1, data_dim);
+0057     complex_v oct = cv_create(oct_real_data, oct_imag_data, 1, data_dim, data_dim);
+0058   
+0059     // Go through the octree
+0060     <span class="keyword">for</span> (uint64_t i = 0; oct_adr[i] &lt; total_vol; ++i){
+0061         // Get the matrix index from the adr
+0062         size_t ind = get_index_from_oct_adr(oct_adr[i], modified_enum);
+0063         // Pick out a piece of constant value to work with
+0064         uint64_t piece_vol = oct_adr[i+1] - oct_adr[i];
+0065         uint64_t piece_len = vol_to_len(piece_vol);
+0066 
+0067         // Time to put all values from the piece into the matrix
+0068 
+0069         // Go through every node in the piece
+0070         <span class="keyword">for</span> (size_t z = 0; z &lt; piece_len; ++z){
+0071             <span class="keyword">for</span> (size_t y = 0; y &lt; piece_len; ++y){
+0072                 <span class="keyword">for</span> (size_t x = 0; x &lt; piece_len; ++x){
+0073                     // Calculate the node's position in the matrix
+0074                     size_t mat_index = ind + x + L * (y + L * z);
+0075                     // Transfer the data to the matrix from the octree
+0076                     cv_set_rel(&amp;mat,mat_index,&amp;oct,i);
+0077                 }
+0078             }
+0079         }
+0080     }
+0081 }
+0082 
+0083 // Find the matrix index from the oct adress using some quick
+0084 // bitshift operations. The octree have an internal fractal structure,
+0085 // it follows that a position can be described with N sequential 
+0086 // choices of octants, one <span class="keyword">for</span> every subdivision.
+0087 size_t get_index_from_oct_adr(uint64_t vol, size_t *modified_enum){
+0088     size_t ind = 0;
+0089     uint64_t twoLoopInd = 1;
+0090     // Find the corresponding octant <span class="keyword">for</span> every subdivision
+0091     <span class="keyword">while</span> (vol != 0){
+0092         ind += twoLoopInd * (size_t)modified_enum[vol &amp; (uint64_t)7]; 
+0093         twoLoopInd &lt;&lt;= 1;
+0094         vol &gt;&gt;= 3;
+0095     }
+0096     <span class="keyword">return</span> ind; // Return the matrix index
+0097 }
+0098  
+0099 // Transforms a number 8^n to 2^n using bitshifts
+0100 uint64_t vol_to_len(uint64_t eight_n) {
+0101     uint64_t two_n = 1;
+0102     <span class="keyword">while</span> (eight_n != 1){
+0103         eight_n &gt;&gt;= 3;
+0104         two_n   &lt;&lt;= 1;
+0105     }
+0106     <span class="keyword">return</span> two_n;
+0107 }</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

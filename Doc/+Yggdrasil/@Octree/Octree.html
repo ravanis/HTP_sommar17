@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Octree</title>
+  <meta name="keywords" content="Octree">
+  <meta name="description" content="The great octree class">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @Octree -->
+<h1>Octree
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>The great octree class</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">The great octree class</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="Octree.html" class="code" title="">Octree</a>	The great octree class</li><li><a href="abs_sq.html" class="code" title="function [ self ] = abs_sq( self )">abs_sq</a>	self = ABS_SQ(self)</li><li><a href="all.html" class="code" title="function output = all(oct)">all</a>	output = ALL(oct)</li><li><a href="any.html" class="code" title="function output = any(oct)">any</a>	output = ANY(oct)</li><li><a href="conj.html" class="code" title="function oct = conj(oct)">conj</a>	oct = CONJ(oct)</li><li><a href="disp.html" class="code" title="function disp(oct)">disp</a>	DISP(oct)</li><li><a href="eq_.html" class="code" title="function output = eq_(a,b)">eq_</a>	output = EQ_(oct,b)</li><li><a href="ge_.html" class="code" title="function output = ge_(a, b)">ge_</a>	output = GE_(a, b)</li><li><a href="gt_.html" class="code" title="function a = gt_(a, b)">gt_</a>	output = GT_(a, b)</li><li><a href="imag.html" class="code" title="function [oct] = imag(oct)">imag</a>	[oct] = IMAG(oct)</li><li><a href="integral.html" class="code" title="function output = integral(a, w)">integral</a>	output = INTEGRAL(a, w)</li><li><a href="le_.html" class="code" title="function output = le_(a, b)">le_</a>	output = LE_(a, b)</li><li><a href="logical.html" class="code" title="function oct = logical(oct)">logical</a>	oct = LOGICAL(oct)</li><li><a href="lt_.html" class="code" title="function a = lt_(a, b)">lt_</a>	output = LT_(a, b)</li><li><a href="merge.html" class="code" title="function oct1 = merge(oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8)">merge</a>	oct1 = MERGE(oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8)</li><li><a href="minus_.html" class="code" title="function a = minus_(a,b)">minus_</a>	oct = MINUS_(oct,b)</li><li><a href="mrdivide_.html" class="code" title="function oct = mrdivide_(oct,b)">mrdivide_</a>	oct = MRDIVIDE_(oct,b)</li><li><a href="mtimes_.html" class="code" title="function a = mtimes_(a,b)">mtimes_</a>	oct = MTIMES_(a, b)</li><li><a href="ne_.html" class="code" title="function output = ne_(a, b)">ne_</a>	output = NE_(a, b)</li><li><a href="not.html" class="code" title="function oct = not(oct)">not</a>	oct = NOT(oct)</li><li><a href="or_.html" class="code" title="function c = or_(a,b)">or_</a>	c = OR_(a,b)</li><li><a href="plus_.html" class="code" title="function a = plus_(a,b)">plus_</a>	oct = PLUS_(oct,b)</li><li><a href="power.html" class="code" title="function oct = power(oct,b)">power</a>	oct = POWER(oct,b)</li><li><a href="rand.html" class="code" title="function [oct] = rand(matsize, rel_eps)">rand</a>	[oct] = RAND(matsize, rel_eps)</li><li><a href="rdivide_.html" class="code" title="function oct = rdivide_(a,b)">rdivide_</a>	oct = RDIVIDE_(a,b)</li><li><a href="real.html" class="code" title="function [oct] = real(oct)">real</a>	[oct] = REAL(oct)</li><li><a href="reduce.html" class="code" title="function oct = reduce(oct, rel_eps)">reduce</a>	oct = REDUCE(oct, rel_eps)</li><li><a href="scalar_prod_.html" class="code" title="function a = scalar_prod_(a, b)">scalar_prod_</a>	oct = SCALAR_PROD_(a, b)</li><li><a href="scalar_prod_integral_.html" class="code" title="function output = scalar_prod_integral_(a, b)">scalar_prod_integral_</a>	output = SCALAR_PROD_INTEGRAL_(a, b)</li><li><a href="size.html" class="code" title="function [ varargout ] = size(oct, dim)">size</a>	[ varargout ] = SIZE(oct, dim)</li><li><a href="sum.html" class="code" title="function [ oct ] = sum(oct, const)">sum</a>	[ oct ] = SUM(oct, const)</li><li><a href="times_.html" class="code" title="function a = times_(a,b)">times_</a>	oct = TIMES_(oct,b)</li><li><a href="to_mat.html" class="code" title="function [ mat ] = to_mat( oct )">to_mat</a>	[ mat ] = TO_MAT( oct )</li><li><a href="uminus.html" class="code" title="function oct = uminus(oct)">uminus</a>	oct = UMINUS(oct)</li><li><a href="uplus.html" class="code" title="function oct = uplus(oct)">uplus</a>	oct = UPLUS(oct)</li><li><a href="weight_.html" class="code" title="function a = weight_(a, w)">weight_</a>	oct = WEIGHT_(a, w);</li><li><a href="zeros.html" class="code" title="function [ oct ] = zeros( mat_size, eps )">zeros</a>	[ oct ] = ZEROS( mat_size, (OPTIONAL) eps )</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="Octree.html" class="code" title="">Octree</a>	The great octree class</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = Octree(obj, varargin)</a></li><li><a href="#_sub2" class="code">function output = priority()</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <span class="comment">%The great octree class</span>
+0002 classdef <a href="Octree.html" class="code" title="">Octree</a> &lt; Yggdrasil.AbstractOctreePriority &amp; <span class="keyword">...</span>
+0003                   Yggdrasil.AbstractOctreeData
+0004     properties (Constant)
+0005         <span class="comment">% Default relative epsilon, the approximation error</span>
+0006         DEFAULT_REL_EPS = 1E-8;
+0007         <span class="comment">% Global settings for mat to octree regarding subdivision</span>
+0008         DEFAULT_ENUM_ORDER = 1:8
+0009         
+0010         <span class="comment">% The largest piece possible to mat_to_oct, this limit</span>
+0011         <span class="comment">% exists because of high memory usage when using mat_to_oct.</span>
+0012         MAX_N = 6;
+0013         
+0014         <span class="comment">% The smallest piece allowed to be created by subdivision.</span>
+0015         <span class="comment">% This limit is set because processing too small pieces is slow.</span>
+0016         MIN_N = 5;
+0017     <span class="keyword">end</span>
+0018 
+0019     methods
+0020         <span class="comment">% Constructor for octrees</span>
+0021         <span class="comment">% Creates an octree from a matrix mat. An optional argument</span>
+0022         <span class="comment">% for the rounding error eps can be given, default is</span>
+0023         <span class="comment">% eps = DEFAULT_EPS. Can handle obj of numeric type and subclasses</span>
+0024         <span class="comment">% to octrees.</span>
+0025         <a name="_sub0" href="#_subfunctions" class="code">function self = Octree(obj, varargin)</a>
+0026             import Yggdrasil.*
+0027             <span class="comment">% Controls on input arguments</span>
+0028             <span class="keyword">if</span> nargin == 0
+0029                 error(<span class="string">'Atleast one input argument is required.'</span>);
+0030             <span class="keyword">end</span>
+0031             
+0032             <span class="keyword">if</span> mod(nargin,2) == 0
+0033                 error(<span class="string">'Constructor only have support for flag value pair inputs.'</span>)
+0034             <span class="keyword">end</span>
+0035             
+0036             <span class="keyword">if</span> numel(obj) == 0
+0037                 error(<span class="string">'The input object can not be empty.'</span>);
+0038             <span class="keyword">end</span>
+0039                        
+0040             num_optional_arg = (nargin-1);
+0041             <span class="keyword">for</span> i = 1:2:num_optional_arg
+0042                 <span class="keyword">switch</span> varargin{i}
+0043                     <span class="keyword">case</span> <span class="string">'rel_eps'</span>
+0044                         rel_eps = varargin{i + 1};
+0045                     <span class="keyword">case</span> <span class="string">'abs_eps'</span>
+0046                         abs_eps = varargin{i + 1};
+0047                     <span class="keyword">case</span> <span class="string">'enum_order'</span>
+0048                         enum_order = varargin{i + 1};
+0049                     <span class="keyword">otherwise</span>
+0050                         error([<span class="string">'Unknown flag '</span> varargin{i + 1} <span class="string">'.'</span>])
+0051                 <span class="keyword">end</span>
+0052             <span class="keyword">end</span>
+0053             
+0054             <span class="comment">% If obj is a octree or a subclass to Octree</span>
+0055             <span class="keyword">if</span> isa(obj,<span class="string">'Yggdrasil.Octree'</span>)
+0056                 <span class="keyword">if</span> nargin ~= 1
+0057                     error(<span class="string">'No options avalible for octree input.'</span>)
+0058                 <span class="keyword">end</span>
+0059                 self.data = obj.data;
+0060                 self.meta = obj.meta;
+0061                 self.adr  = obj.adr;
+0062                 <span class="keyword">return</span>;
+0063             <span class="keyword">elseif</span> ~isnumeric(obj)
+0064                 error(<span class="string">'Input is not Octreeable.'</span>)
+0065             <span class="keyword">end</span>
+0066             
+0067             <span class="comment">% obj is matrix</span>
+0068             
+0069             <span class="keyword">if</span> ~exist(<span class="string">'enum_order'</span>,<span class="string">'var'</span>)
+0070                 <span class="comment">% Set an order of how to divide matrices into pieces</span>
+0071                 enum_order = self.DEFAULT_ENUM_ORDER;
+0072             <span class="keyword">end</span>
+0073 
+0074             <span class="comment">% Ensure rel_eps to be set</span>
+0075             <span class="keyword">if</span> ~exist(<span class="string">'rel_eps'</span>,<span class="string">'var'</span>)
+0076                 <span class="keyword">if</span> exist(<span class="string">'abs_eps'</span>,<span class="string">'var'</span>)
+0077                     rel_eps = Yggdrasil.Utils.Octree.get_rel_eps(obj, abs_eps);
+0078                 <span class="keyword">else</span>
+0079                     rel_eps = self.DEFAULT_REL_EPS;
+0080                 <span class="keyword">end</span>
+0081             <span class="keyword">end</span>
+0082             
+0083             <span class="comment">% From rel_eps calc abs_eps if needed</span>
+0084             <span class="keyword">if</span> ~exist(<span class="string">'abs_eps'</span>,<span class="string">'var'</span>)
+0085                 abs_eps = Yggdrasil.Utils.Octree.get_abs_eps(obj, rel_eps);
+0086             <span class="keyword">end</span>
+0087             
+0088             <span class="comment">% Get side lengths</span>
+0089             mat_size = Utils.size( obj,4 );
+0090             <span class="keyword">if</span> length(mat_size) ~= 4
+0091                 error([<span class="string">'Invalid matrix dimension, only 4 dimensional'</span><span class="keyword">...</span>
+0092                     <span class="string">' or lower dimensional matrices are accepted.'</span>]);
+0093             <span class="keyword">end</span>
+0094 
+0095             <span class="comment">% First, check if the matrix is a cubic matrix with 2^N</span>
+0096             <span class="comment">% sidelengths</span>
+0097             is_cubic = <a href="all.html" class="code" title="function output = all(oct)">all</a>( mat_size(2:3) <span class="keyword">...</span>
+0098                                == mat_size(1) );
+0099             
+0100             [is_pow_2, N] = Math.is2pow( mat_size(1) );
+0101             <span class="comment">% If mat is easy to create an octree from</span>
+0102             <span class="keyword">if</span> is_cubic &amp;&amp; is_pow_2 &amp;&amp; N &lt;= Octree.MAX_N  
+0103                 <span class="comment">% Create it from scratch</span>
+0104                 [self.data, self.adr, self.meta] = <span class="keyword">...</span>
+0105                     Wrapper.m2o(obj, rel_eps, abs_eps, enum_order);
+0106             <span class="keyword">else</span>
+0107                 <span class="comment">% An smart method that recursivly calls the constructor</span>
+0108                 <span class="comment">% with pieces of the matrix mat, and then merges the</span>
+0109                 <span class="comment">% octrees together to form the final octree self.</span>
+0110                 [self.data, self.adr, self.meta] = <span class="keyword">...</span>
+0111                     Utils.Octree.mat_to_oct(obj, rel_eps, abs_eps, enum_order); 
+0112             <span class="keyword">end</span>
+0113         <span class="keyword">end</span>
+0114         
+0115         output = <a href="uplus.html" class="code" title="function oct = uplus(oct)">uplus</a>(oct);
+0116         output = <a href="uminus.html" class="code" title="function oct = uminus(oct)">uminus</a>(oct);
+0117         output = <a href="conj.html" class="code" title="function oct = conj(oct)">conj</a>(oct);
+0118         
+0119         output = <a href="sum.html" class="code" title="function [ oct ] = sum(oct, const)">sum</a>(oct, b);
+0120         output = <a href="power.html" class="code" title="function oct = power(oct,b)">power</a>(oct, b);
+0121         
+0122         output = <a href="not.html" class="code" title="function oct = not(oct)">not</a>(oct);
+0123         output = <a href="any.html" class="code" title="function output = any(oct)">any</a>(oct);
+0124         output = <a href="all.html" class="code" title="function output = all(oct)">all</a>(oct);
+0125         output = <a href="logical.html" class="code" title="function oct = logical(oct)">logical</a>(oct);
+0126         output = <a href="real.html" class="code" title="function [oct] = real(oct)">real</a>(oct);
+0127         output = <a href="imag.html" class="code" title="function [oct] = imag(oct)">imag</a>(oct);
+0128         
+0129         varargout = <a href="size.html" class="code" title="function [ varargout ] = size(oct, dim)">size</a>(oct, dim);
+0130         output = <a href="integral.html" class="code" title="function output = integral(a, w)">integral</a>(oct1, oct2);
+0131         output = <a href="abs_sq.html" class="code" title="function [ self ] = abs_sq( self )">abs_sq</a>(input);
+0132         
+0133         output = <a href="reduce.html" class="code" title="function oct = reduce(oct, rel_eps)">reduce</a>(oct, eps);
+0134         output = <a href="to_mat.html" class="code" title="function [ mat ] = to_mat( oct )">to_mat</a>(oct);
+0135            
+0136         <a href="disp.html" class="code" title="function disp(oct)">disp</a>(oct);
+0137     <span class="keyword">end</span>
+0138     methods (Static)
+0139         <a name="_sub1" href="#_subfunctions" class="code">function output = priority()</a>
+0140            output = 0; 
+0141         <span class="keyword">end</span>
+0142         
+0143         output = <a href="plus_.html" class="code" title="function a = plus_(a,b)">plus_</a>(oct, b);
+0144         output = <a href="minus_.html" class="code" title="function a = minus_(a,b)">minus_</a>(oct, b);
+0145         output = <a href="times_.html" class="code" title="function a = times_(a,b)">times_</a>(oct, b);
+0146         output = <a href="mtimes_.html" class="code" title="function a = mtimes_(a,b)">mtimes_</a>(oct, b);
+0147         output = <a href="mrdivide_.html" class="code" title="function oct = mrdivide_(oct,b)">mrdivide_</a>(oct, b);
+0148         output = <a href="rdivide_.html" class="code" title="function oct = rdivide_(a,b)">rdivide_</a>(oct, b);
+0149 
+0150         output = <a href="ne_.html" class="code" title="function output = ne_(a, b)">ne_</a>(oct_a, oct_b);
+0151         output = <a href="eq_.html" class="code" title="function output = eq_(a,b)">eq_</a>(oct_a, oct_b);
+0152         output = and_(oct_a, oct_b);
+0153         output = <a href="or_.html" class="code" title="function c = or_(a,b)">or_</a>(oct_a, oct_b);
+0154         output = <a href="gt_.html" class="code" title="function a = gt_(a, b)">gt_</a>(oct1, oct2);
+0155         output = <a href="lt_.html" class="code" title="function a = lt_(a, b)">lt_</a>(oct1, oct2);
+0156         output = <a href="ge_.html" class="code" title="function output = ge_(a, b)">ge_</a>(oct1, oct2);
+0157         output = <a href="le_.html" class="code" title="function output = le_(a, b)">le_</a>(oct1, oct2);
+0158 
+0159         output = <a href="scalar_prod_integral_.html" class="code" title="function output = scalar_prod_integral_(a, b)">scalar_prod_integral_</a>(oct1, oct2);
+0160         output = <a href="scalar_prod_.html" class="code" title="function a = scalar_prod_(a, b)">scalar_prod_</a>(oct1, oct2);
+0161         output = <a href="weight_.html" class="code" title="function a = weight_(a, w)">weight_</a>(oct, w);
+0162 
+0163         output = <a href="zeros.html" class="code" title="function [ oct ] = zeros( mat_size, eps )">zeros</a>(mat_size, eps);
+0164         output = <a href="rand.html" class="code" title="function [oct] = rand(matsize, rel_eps)">rand</a>(matsize, eps);
+0165     <span class="keyword">end</span>
+0166     methods (Access = public, Static)
+0167         output = <a href="merge.html" class="code" title="function oct1 = merge(oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8)">merge</a>(oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8);
+0168     <span class="keyword">end</span>
+0169     
+0170 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

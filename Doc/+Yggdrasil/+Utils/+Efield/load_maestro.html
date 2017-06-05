@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_maestro</title>
+  <meta name="keywords" content="load_maestro">
+  <meta name="description" content="[data, adr, meta] = LOAD_MAESTRO( varargin )">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html +Yggdrasil --><!-- ../menu.html +Utils --><!-- menu.html +Efield -->
+<h1>load_maestro
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>[data, adr, meta] = LOAD_MAESTRO( varargin )</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [data, adr, meta] = load_maestro( mode, varargin ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)"><pre class="comment">[data, adr, meta] = LOAD_MAESTRO( varargin )
+   Handles the memory usage of SF_Efields. Reason being there are a lot of
+   single frequencies E-fields which are only used once in a while. 
+   load_maestro only stores the last used E-fields and because of lowers
+   memory usage.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [data, adr, meta] = load_maestro( mode, varargin )</a>
+0002 <span class="comment">%[data, adr, meta] = LOAD_MAESTRO( varargin )</span>
+0003 <span class="comment">%   Handles the memory usage of SF_Efields. Reason being there are a lot of</span>
+0004 <span class="comment">%   single frequencies E-fields which are only used once in a while.</span>
+0005 <span class="comment">%   load_maestro only stores the last used E-fields and because of lowers</span>
+0006 <span class="comment">%   memory usage.</span>
+0007     <span class="keyword">if</span> nargin == 0 || ~ischar(mode)
+0008         error([<span class="string">'Invalid input. First input argument need to be'</span><span class="keyword">...</span>
+0009             <span class="string">' &quot;init&quot; or &quot;fetch&quot; or &quot;disp&quot;.'</span>]);
+0010     <span class="keyword">end</span>
+0011     
+0012     <span class="keyword">persistent</span> get_filename_Efield;
+0013     <span class="keyword">persistent</span> get_filename_Sigma;
+0014     <span class="keyword">persistent</span> oct_map;
+0015     <span class="keyword">persistent</span> next_free_pos;
+0016     <span class="keyword">persistent</span> release_queue;
+0017     <span class="keyword">persistent</span> eps_Efield;
+0018     <span class="keyword">persistent</span> eps_Sigma;
+0019     MAX_LOADED_OCT = 20;
+0020     
+0021     <span class="keyword">if</span> strcmp(<span class="string">'fetch'</span>, mode) <span class="comment">% Fetch mode</span>
+0022         <span class="comment">% Input checks</span>
+0023         <span class="keyword">if</span> nargin ~= 2
+0024             error(<span class="string">'The mode &quot;fetch&quot; need a SF_Efield object.'</span>)
+0025         <span class="keyword">end</span>
+0026         <span class="keyword">if</span> ~isa(varargin{1},<span class="string">'Yggdrasil.SF_Efield'</span>)
+0027             error(<span class="string">'Invalid input, can only load data from a SF_Efield.'</span>);
+0028         <span class="keyword">end</span>
+0029         <span class="comment">% Check if something is wrong with SF_Efield</span>
+0030         <span class="keyword">if</span> length(varargin{1}.C) ~= 1
+0031             error([<span class="string">'Invalid Yggdrasil.SF_Efield object. The object does not'</span><span class="keyword">...</span>
+0032                 <span class="string">' correspond to only 1 antenna.'</span>])
+0033         <span class="keyword">end</span>
+0034         <span class="comment">% Check if load_maestro is initialised</span>
+0035         <span class="keyword">if</span> ~exist(<span class="string">'get_filename_Efield'</span>,<span class="string">'var'</span>)
+0036             error([<span class="string">'Need to give a filepath generating function before'</span><span class="keyword">...</span>
+0037                    <span class="string">' loading data.'</span>])
+0038         <span class="keyword">end</span>
+0039         
+0040         file_name = get_filename_Efield(varargin{1}.frequency,<span class="keyword">...</span><span class="comment"> % Frequency</span>
+0041                                         varargin{1}.C.keys<span class="keyword">...</span><span class="comment"> % Antenna id</span>
+0042                                         );
+0043         
+0044         <span class="keyword">if</span> ~oct_map.isKey(file_name) <span class="comment">% Octree is not loaded into load_maestro</span>
+0045             <span class="comment">% Load the E-field into maestro.</span>
+0046             
+0047             <span class="comment">% Ensure there exsists a _weighted.oct version of the E-field</span>
+0048             <span class="keyword">if</span> ~exist([file_name <span class="string">'_weighted.oct'</span>], <span class="string">'file'</span>)
+0049                 <span class="comment">% Create the _weighted.oct file</span>
+0050                 sigma_file_name = get_filename_Sigma(varargin{1}.frequency);
+0051                 <span class="keyword">if</span> exist(<span class="string">'eps_Efield'</span>,<span class="string">'var'</span>)
+0052                     <span class="comment">% If eps_Efield is set, eps_Sigma is also set</span>
+0053                     Yggdrasil.Utils.Efield.create_Efield_oct(file_name, sigma_file_name, eps_Efield, eps_Sigma);
+0054                 <span class="keyword">else</span>
+0055                     Yggdrasil.Utils.Efield.create_Efield_oct(file_name, sigma_file_name);
+0056                 <span class="keyword">end</span>
+0057             <span class="keyword">end</span>
+0058             
+0059             <span class="comment">% Load the _weighted.oct file</span>
+0060             oct = Yggdrasil.Utils.load([file_name <span class="string">'_weighted.oct'</span>]);
+0061 
+0062             <span class="comment">% Check if expected the loaded data have the correct</span>
+0063             <span class="keyword">if</span> oct.meta.eps &gt; eps_Efield + eps_Sigma + 10*Yggdrasil.Octree.DEFAULT_REL_EPS 
+0064                 warning([<span class="string">'Current relative approximation error, eps = '</span><span class="keyword">...</span>
+0065                     num2str(eps_Efield + eps_Sigma) <span class="string">', is '</span><span class="keyword">...</span>
+0066                     <span class="string">'smaller than previous eps = '</span><span class="keyword">...</span>
+0067                     num2str(oct.meta.eps) <span class="string">'. Consider removing .oct'</span><span class="keyword">...</span>
+0068                     <span class="string">' files to recalculate the octrees.'</span>]);
+0069             <span class="keyword">end</span>
+0070             
+0071             <span class="comment">% Check if expected the loaded data have the correct</span>
+0072             <span class="keyword">if</span> oct.meta.eps &lt; eps_Efield + eps_Sigma - 10*Yggdrasil.Octree.DEFAULT_REL_EPS
+0073                 warning([<span class="string">'Current relative approximation error, eps = '</span><span class="keyword">...</span>
+0074                     num2str(eps_Efield + eps_Sigma) <span class="string">', is '</span><span class="keyword">...</span>
+0075                     <span class="string">'larger than previous eps = '</span><span class="keyword">...</span>
+0076                     num2str(oct.meta.eps) <span class="string">'. This means that the data '</span><span class="keyword">...</span>
+0077                     <span class="string">'could be compressed futher. Consider removing .oct'</span><span class="keyword">...</span>
+0078                     <span class="string">' files to recalculate the octrees for higher compression.'</span>]);
+0079             <span class="keyword">end</span>
+0080             
+0081             <span class="comment">% Ensure there being a free position in the queue</span>
+0082             <span class="keyword">if</span> ~isempty(release_queue{next_free_pos})
+0083                 <span class="comment">% Remove the oldest kept E-field</span>
+0084                 oct_map.remove(release_queue(next_free_pos));
+0085             <span class="keyword">end</span>
+0086             
+0087             <span class="comment">% Add the octree to the map</span>
+0088             oct_map(file_name) = oct;
+0089             <span class="comment">% and to the queue</span>
+0090             release_queue{next_free_pos} = file_name;
+0091             
+0092             <span class="comment">% Increment position variable</span>
+0093             next_free_pos = next_free_pos + 1;
+0094             <span class="keyword">if</span> length(release_queue) &lt; next_free_pos
+0095                 <span class="comment">% Wrap around</span>
+0096                 next_free_pos = 1;
+0097             <span class="keyword">end</span>
+0098         <span class="keyword">end</span>
+0099         
+0100         <span class="comment">% Return the loaded octree</span>
+0101         oct  = oct_map(file_name);
+0102         data = oct.data;
+0103         adr  = oct.adr;
+0104         meta = oct.meta;
+0105         
+0106     <span class="keyword">elseif</span> strcmp(<span class="string">'init'</span>, mode)
+0107         <span class="keyword">if</span> nargin &lt; 3
+0108             error([<span class="string">'The mode &quot;init&quot; needs atleast three inputs, mode &quot;init&quot;'</span><span class="keyword">...</span>
+0109                 <span class="string">', filename_Efield_function, filename_Sigma_function'</span>])
+0110         <span class="keyword">end</span>
+0111         <span class="keyword">if</span> nargin &gt; 5
+0112             error([<span class="string">'The mode &quot;init&quot; can only have atmost 2 optional arguments, '</span><span class="keyword">...</span>
+0113                    <span class="string">'at a total of 5 input arguments.'</span>])
+0114         <span class="keyword">end</span>
+0115         <span class="keyword">if</span> ~isa(varargin{1},<span class="string">'function_handle'</span>)
+0116             error(<span class="string">'Second input needs to be a function handle.'</span>)
+0117         <span class="keyword">end</span>
+0118         <span class="keyword">if</span> ~isa(varargin{2},<span class="string">'function_handle'</span>)
+0119             error(<span class="string">'Third input needs to be a function handle.'</span>)
+0120         <span class="keyword">end</span>
+0121         <span class="keyword">if</span> nargin(varargin{1})~= 2
+0122             error([<span class="string">'The function to create filepath to SF_Efields need 2'</span><span class="keyword">...</span>
+0123                 <span class="string">' input arguments: Frequency and antenna_id.'</span>]) 
+0124         <span class="keyword">end</span>
+0125         <span class="keyword">if</span> nargin(varargin{2})~= 1
+0126             error([<span class="string">'The function to create filepath to Sigma data need 1'</span><span class="keyword">...</span>
+0127                 <span class="string">' input arguments: Frequency.'</span>]) 
+0128         <span class="keyword">end</span>
+0129         
+0130         <span class="keyword">if</span> nargin &gt; 3
+0131             <span class="keyword">if</span> ~Yggdrasil.Utils.isrealscalar(varargin{3})
+0132                 error(<span class="string">'The approximation error need to be a real scalar'</span>);
+0133             <span class="keyword">end</span>
+0134             eps_Efield = varargin{3};
+0135             eps_Sigma  = eps_Efield;
+0136             <span class="keyword">if</span> nargin == 5
+0137                 <span class="keyword">if</span> ~Yggdrasil.Utils.isrealscalar(varargin{4})
+0138                     error(<span class="string">'The approximation for Sigma error need to be a real scalar'</span>);
+0139                 <span class="keyword">end</span>
+0140                 eps_Efield = varargin{4};
+0141             <span class="keyword">end</span>
+0142         <span class="keyword">else</span>
+0143            eps_Efield = Yggdrasil.Octree.DEFAULT_REL_EPS;
+0144            eps_Sigma  = eps_Efield;
+0145         <span class="keyword">end</span>
+0146         
+0147         get_filename_Efield = varargin{1};
+0148         get_filename_Sigma  = varargin{2};
+0149         
+0150         oct_map = containers.Map;
+0151         next_free_pos = 1;
+0152         release_queue = cell(MAX_LOADED_OCT,1);
+0153     <span class="keyword">elseif</span> strcmp(<span class="string">'disp'</span>, mode)
+0154         get_filename_Efield
+0155         get_filename_Sigma
+0156         oct_map
+0157         next_free_pos
+0158         release_queue
+0159         eps_Efield
+0160         eps_Sigma
+0161     <span class="keyword">elseif</span> strcmp(<span class="string">'clear'</span>, mode)
+0162         clear get_filename_Efield;
+0163         clear get_filename_Sigma;
+0164         clear oct_map;
+0165         clear next_free_pos;
+0166         clear release_queue;
+0167         clear eps_Efield;
+0168         clear eps_Sigma;
+0169     <span class="keyword">elseif</span> strcmp(<span class="string">'empty'</span>, mode)
+0170         <span class="comment">% Empty out all loaded data</span>
+0171         oct_map = containers.Map;
+0172         next_free_pos = 1;
+0173         release_queue = cell(MAX_LOADED_OCT,1);
+0174     <span class="keyword">else</span>
+0175         error([<span class="string">'Invalid input. First input argument need to be'</span><span class="keyword">...</span>
+0176             <span class="string">' &quot;init&quot; or &quot;fetch&quot; or &quot;disp&quot;.'</span>]);
+0177     <span class="keyword">end</span>
+0178 <span class="keyword">end</span>
+0179</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

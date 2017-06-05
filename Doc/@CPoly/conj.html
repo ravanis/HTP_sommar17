@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of conj</title>
+  <meta name="keywords" content="conj">
+  <meta name="description" content="a = CONJ(a)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html @CPoly -->
+<h1>conj
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>a = CONJ(a)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function a = conj(a) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre class="comment">a = CONJ(a)
+   Conjugates the whole polynomial</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="conj.html" class="code" title="function a = conj(a)">conj</a>	a = CONJ(a)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="CPoly.html" class="code" title="">CPoly</a>	This class handles complex polynomials of the type</li><li><a href="absSq.html" class="code" title="function a = absSq(a)">absSq</a>	a = ABSSQ(a)</li><li><a href="conj.html" class="code" title="function a = conj(a)">conj</a>	a = CONJ(a)</li><li><a href="evaluate.html" class="code" title="function val = evaluate(poly, z_vec)">evaluate</a>	val = EVALUATE(poly, z_vec)</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function a = conj(a)</a>
+0002 <span class="comment">%a = CONJ(a)</span>
+0003 <span class="comment">%   Conjugates the whole polynomial</span>
+0004 
+0005     <span class="comment">%Conjugates the monomials by flipping and changing sign</span>
+0006     <span class="keyword">for</span> i = length(a.monom)
+0007         a.monom{i} = -flipud(a.monom{i});
+0008     <span class="keyword">end</span>
+0009     
+0010     <span class="comment">%And the coefficients can be conjugated by</span>
+0011     a.coefficients = <a href="conj.html" class="code" title="function a = conj(a)">conj</a>(a.coefficients);
+0012     
+0013 <span class="keyword">end</span>
+0014</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

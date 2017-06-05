@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of save_Efield_oct</title>
+  <meta name="keywords" content="save_Efield_oct">
+  <meta name="description" content="SAVE_EFIELD_OCT( Efield_file_name, sigma_file_name)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html +Yggdrasil --><!-- ../menu.html +Utils --><!-- menu.html +Efield -->
+<h1>save_Efield_oct
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>SAVE_EFIELD_OCT( Efield_file_name, sigma_file_name)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function save_Efield_oct( E_field_oct, sigma_sqrt_oct, file_name) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)"><pre class="comment">SAVE_EFIELD_OCT( Efield_file_name, sigma_file_name)
+   From a given SF_Efield.mat file, weights and save an octree
+   version of of the E-field. The weight is sqrt(sigma/2) and 
+   is used to simplify calculations of power densities.
+INPUT:
+   E_field_oct - An octree contianing a raw E_field (raw = non-weighted)
+   sigma_sqrt_oct - An octree containing the sqrt(conductivity)
+   file_name - A string containing the file_name of the saved file. This 
+      string should not contain a file ending as this will automatically
+      be added.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function save_Efield_oct( E_field_oct, sigma_sqrt_oct, file_name)</a>
+0002 <span class="comment">%SAVE_EFIELD_OCT( Efield_file_name, sigma_file_name)</span>
+0003 <span class="comment">%   From a given SF_Efield.mat file, weights and save an octree</span>
+0004 <span class="comment">%   version of of the E-field. The weight is sqrt(sigma/2) and</span>
+0005 <span class="comment">%   is used to simplify calculations of power densities.</span>
+0006 <span class="comment">%INPUT:</span>
+0007 <span class="comment">%   E_field_oct - An octree contianing a raw E_field (raw = non-weighted)</span>
+0008 <span class="comment">%   sigma_sqrt_oct - An octree containing the sqrt(conductivity)</span>
+0009 <span class="comment">%   file_name - A string containing the file_name of the saved file. This</span>
+0010 <span class="comment">%      string should not contain a file ending as this will automatically</span>
+0011 <span class="comment">%      be added.</span>
+0012     
+0013     E_field_oct = E_field_oct.weight(sigma_sqrt_oct)/sqrt(2);
+0014     
+0015     save([file_name <span class="string">'_weighted.oct'</span>], <span class="string">'E_field_oct'</span>, <span class="string">'-v7.3'</span>);
+0016 <span class="keyword">end</span>
+0017</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,11 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  integral -> weight;
+
+  abs_sq [URL="abs_sq.html"];
+  integral [URL="integral.html"];
+  is2pow [URL="is2pow.html"];
+  scalar_prod [URL="scalar_prod.html"];
+  scalar_prod_integral [URL="scalar_prod_integral.html"];
+  weight [URL="weight.html"];
+}

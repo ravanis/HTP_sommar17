@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of MF_Efield</title>
+  <meta name="keywords" content="MF_Efield">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @MF_Efield -->
+<h1>MF_Efield
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="MF_Efield.html" class="code" title="">MF_Efield</a>	</li><li><a href="abs_sq.html" class="code" title="function [ P ] = abs_sq( mf_obj )">abs_sq</a>	[ oct ] = ABS_SQ( mf_obj )</li><li><a href="input_chk.html" class="code" title="function [x,y,mf_num] = input_chk(a,b)">input_chk</a>	[x,y,mf_num] = INPUT_CHK(a,b)</li><li><a href="mtimes_.html" class="code" title="function output = mtimes_(a,b)">mtimes_</a>	output = MTIMES_(a,b)</li><li><a href="plus_.html" class="code" title="function a = plus_(a,b)">plus_</a>	a = plus_(a,b)</li><li><a href="scalar_prod_.html" class="code" title="function S = scalar_prod_(a,b)">scalar_prod_</a>	S = SCALAR_PROD_(a,b)</li><li><a href="scalar_prod_integral_.html" class="code" title="function S = scalar_prod_integral_(a,b)">scalar_prod_integral_</a>	S = SCALAR_PROD_INTEGRAL_(a,b)</li><li><a href="uminus.html" class="code" title="function a = uminus(a)">uminus</a>	a = UMINUS(a)</li><li><a href="weight_.html" class="code" title="function a = weight_(a,w)">weight_</a>	a = WEIGHT_(a,w)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="MF_Efield.html" class="code" title="">MF_Efield</a>	</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = MF_Efield()</a></li><li><a href="#_sub2" class="code">function disp(sf_e)</a></li><li><a href="#_sub3" class="code">function output = priority()</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 classdef <a href="MF_Efield.html" class="code" title="">MF_Efield</a> &lt; Yggdrasil.AbstractOctreePriority
+0002     properties
+0003         E = Yggdrasil.YggMap();
+0004     <span class="keyword">end</span>
+0005     methods
+0006         <a name="_sub0" href="#_subfunctions" class="code">function self = MF_Efield()</a>
+0007         <span class="keyword">end</span>
+0008         
+0009         <a name="_sub1" href="#_subfunctions" class="code">function disp(sf_e)</a>
+0010             <span class="comment">% TBW</span>
+0011             <a href="#_sub2" class="code" title="subfunction disp(sf_e)">disp</a>(<span class="string">'Hi, I''m an MF_Efield.'</span>);
+0012         <span class="keyword">end</span>
+0013         
+0014         self   = <a href="uminus.html" class="code" title="function a = uminus(a)">uminus</a>(self)
+0015         output = <a href="abs_sq.html" class="code" title="function [ P ] = abs_sq( mf_obj )">abs_sq</a>(self)
+0016     <span class="keyword">end</span>
+0017     
+0018     methods (Static, Access = private)
+0019          [x,y,mf_num] = <a href="input_chk.html" class="code" title="function [x,y,mf_num] = input_chk(a,b)">input_chk</a>(a,b)
+0020     <span class="keyword">end</span>
+0021         
+0022     
+0023     methods (Static)
+0024         
+0025         <a name="_sub2" href="#_subfunctions" class="code">function output = priority()</a>
+0026            output = Yggdrasil.SF_Efield.priority() + 1; 
+0027         <span class="keyword">end</span>
+0028         
+0029         a = <a href="plus_.html" class="code" title="function a = plus_(a,b)">plus_</a>(a,b)
+0030         a = <a href="mtimes_.html" class="code" title="function output = mtimes_(a,b)">mtimes_</a>(a,b)
+0031         S = <a href="scalar_prod_.html" class="code" title="function S = scalar_prod_(a,b)">scalar_prod_</a>(a,b)
+0032         S = <a href="scalar_prod_integral_.html" class="code" title="function S = scalar_prod_integral_(a,b)">scalar_prod_integral_</a>(a,b)
+0033         a = <a href="weight_.html" class="code" title="function a = weight_(a,w)">weight_</a>(a,w)
+0034         
+0035      <span class="keyword">end</span>
+0036  <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

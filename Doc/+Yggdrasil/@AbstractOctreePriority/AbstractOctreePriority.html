@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of AbstractOctreePriority</title>
+  <meta name="keywords" content="AbstractOctreePriority">
+  <meta name="description" content="Used in binary operations to handle priority order, given two instances">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @AbstractOctreePriority -->
+<h1>AbstractOctreePriority
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Used in binary operations to handle priority order, given two instances</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment"> Used in binary operations to handle priority order, given two instances
+ from different classes chooses which class handles the operation. The
+ class with the highest priority will handle the operation</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="AbstractOctreePriority.html" class="code" title="">AbstractOctreePriority</a>	Used in binary operations to handle priority order, given two instances</li><li><a href="prio.html" class="code" title="function output = prio(a, b, a_handle, b_handle)">prio</a>	output = PRIO(a, b, a_handle, b_handle)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="AbstractOctreePriority.html" class="code" title="">AbstractOctreePriority</a>	Used in binary operations to handle priority order, given two instances</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function output = plus(a, b)</a></li><li><a href="#_sub2" class="code">function output = minus(a, b)</a></li><li><a href="#_sub3" class="code">function output = times(a, b)</a></li><li><a href="#_sub4" class="code">function output = mtimes(a, b)</a></li><li><a href="#_sub5" class="code">function output = mrdivide(a, b)</a></li><li><a href="#_sub6" class="code">function output = rdivide(a, b)</a></li><li><a href="#_sub7" class="code">function output = ne(a, b)</a></li><li><a href="#_sub8" class="code">function output = eq(a, b)</a></li><li><a href="#_sub9" class="code">function output = and(a, b)</a></li><li><a href="#_sub10" class="code">function output = or(a, b)</a></li><li><a href="#_sub11" class="code">function output = gt(a, b)</a></li><li><a href="#_sub12" class="code">function output = lt(a, b)</a></li><li><a href="#_sub13" class="code">function output = ge(a, b)</a></li><li><a href="#_sub14" class="code">function output = le(a, b)</a></li><li><a href="#_sub15" class="code">function output = scalar_prod_integral(a, b)</a></li><li><a href="#_sub16" class="code">function output = scalar_prod(a, b)</a></li><li><a href="#_sub17" class="code">function output = weight(a, b)</a></li><li><a href="#_sub18" class="code">function output = plus_(a,b)</a></li><li><a href="#_sub19" class="code">function output = minus_(a,b)</a></li><li><a href="#_sub20" class="code">function output = times_(a,b)</a></li><li><a href="#_sub21" class="code">function output = mtimes_(a,b)</a></li><li><a href="#_sub22" class="code">function output = mrdivide_(a,b)</a></li><li><a href="#_sub23" class="code">function output = rdivide_(a,b)</a></li><li><a href="#_sub24" class="code">function output = ne_(a,b)</a></li><li><a href="#_sub25" class="code">function output = eq_(a,b)</a></li><li><a href="#_sub26" class="code">function output = and_(a,b)</a></li><li><a href="#_sub27" class="code">function output = or_(a,b)</a></li><li><a href="#_sub28" class="code">function output = gt_(a,b)</a></li><li><a href="#_sub29" class="code">function output = lt_(a,b)</a></li><li><a href="#_sub30" class="code">function output = ge_(a,b)</a></li><li><a href="#_sub31" class="code">function output = le_(a,b)</a></li><li><a href="#_sub32" class="code">function output = scalar_prod_integral_(a,b)</a></li><li><a href="#_sub33" class="code">function output = scalar_prod_(a,b)</a></li><li><a href="#_sub34" class="code">function output = weight_(a,b)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <span class="comment">% Used in binary operations to handle priority order, given two instances</span>
+0002 <span class="comment">% from different classes chooses which class handles the operation. The</span>
+0003 <span class="comment">% class with the highest priority will handle the operation</span>
+0004 classdef (Abstract) <a href="AbstractOctreePriority.html" class="code" title="">AbstractOctreePriority</a>
+0005     methods
+0006         <span class="comment">% Priority wrappers for binary operators</span>
+0007         <a name="_sub0" href="#_subfunctions" class="code">function output = plus(a, b)</a>
+0008             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.plus_, @b.plus_);
+0009         <span class="keyword">end</span>
+0010         
+0011         <a name="_sub1" href="#_subfunctions" class="code">function output = minus(a, b)</a>
+0012             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.minus_, @b.minus_);
+0013         <span class="keyword">end</span>
+0014         <a name="_sub2" href="#_subfunctions" class="code">function output = times(a, b)</a>
+0015             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.times_, @b.times_);
+0016         <span class="keyword">end</span>
+0017 
+0018         <a name="_sub3" href="#_subfunctions" class="code">function output = mtimes(a, b)</a>
+0019             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.mtimes_, @b.mtimes_);
+0020         <span class="keyword">end</span>
+0021         <a name="_sub4" href="#_subfunctions" class="code">function output = mrdivide(a, b)</a>
+0022             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.mrdivide_, @b.mrdivide_);
+0023         <span class="keyword">end</span>
+0024         <a name="_sub5" href="#_subfunctions" class="code">function output = rdivide(a, b)</a>
+0025             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.rdivide_, @b.rdivide_);
+0026         <span class="keyword">end</span>
+0027 
+0028         <a name="_sub6" href="#_subfunctions" class="code">function output = ne(a, b)</a>
+0029             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.ne_, @b.ne_);
+0030         <span class="keyword">end</span>
+0031         <a name="_sub7" href="#_subfunctions" class="code">function output = eq(a, b)</a>
+0032             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.eq_, @b.eq_);
+0033         <span class="keyword">end</span>
+0034         <a name="_sub8" href="#_subfunctions" class="code">function output = and(a, b)</a>
+0035             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.and_, @b.and_);
+0036         <span class="keyword">end</span>
+0037         <a name="_sub9" href="#_subfunctions" class="code">function output = or(a, b)</a>
+0038             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.or_, @b.or_);
+0039         <span class="keyword">end</span>
+0040 
+0041         <a name="_sub10" href="#_subfunctions" class="code">function output = gt(a, b)</a>
+0042             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.gt_, @b.gt_);
+0043         <span class="keyword">end</span>
+0044         <a name="_sub11" href="#_subfunctions" class="code">function output = lt(a, b)</a>
+0045             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.lt_, @b.lt_);
+0046         <span class="keyword">end</span>
+0047         <a name="_sub12" href="#_subfunctions" class="code">function output = ge(a, b)</a>
+0048             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.ge_, @b.ge_);
+0049         <span class="keyword">end</span>
+0050         <a name="_sub13" href="#_subfunctions" class="code">function output = le(a, b)</a>
+0051             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.le_, @b.le_);
+0052         <span class="keyword">end</span>
+0053 
+0054         <a name="_sub14" href="#_subfunctions" class="code">function output = scalar_prod_integral(a, b)</a>
+0055             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.scalar_prod_integral_, @b.scalar_prod_integral_);
+0056         <span class="keyword">end</span>
+0057         <a name="_sub15" href="#_subfunctions" class="code">function output = scalar_prod(a, b)</a>
+0058             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.scalar_prod_, @b.scalar_prod_);
+0059         <span class="keyword">end</span>
+0060         <a name="_sub16" href="#_subfunctions" class="code">function output = weight(a, b)</a>
+0061             output = Yggdrasil.AbstractOctreePriority.prio(a, b, @a.weight_, @b.weight_);
+0062         <span class="keyword">end</span>
+0063         
+0064     <span class="keyword">end</span>
+0065     methods (Static = true)
+0066         <span class="comment">% Call function handle with highest priority</span>
+0067         output = <a href="prio.html" class="code" title="function output = prio(a, b, a_handle, b_handle)">prio</a>(a, b, a_handle, b_handle)
+0068     <span class="keyword">end</span>
+0069         
+0070     methods (Static = true, Abstract = true)
+0071         <span class="comment">% Return the priority value</span>
+0072         output = priority();
+0073     <span class="keyword">end</span>
+0074     
+0075     
+0076     methods (Static = true)
+0077                 
+0078         <span class="comment">% Default implementaion of binary operators</span>
+0079         <a name="_sub17" href="#_subfunctions" class="code">function output = plus_(a,b)</a>
+0080             error(<span class="string">'Operator plus is not implemented.'</span>);
+0081         <span class="keyword">end</span>
+0082         <a name="_sub18" href="#_subfunctions" class="code">function output = minus_(a,b)</a>
+0083             error(<span class="string">'Operator minus is not implemented.'</span>);
+0084         <span class="keyword">end</span>
+0085         <a name="_sub19" href="#_subfunctions" class="code">function output = times_(a,b)</a>
+0086             error(<span class="string">'Operator times is not implemented.'</span>);
+0087         <span class="keyword">end</span>
+0088         
+0089         <a name="_sub20" href="#_subfunctions" class="code">function output = mtimes_(a,b)</a>
+0090             error(<span class="string">'Operator mtimes is not implemented.'</span>);
+0091         <span class="keyword">end</span>
+0092         <a name="_sub21" href="#_subfunctions" class="code">function output = mrdivide_(a,b)</a>
+0093             error(<span class="string">'Operator mrdivide is not implemented.'</span>);
+0094         <span class="keyword">end</span>
+0095         <a name="_sub22" href="#_subfunctions" class="code">function output = rdivide_(a,b)</a>
+0096             error(<span class="string">'Operator rdivide is not implemented.'</span>);
+0097         <span class="keyword">end</span>
+0098         
+0099         <a name="_sub23" href="#_subfunctions" class="code">function output = ne_(a,b)</a>
+0100             error(<span class="string">'Operator ne is not implemented.'</span>);
+0101         <span class="keyword">end</span>
+0102         <a name="_sub24" href="#_subfunctions" class="code">function output = eq_(a,b)</a>
+0103             error(<span class="string">'Operator eq is not implemented.'</span>);
+0104         <span class="keyword">end</span>
+0105         <a name="_sub25" href="#_subfunctions" class="code">function output = and_(a,b)</a>
+0106             error(<span class="string">'Operator and is not implemented.'</span>);
+0107         <span class="keyword">end</span>
+0108         <a name="_sub26" href="#_subfunctions" class="code">function output = or_(a,b)</a>
+0109             error(<span class="string">'Operator or is not implemented.'</span>);
+0110         <span class="keyword">end</span>
+0111 
+0112         <a name="_sub27" href="#_subfunctions" class="code">function output = gt_(a,b)</a>
+0113             error(<span class="string">'Operator gt is not implemented.'</span>);
+0114         <span class="keyword">end</span>
+0115         <a name="_sub28" href="#_subfunctions" class="code">function output = lt_(a,b)</a>
+0116             error(<span class="string">'Operator lt is not implemented.'</span>);
+0117         <span class="keyword">end</span>
+0118         <a name="_sub29" href="#_subfunctions" class="code">function output = ge_(a,b)</a>
+0119             error(<span class="string">'Operator ge is not implemented.'</span>);
+0120         <span class="keyword">end</span>
+0121         <a name="_sub30" href="#_subfunctions" class="code">function output = le_(a,b)</a>
+0122             error(<span class="string">'Operator le is not implemented.'</span>);
+0123         <span class="keyword">end</span>
+0124         
+0125         <a name="_sub31" href="#_subfunctions" class="code">function output = scalar_prod_integral_(a,b)</a>
+0126             error(<span class="string">'Operator scalar_prod_integral is not implemented.'</span>);
+0127         <span class="keyword">end</span>
+0128         <a name="_sub32" href="#_subfunctions" class="code">function output = scalar_prod_(a,b)</a>
+0129             error(<span class="string">'Operator scalar_prod is not implemented.'</span>);
+0130         <span class="keyword">end</span>
+0131         <a name="_sub33" href="#_subfunctions" class="code">function output = weight_(a,b)</a>
+0132             error(<span class="string">'Operator weight is not implemented.'</span>);
+0133         <span class="keyword">end</span>
+0134     <span class="keyword">end</span>
+0135 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

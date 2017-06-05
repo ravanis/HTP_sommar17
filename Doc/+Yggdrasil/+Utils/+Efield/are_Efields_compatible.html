@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of are_Efields_compatible</title>
+  <meta name="keywords" content="are_Efields_compatible">
+  <meta name="description" content="[ comp ] = are_Efields_compatible(a,b)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html +Yggdrasil --><!-- ../menu.html +Utils --><!-- menu.html +Efield -->
+<h1>are_Efields_compatible
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>[ comp ] = are_Efields_compatible(a,b)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [ comp ] = are_Efields_compatible(a,b) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)"><pre class="comment">[ comp ] = are_Efields_compatible(a,b)
+   Checks if two SF_E-fields are physically compatible with eachother.
+   That is if they are able to interfere with eachother.
+   This means that the their frequency are the same and that their arrangement
+   are the same.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [ comp ] = are_Efields_compatible(a,b)</a>
+0002 <span class="comment">%[ comp ] = are_Efields_compatible(a,b)</span>
+0003 <span class="comment">%   Checks if two SF_E-fields are physically compatible with eachother.</span>
+0004 <span class="comment">%   That is if they are able to interfere with eachother.</span>
+0005 <span class="comment">%   This means that the their frequency are the same and that their arrangement</span>
+0006 <span class="comment">%   are the same.</span>
+0007 
+0008     <span class="keyword">if</span> ~isa(a,<span class="string">'Yggdrasil.SF_Efield'</span>)
+0009         error(<span class="string">'First input argument is not a SF_Efield.'</span>)
+0010     <span class="keyword">end</span>
+0011     
+0012     <span class="keyword">if</span> ~isa(b,<span class="string">'Yggdrasil.SF_Efield'</span>)
+0013         error(<span class="string">'Second input argument is not a SF_Efield.'</span>)
+0014     <span class="keyword">end</span>
+0015     
+0016     <span class="keyword">if</span> a.frequency ~= b.frequency
+0017         comp = false;
+0018         <span class="keyword">return</span>
+0019     <span class="keyword">end</span>
+0020     
+0021     <span class="keyword">if</span> a.arrangement ~= b.arrangement
+0022         comp = false;
+0023         <span class="keyword">return</span>
+0024     <span class="keyword">end</span>
+0025     comp = true;
+0026 <span class="keyword">end</span>
+0027</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

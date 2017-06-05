@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mrdivide_</title>
+  <meta name="keywords" content="mrdivide_">
+  <meta name="description" content="oct = MRDIVIDE_(oct,b)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @Octree -->
+<h1>mrdivide_
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>oct = MRDIVIDE_(oct,b)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function oct = mrdivide_(oct,b) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">oct = MRDIVIDE_(oct,b)
+  Overloads Matlabs mrdivide for octrees, can olny be used to divide
+  octrees with scalars</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="Octree.html" class="code" title="">Octree</a>	The great octree class</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function oct = mrdivide_(oct,b)</a>
+0002 <span class="comment">%oct = MRDIVIDE_(oct,b)</span>
+0003 <span class="comment">%  Overloads Matlabs mrdivide for octrees, can olny be used to divide</span>
+0004 <span class="comment">%  octrees with scalars</span>
+0005     <span class="keyword">if</span> ~Yggdrasil.Utils.isscalar(b)
+0006         error(<span class="string">'mrdivide (/) only defined for octree/scalar'</span>)
+0007     <span class="keyword">end</span>
+0008     oct.data = oct.data/b;
+0009 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

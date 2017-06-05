@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of disp</title>
+  <meta name="keywords" content="disp">
+  <meta name="description" content="DISP(oct)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @Octree -->
+<h1>disp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DISP(oct)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function disp(oct) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">DISP(oct)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="imag.html" class="code" title="function [oct] = imag(oct)">imag</a>	[oct] = IMAG(oct)</li><li><a href="real.html" class="code" title="function [oct] = real(oct)">real</a>	[oct] = REAL(oct)</li><li><a href="size.html" class="code" title="function [ varargout ] = size(oct, dim)">size</a>	[ varargout ] = SIZE(oct, dim)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="Octree.html" class="code" title="">Octree</a>	The great octree class</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function disp(oct)</a>
+0002 <span class="comment">%DISP(oct)</span>
+0003     class_name = strrep(class(oct),<span class="string">'Yggdrasil.'</span>,<span class="string">''</span>);
+0004     <span class="keyword">if</span> usejava(<span class="string">'desktop'</span>)
+0005         class_str = [<span class="string">'&lt;a href = &quot;matlab:helpPopup '</span> <span class="keyword">...</span>
+0006             class(oct) <span class="string">'&quot; style=&quot;font-weight:bold&quot;&gt;'</span> class_name <span class="string">'&lt;/a&gt;'</span>];
+0007     <span class="keyword">else</span>
+0008         class_str = class_name;
+0009     <span class="keyword">end</span>
+0010     
+0011     
+0012     <span class="keyword">if</span> numel(oct) ~= 1 <span class="comment">% If multiple data values</span>
+0013         dim = builtin(<span class="string">'size'</span>,oct);
+0014         size_str = [sprintf(<span class="string">'%d'</span>, dim(1)) sprintf(<span class="string">'x%d'</span>, dim(2:end))];
+0015         delim_str = <span class="string">'.'</span>;
+0016         vis_str = <span class="string">''</span>;
+0017         
+0018         <span class="keyword">if</span> ndims(oct) &lt;= 2 &amp;&amp; numel(oct)~=0
+0019             delim_str = <span class="string">':'</span>;
+0020             c = num2str(ones(dim));
+0021             vis_str = [];
+0022             <span class="keyword">for</span> i = 1:<a href="size.html" class="code" title="function [ varargout ] = size(oct, dim)">size</a>(c,1)
+0023                 vis_str = [vis_str <span class="string">'    '</span> num2str(c(1,:)) char(13)];
+0024             <span class="keyword">end</span>
+0025             vis_str = strrep(vis_str, <span class="string">'1'</span>, class_name);
+0026             vis_str = [vis_str <span class="string">'\n'</span>];
+0027         <span class="keyword">end</span>
+0028         
+0029         fprintf([<span class="string">'  '</span> size_str <span class="string">' '</span> class_str <span class="string">' array'</span> delim_str <span class="string">'\n\n'</span> vis_str]);
+0030         
+0031         <span class="keyword">return</span>;
+0032     <span class="keyword">end</span>
+0033     dim = <a href="size.html" class="code" title="function [ varargout ] = size(oct, dim)">size</a>(oct);
+0034     D = oct.data;
+0035     size_str = [sprintf(<span class="string">'%d'</span>, dim(1)) sprintf(<span class="string">'x%d'</span>, dim(2:end))];
+0036     
+0037     <span class="keyword">if</span> usejava(<span class="string">'desktop'</span>)        
+0038         header_str = [size_str <span class="string">' '</span> class_str <span class="string">' with properties:\n'</span>];
+0039         
+0040         meta_str = [ <span class="keyword">...</span>
+0041             sprintf(<span class="string">'  &lt;strong&gt;meta:&lt;/strong&gt;\n    N: %d\n    original_matrix_size: [%d  %d  %d]\n'</span>, <span class="keyword">...</span>
+0042                     oct.meta.N, oct.meta.original_matrix_size) <span class="keyword">...</span>
+0043             sprintf(<span class="string">'    eps: %g\n    enum_order: [%d  %d  %d  %d  %d  %d  %d  %d]\n'</span>, <span class="keyword">...</span>
+0044                     oct.meta.eps, oct.meta.enum_order)];
+0045         
+0046         data_header_str = <span class="string">'  &lt;strong&gt;data:&lt;/strong&gt;\n'</span>;
+0047         
+0048         <span class="keyword">if</span> isreal(D)
+0049             <span class="keyword">if</span> <a href="size.html" class="code" title="function [ varargout ] = size(oct, dim)">size</a>(D,2) == 1
+0050                 data_str = sprintf(<span class="string">'    [%0.3g]\n'</span>, D');
+0051             <span class="keyword">else</span>
+0052                 data_str = sprintf(<span class="string">'    [%0.3g  %0.3g  ...  %0.3g  %0.3g]\n'</span>, <span class="keyword">...</span>
+0053                                    [D(:,1:2) D(:,end-1:end)]');
+0054             <span class="keyword">end</span>
+0055         <span class="keyword">else</span>
+0056             <span class="keyword">if</span> <a href="size.html" class="code" title="function [ varargout ] = size(oct, dim)">size</a>(D,2) == 1
+0057                 data_str = sprintf(<span class="string">'    [%0.3g + %0.3gi]\n'</span>, [<a href="real.html" class="code" title="function [oct] = real(oct)">real</a>(D), <a href="imag.html" class="code" title="function [oct] = imag(oct)">imag</a>(D)]');
+0058             <span class="keyword">else</span>
+0059                 data_str = sprintf(<span class="string">'    [%0.3g + %0.3gi  ...  %0.3g + %0.3gi]\n'</span>, <span class="keyword">...</span>
+0060                                    [<a href="real.html" class="code" title="function [oct] = real(oct)">real</a>(D(:,1)),<a href="imag.html" class="code" title="function [oct] = imag(oct)">imag</a>(D(:,1)), <a href="real.html" class="code" title="function [oct] = real(oct)">real</a>(D(:,end)),<a href="imag.html" class="code" title="function [oct] = imag(oct)">imag</a>(D(:,end))]');
+0061             <span class="keyword">end</span>
+0062         <span class="keyword">end</span>
+0063 
+0064         adr_header_str  = [<span class="string">'  &lt;strong&gt;adr:&lt;/strong&gt;\n'</span>];
+0065 
+0066     <span class="keyword">else</span>
+0067         c_keyw = <span class="string">'\033[4m'</span>;
+0068         c_reset = <span class="string">'\033[0m'</span>;
+0069 
+0070         header_str = [size_str <span class="keyword">...</span>
+0071             <span class="string">' '</span><span class="keyword">...</span>
+0072             c_keyw class_str c_reset <span class="keyword">...</span>
+0073             <span class="string">' with properties:\n'</span>];
+0074         
+0075         meta_str = [ <span class="keyword">...</span>
+0076             sprintf([<span class="string">'  '</span> c_keyw <span class="string">'meta:'</span> c_reset <span class="string">'\n    N: %d\n    original_matrix_size: [%d  %d  %d]\n'</span>], <span class="keyword">...</span>
+0077                     oct.meta.N, oct.meta.original_matrix_size) <span class="keyword">...</span>
+0078             sprintf(<span class="string">'    eps: %g\n    enum_order: [%d  %d  %d  %d  %d  %d  %d  %d]\n'</span>, <span class="keyword">...</span>
+0079                     oct.meta.eps, oct.meta.enum_order)];
+0080         
+0081         data_header_str = [<span class="string">'  '</span> c_keyw <span class="string">'data:\n'</span> c_reset];
+0082         
+0083         <span class="keyword">if</span> isreal(D)
+0084             <span class="keyword">if</span> <a href="size.html" class="code" title="function [ varargout ] = size(oct, dim)">size</a>(D,2) == 1
+0085                 data_str = sprintf(<span class="string">'    [%0.3g]\n'</span>, D');
+0086             <span class="keyword">else</span>
+0087                 data_str = sprintf(<span class="string">'    [%0.3g  %0.3g  ...  %0.3g  %0.3g]\n'</span>, <span class="keyword">...</span>
+0088                                 [D(:,1:2) D(:,end-1:end)]');
+0089             <span class="keyword">end</span>
+0090         <span class="keyword">else</span>
+0091             <span class="keyword">if</span> <a href="size.html" class="code" title="function [ varargout ] = size(oct, dim)">size</a>(D,2) == 1
+0092                 data_str = sprintf(<span class="string">'    [%0.3g + %0.3gi]\n'</span>, [<a href="real.html" class="code" title="function [oct] = real(oct)">real</a>(D), <a href="imag.html" class="code" title="function [oct] = imag(oct)">imag</a>(D)]');
+0093             <span class="keyword">else</span>
+0094                 data_str = sprintf(<span class="string">'    [%0.3g + %0.3gi  ...  %0.3g + %0.3gi]\n'</span>, <span class="keyword">...</span>
+0095                                 [<a href="real.html" class="code" title="function [oct] = real(oct)">real</a>(D(:,1)),<a href="imag.html" class="code" title="function [oct] = imag(oct)">imag</a>(D(:,1)), <a href="real.html" class="code" title="function [oct] = real(oct)">real</a>(D(:,end)),<a href="imag.html" class="code" title="function [oct] = imag(oct)">imag</a>(D(:,end))]');
+0096             <span class="keyword">end</span>
+0097         <span class="keyword">end</span>
+0098 
+0099         adr_header_str = [<span class="string">'  '</span> c_keyw <span class="string">'adr:'</span> c_reset <span class="string">'\n'</span>];
+0100     <span class="keyword">end</span>
+0101 
+0102     <span class="keyword">if</span> <a href="size.html" class="code" title="function [ varargout ] = size(oct, dim)">size</a>(oct.adr,2) &lt; 10
+0103         adr_str = [<span class="string">'    ['</span> num2str(oct.adr) <span class="string">']\n\n'</span>];
+0104     <span class="keyword">else</span>
+0105         adr_str = [<span class="string">'    ['</span> num2str(oct.adr(:,1:2)) <span class="string">'  ...  '</span> num2str(oct.adr(:,end-1:end)) <span class="string">']\n\n'</span>];
+0106     <span class="keyword">end</span>
+0107     
+0108     fprintf([header_str meta_str data_header_str data_str adr_header_str adr_str]);
+0109 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

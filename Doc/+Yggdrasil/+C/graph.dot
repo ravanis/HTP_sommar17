@@ -1,0 +1,12 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  weight -> weight;
+
+  mat_to_oct [URL="mat_to_oct.html"];
+  oct_to_mat [URL="oct_to_mat.html"];
+  plus [URL="plus.html"];
+  scalar_prod [URL="scalar_prod.html"];
+  scalar_prod_integral [URL="scalar_prod_integral.html"];
+  times [URL="times.html"];
+  weight [URL="weight.html"];
+}

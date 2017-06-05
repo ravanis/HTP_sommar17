@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of disp</title>
+  <meta name="keywords" content="disp">
+  <meta name="description" content="DISP(a)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html @CPoly -->
+<h1>disp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>DISP(a)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function disp(a) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre class="comment">DISP(a)
+   Displays the polynomial</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(a)">disp</a>	DISP(a)</li><li><a href="reduce.html" class="code" title="function b = reduce(a)">reduce</a>	b = REDUCE(a)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(a)">disp</a>	DISP(a)</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)">
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function s = subsub(x)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function disp(a)</a>
+0002 <span class="comment">%DISP(a)</span>
+0003 <span class="comment">%   Displays the polynomial</span>
+0004 output = <span class="string">''</span>;
+0005 
+0006 a = <a href="reduce.html" class="code" title="function b = reduce(a)">reduce</a>(a);
+0007 
+0008 <span class="keyword">for</span> i = 1:length(a.coefficients)
+0009    output = [output, sprintf(<span class="string">'%d'</span>, a.coefficients(i))];
+0010    
+0011    <span class="keyword">if</span> ~isempty(a.monom{i}) <span class="comment">%Isn't a constant</span>
+0012        <span class="keyword">for</span> j = 1:length(a.monom{i})
+0013            output = [output <span class="string">' Z'</span>];
+0014            output = [output sprintf(<span class="string">'%s'</span>,<a href="#_sub1" class="code" title="subfunction s = subsub(x)">subsub</a>(abs(a.monom{i}(j))))];
+0015            <span class="keyword">if</span> a.monom{i}(j) &lt; 0
+0016                output = [output <span class="string">'*'</span>];
+0017            <span class="keyword">end</span>
+0018        <span class="keyword">end</span>
+0019    <span class="keyword">end</span>
+0020    <span class="keyword">if</span> i ~= length(a.coefficients);
+0021       output = [output <span class="string">' + '</span>];
+0022    <span class="keyword">end</span>
+0023 <span class="keyword">end</span>
+0024 
+0025 <a href="disp.html" class="code" title="function disp(a)">disp</a>(output);
+0026 
+0027 <span class="keyword">end</span>
+0028 
+0029 <a name="_sub1" href="#_subfunctions" class="code">function s = subsub(x)</a>
+0030     sub = char(8320:8329);
+0031     nosub = <span class="string">'0123456789'</span>;
+0032     
+0033     s = num2str(x);
+0034     <span class="keyword">for</span> i = 1:10
+0035         s = strrep(s, nosub(i), sub(i));
+0036     <span class="keyword">end</span>
+0037 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

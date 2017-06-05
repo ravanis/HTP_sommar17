@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of scalar_prod_integral_</title>
+  <meta name="keywords" content="scalar_prod_integral_">
+  <meta name="description" content="oct = SCALAR_PROD(a, b)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @SF_Efield -->
+<h1>scalar_prod_integral_
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>oct = SCALAR_PROD(a, b)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function a = scalar_prod_integral_(a, b) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">oct = SCALAR_PROD(a, b)
+   Calculates the scalar product between SF_Efields. This 
+   gives mixed term when calculating the power density.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="SF_Efield.html" class="code" title="">SF_Efield</a>	</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function a = scalar_prod_integral_(a, b)</a>
+0002 <span class="comment">%oct = SCALAR_PROD(a, b)</span>
+0003 <span class="comment">%   Calculates the scalar product between SF_Efields. This</span>
+0004 <span class="comment">%   gives mixed term when calculating the power density.</span>
+0005     
+0006     <span class="keyword">if</span> ~Yggdrasil.Utils.Efield.are_Efields_compatible(a,b)
+0007         error([<span class="string">'There is no physical reason to take the scalar product'</span>, <span class="keyword">...</span>
+0008                <span class="string">'between two SF_Efields of different frequency or of '</span>,<span class="keyword">...</span>
+0009                <span class="string">'different arrangements.'</span>]);
+0010     <span class="keyword">end</span>
+0011     
+0012     a = Yggdrasil.Octree.scalar_prod_integral(<span class="keyword">...</span>
+0013                                    Yggdrasil.Octree(a),<span class="keyword">...</span>
+0014                                    Yggdrasil.Octree(b));
+0015 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

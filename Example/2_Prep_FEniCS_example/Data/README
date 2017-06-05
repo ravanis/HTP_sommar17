@@ -1,0 +1,17 @@
+List of files:
+
+boundary_condition.m
+df_duke_neck_cst_600MHz.txt
+tissue_mat.mat
+temperature.m
+thermal_db_index_to_mat_index.m
+
+2 choices, need either a database to generate parameters
+
+	Thermal_dielectric_acoustic_MR_properties_database_V3.0%28Excel%29.xlsx
+
+or a premade compilation of all thermal parameters
+
+	thermal_compilation.txt
+
+--------------------------------

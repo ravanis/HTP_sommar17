@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of compile</title>
+  <meta name="keywords" content="compile">
+  <meta name="description" content="COMPILE()">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html +Extrapolation -->
+<h1>compile
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>COMPILE()</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function compile() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre class="comment"> COMPILE()
+   Compiles C file for quick nearest neighbour calculations.
+   The algorithm is based around for-loops and can because of this be
+   parallelize with OpenMP. OpenMP is not available in the compiler
+   provided by Mathworks. Compilation is first attempted with OpenMP support 
+   and upon failure fallbacks to non-parrell compilation.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function compile()</a>
+0002 <span class="comment">% COMPILE()</span>
+0003 <span class="comment">%   Compiles C file for quick nearest neighbour calculations.</span>
+0004 <span class="comment">%   The algorithm is based around for-loops and can because of this be</span>
+0005 <span class="comment">%   parallelize with OpenMP. OpenMP is not available in the compiler</span>
+0006 <span class="comment">%   provided by Mathworks. Compilation is first attempted with OpenMP support</span>
+0007 <span class="comment">%   and upon failure fallbacks to non-parrell compilation.</span>
+0008 
+0009 <span class="comment">% Change directory to Yggdrasil</span>
+0010 old_dir = pwd;
+0011 [folder, ~, ~] = fileparts(mfilename(<span class="string">'fullpath'</span>)); <span class="comment">% Get compiles folder</span>
+0012 cd(folder)
+0013 
+0014 <span class="keyword">if</span> ispc <span class="comment">% is Windows</span>
+0015     cflags = <span class="string">'-std=c99 -O3'</span>;
+0016 <span class="keyword">else</span>
+0017     cflags = <span class="string">'-std=c99 -O3 -fPIC'</span>;
+0018 <span class="keyword">end</span>
+0019 
+0020 cc = @(x) eval([<span class="string">'mex CFLAGS='''</span> cflags <span class="string">''''</span><span class="keyword">...</span>
+0021     <span class="string">' -DMATLAB '</span><span class="keyword">...</span>
+0022     <span class="string">'-output '</span> x <span class="string">' src/'</span> x <span class="string">'/'</span> x <span class="string">'.c'</span>]);
+0023 
+0024 cc_par = @(x) eval([<span class="string">'mex CFLAGS='''</span> cflags <span class="string">' -fopenmp'</span> <span class="string">''''</span><span class="keyword">...</span>
+0025     <span class="string">' -lgomp -DMATLAB '</span><span class="keyword">...</span>
+0026     <span class="string">'-output '</span> x <span class="string">' src/'</span> x <span class="string">'/'</span> x <span class="string">'.c'</span>]);
+0027 disp(<span class="string">'Compiling Extrapolation C code.'</span>)
+0028 disp(<span class="string">'Attempting to compile with OpenMP-parallelization.'</span>)
+0029 <span class="keyword">try</span>
+0030     cc_par(<span class="string">'meijster'</span>)
+0031 <span class="keyword">catch</span>
+0032     disp(<span class="string">'Compilation failed, attempting non-parallelization compilation.'</span>)
+0033     cc(<span class="string">'meijster'</span>)
+0034 <span class="keyword">end</span>
+0035 disp(<span class="string">'Success!'</span>)
+0036 
+0037 cd(old_dir)
+0038 
+0039 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

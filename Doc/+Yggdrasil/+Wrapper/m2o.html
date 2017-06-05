@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of m2o</title>
+  <meta name="keywords" content="m2o">
+  <meta name="description" content="[data, adr, N] = M2O( mat, epsilon, enum_order)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html +Wrapper -->
+<h1>m2o
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>[data, adr, N] = M2O( mat, epsilon, enum_order)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [obj_data, obj_adr, obj_meta] = m2o( mat, rel_eps, abs_eps, enum_order) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">[data, adr, N] = M2O( mat, epsilon, enum_order)
+ INTERNAL USE
+ A wrapper to the mex-file for transforming a matrix into an octree.
+ This function is internally used to bridge matlab and C.
+ INPUT:
+     mat        - matrix to be transformed
+     rel_eps    - relative approximation error (Passed through)
+     abs_eps    - absolute approximation error (Used by calculations)
+     enum_order - order of enumeration
+ OUTPUT:
+     obj        - Octree object TBW</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <span class="comment">%[data, adr, N] = M2O( mat, epsilon, enum_order)</span>
+0002 <span class="comment">% INTERNAL USE</span>
+0003 <span class="comment">% A wrapper to the mex-file for transforming a matrix into an octree.</span>
+0004 <span class="comment">% This function is internally used to bridge matlab and C.</span>
+0005 <span class="comment">% INPUT:</span>
+0006 <span class="comment">%     mat        - matrix to be transformed</span>
+0007 <span class="comment">%     rel_eps    - relative approximation error (Passed through)</span>
+0008 <span class="comment">%     abs_eps    - absolute approximation error (Used by calculations)</span>
+0009 <span class="comment">%     enum_order - order of enumeration</span>
+0010 <span class="comment">% OUTPUT:</span>
+0011 <span class="comment">%     obj        - Octree object TBW</span>
+0012 
+0013 <a name="_sub0" href="#_subfunctions" class="code">function [obj_data, obj_adr, obj_meta] = m2o( mat, rel_eps, abs_eps, enum_order)</a>
+0014 
+0015     [is2pow, N] = Yggdrasil.Math.is2pow(size(mat,1));
+0016     obj_meta.N = uint8(N);
+0017     obj_meta.enum_order = uint8(enum_order);
+0018     obj_meta.eps = single(rel_eps);
+0019     [mat_size(1), mat_size(2), mat_size(3)] = Yggdrasil.Utils.size(mat);
+0020     obj_meta.original_matrix_size = uint32(mat_size);
+0021 
+0022     <span class="comment">% Checks if it is a single value octree.</span>
+0023     <span class="keyword">if</span> all(mat_size == 1)
+0024        obj_adr = uint64([0 1]); <span class="comment">% the octree standard for single value octrees</span>
+0025        <span class="keyword">if</span> all(abs(mat) &lt; abs_eps) <span class="comment">% Should it be approximated with 0?</span>
+0026            data_dim = size(mat,4);
+0027            obj_data = complex(single(zeros(data_dim,1))); <span class="comment">% Appproximate with 0</span>
+0028        <span class="keyword">else</span>
+0029            <span class="comment">% Squeeze superfluous dimensions</span>
+0030            obj_data = complex(single(squeeze(mat))); 
+0031        <span class="keyword">end</span>
+0032        <span class="keyword">return</span>;
+0033     <span class="keyword">end</span>
+0034 
+0035     <span class="comment">% All matrix sizes need to be the same power of two ~= 0</span>
+0036 
+0037     <span class="comment">% Is it not a 3d matrix?</span>
+0038     <span class="keyword">if</span> length(size(mat)) &gt; 4
+0039        error(<span class="string">'Invalid matrix size, it must contain atleast 3 dimensions.'</span>);
+0040     <span class="keyword">end</span>
+0041 
+0042     <span class="comment">% Are all sizes the same?</span>
+0043     <span class="keyword">if</span> size(mat,1) ~= size(mat,2) || size(mat,1) ~= size(mat,3)
+0044        error(<span class="string">'Invalid matrix size, the first 3 dimensions need to be the same.'</span>);
+0045     <span class="keyword">end</span>
+0046 
+0047     <span class="comment">% The matrix need to be on the format 2^n</span>
+0048     <span class="keyword">if</span> ~is2pow
+0049        error(<span class="string">'Invalid matrix size, the matrix sides should be 2^n.'</span>);
+0050     <span class="keyword">end</span>
+0051     
+0052     data_dim = size(mat,4);
+0053     [obj_data, obj_adr] = Yggdrasil.C.mat_to_oct(<span class="keyword">...</span>
+0054                                        obj_meta.N,<span class="keyword">...</span>
+0055                                        uint32(data_dim),<span class="keyword">...</span>
+0056                                        complex(single(mat)), <span class="keyword">...</span>
+0057                                        single(abs_eps), <span class="keyword">...</span>
+0058                                        obj_meta.enum_order);
+0059 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

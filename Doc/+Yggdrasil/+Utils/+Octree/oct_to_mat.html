@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of oct_to_mat</title>
+  <meta name="keywords" content="oct_to_mat">
+  <meta name="description" content="mat = OCT_TO_MAT(oct)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html +Yggdrasil --><!-- ../menu.html +Utils --><!-- menu.html +Octree -->
+<h1>oct_to_mat
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>mat = OCT_TO_MAT(oct)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function mat = oct_to_mat(oct) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)"><pre class="comment">mat = OCT_TO_MAT(oct)
+ INTERNAL USE
+ Creates a matrix from an octree
+ This function transforms an octree into a matrix of the origional size.
+ INPUT
+    oct - Any octree 
+ OUTPUT
+    mat - The matrix representing the octree. It will be of the same
+          size as the origional matrix</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)"><pre>0001 <span class="comment">%mat = OCT_TO_MAT(oct)</span>
+0002 <span class="comment">% INTERNAL USE</span>
+0003 <span class="comment">% Creates a matrix from an octree</span>
+0004 <span class="comment">% This function transforms an octree into a matrix of the origional size.</span>
+0005 <span class="comment">% INPUT</span>
+0006 <span class="comment">%    oct - Any octree</span>
+0007 <span class="comment">% OUTPUT</span>
+0008 <span class="comment">%    mat - The matrix representing the octree. It will be of the same</span>
+0009 <span class="comment">%          size as the origional matrix</span>
+0010 <a name="_sub0" href="#_subfunctions" class="code">function mat = oct_to_mat(oct)</a>
+0011     
+0012     <span class="keyword">if</span> nargin == 0
+0013        error(<span class="string">'Need to input an octree'</span>) 
+0014     <span class="keyword">end</span>
+0015     
+0016     mat = Yggdrasil.Wrapper.o2m(oct);
+0017     d = oct.meta.original_matrix_size;
+0018     mat = mat(1:d(1),1:d(2),1:d(3),:);
+0019 
+0020 <span class="keyword">end</span>
+0021</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

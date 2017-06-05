@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of scalar_prod</title>
+  <meta name="keywords" content="scalar_prod">
+  <meta name="description" content="oct = SCALAR_PROD(a, b)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html +Math -->
+<h1>scalar_prod
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>oct = SCALAR_PROD(a, b)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function a = scalar_prod(a,b) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">oct = SCALAR_PROD(a, b)
+   Calculates the scalar product between two vector fields. This 
+   function calculates &quot;sum(conj(a).*b,4)&quot; but uses quick c-code in the
+   case of a and b being octrees.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function a = scalar_prod(a,b)</a>
+0002 <span class="comment">%oct = SCALAR_PROD(a, b)</span>
+0003 <span class="comment">%   Calculates the scalar product between two vector fields. This</span>
+0004 <span class="comment">%   function calculates &quot;sum(conj(a).*b,4)&quot; but uses quick c-code in the</span>
+0005 <span class="comment">%   case of a and b being octrees.</span>
+0006     <span class="keyword">if</span> isa(a,<span class="string">'Yggdrasil.AbstractOctreePriority'</span>) || isa(b,<span class="string">'Yggdrasil.AbstractOctreePriority'</span>)
+0007         a_handle = @a.scalar_prod_;
+0008         b_handle = @b.scalar_prod_;
+0009         a = Yggdrasil.AbstractOctreePriority.prio(a,b,a_handle,b_handle);
+0010         <span class="keyword">return</span>;
+0011     <span class="keyword">end</span>
+0012 
+0013 <span class="comment">%  Try to scalar_prod by using basic operations</span>
+0014     a = sum(conj(a).*b,4);
+0015 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

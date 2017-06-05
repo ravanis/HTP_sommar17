@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of AbstractOctreeData</title>
+  <meta name="keywords" content="AbstractOctreeData">
+  <meta name="description" content="The great abstract octree data class">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @AbstractOctreeData -->
+<h1>AbstractOctreeData
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>The great abstract octree data class</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">The great abstract octree data class</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="AbstractOctreeData.html" class="code" title="">AbstractOctreeData</a>	The great abstract octree data class</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="AbstractOctreeData.html" class="code" title="">AbstractOctreeData</a>	The great abstract octree data class</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = set.data(self, data)</a></li><li><a href="#_sub2" class="code">function self = set.adr(self, adr)</a></li><li><a href="#_sub3" class="code">function self = set.meta(self,meta)</a></li><li><a href="#_sub4" class="code">function data = get.data(self)</a></li><li><a href="#_sub5" class="code">function adr = get.adr(self)</a></li><li><a href="#_sub6" class="code">function meta = get.meta(self)</a></li><li><a href="#_sub7" class="code">function [self, data] = set_data(self, data)</a></li><li><a href="#_sub8" class="code">function [self, adr] = set_adr(self, adr)</a></li><li><a href="#_sub9" class="code">function [self, meta] = set_meta(self, meta)</a></li><li><a href="#_sub10" class="code">function data = get_data(self, data)</a></li><li><a href="#_sub11" class="code">function adr = get_adr(self, adr)</a></li><li><a href="#_sub12" class="code">function meta = get_meta(self, meta)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <span class="comment">%The great abstract octree data class</span>
+0002 classdef <a href="AbstractOctreeData.html" class="code" title="">AbstractOctreeData</a>
+0003     properties
+0004         meta <span class="comment">% A metadata struct containing</span>
+0005              <span class="comment">%   original_matrix_size: the compressed matrix's size</span>
+0006              <span class="comment">%   N: describes the size of the octree</span>
+0007              <span class="comment">%   eps: the rounding error</span>
+0008              <span class="comment">%   enum_order: the geometrical order used when building the octree</span>
+0009         data <span class="comment">% The compacted data, is typically complex single</span>
+0010         adr  <span class="comment">% The cumulative volume of the octree</span>
+0011     <span class="keyword">end</span>
+0012 
+0013     methods
+0014         <span class="comment">% Set data</span>
+0015         <a name="_sub0" href="#_subfunctions" class="code">function self = set.data(self, data)</a>
+0016             [self, self.data] = self.set_data(data);
+0017         <span class="keyword">end</span>
+0018         
+0019         <span class="comment">% Set adr</span>
+0020         <a name="_sub1" href="#_subfunctions" class="code">function self = set.adr(self, adr)</a>
+0021             [self, self.adr] = self.set_adr(adr);
+0022         <span class="keyword">end</span>
+0023         
+0024         <span class="comment">% Set metadata meta</span>
+0025         <a name="_sub2" href="#_subfunctions" class="code">function self = set.meta(self,meta)</a>
+0026             [self, self_meta] = self.set_meta(meta);
+0027             self.meta.N = uint8(self_meta.N);
+0028             self.meta.original_matrix_size = uint32(self_meta.original_matrix_size);
+0029             self.meta.eps = single(self_meta.eps);
+0030             self.meta.enum_order = uint8(self_meta.enum_order);
+0031         <span class="keyword">end</span>
+0032         
+0033         <span class="comment">% Get oct.data</span>
+0034         <a name="_sub3" href="#_subfunctions" class="code">function data = get.data(self)</a>
+0035             data = self.get_data(self.data);
+0036         <span class="keyword">end</span>
+0037         
+0038         <span class="comment">% Get oct.adr</span>
+0039         <a name="_sub4" href="#_subfunctions" class="code">function adr = get.adr(self)</a>
+0040             adr = self.get_adr(self.adr);
+0041         <span class="keyword">end</span>
+0042         
+0043         <span class="comment">% Get oct.meta</span>
+0044         <a name="_sub5" href="#_subfunctions" class="code">function meta = get.meta(self)</a>
+0045             meta = self.get_meta(self.meta);
+0046         <span class="keyword">end</span>
+0047     <span class="keyword">end</span>
+0048     methods (Access = protected)
+0049         <a name="_sub6" href="#_subfunctions" class="code">function [self, data] = set_data(self, data)</a>
+0050         <span class="comment">%data = SET_DATA(self, data)</span>
+0051         <span class="comment">%   Called just before set.data</span>
+0052         <span class="keyword">end</span>
+0053         
+0054         <a name="_sub7" href="#_subfunctions" class="code">function [self, adr] = set_adr(self, adr)</a>
+0055         <span class="comment">%adr = SET_ADR(self, adr)</span>
+0056         <span class="comment">%   Called just before set.adr</span>
+0057         <span class="keyword">end</span>
+0058         
+0059         <a name="_sub8" href="#_subfunctions" class="code">function [self, meta] = set_meta(self, meta)</a>
+0060         <span class="comment">%meta = SET_META(self, meta)</span>
+0061         <span class="comment">%   Called just before set.meta</span>
+0062         <span class="keyword">end</span>
+0063         
+0064         <a name="_sub9" href="#_subfunctions" class="code">function data = get_data(self, data)</a>
+0065         <span class="comment">%data = GET_DATA(self, data)</span>
+0066         <span class="comment">%   Called just before get.data</span>
+0067         <span class="keyword">end</span>
+0068        
+0069         <a name="_sub10" href="#_subfunctions" class="code">function adr = get_adr(self, adr)</a>
+0070         <span class="comment">%adr = GET_ADR(self, adr)</span>
+0071         <span class="comment">%   Called just before get.adr</span>
+0072         <span class="keyword">end</span>
+0073         
+0074         <a name="_sub11" href="#_subfunctions" class="code">function meta = get_meta(self, meta)</a>
+0075         <span class="comment">%meta = GET_META(self, meta)</span>
+0076         <span class="comment">%   Called just before get.meta</span>
+0077         <span class="keyword">end</span>
+0078     <span class="keyword">end</span>
+0079 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

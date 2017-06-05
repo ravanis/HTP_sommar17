@@ -1,0 +1,10 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  YggMap -> YggMap;
+  YggMap -> mtimes;
+  YggMap -> plus;
+
+  YggMap [URL="YggMap.html"];
+  mtimes [URL="mtimes.html"];
+  plus [URL="plus.html"];
+}

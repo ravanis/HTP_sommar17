@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plus</title>
+  <meta name="keywords" content="plus">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html +C -->
+<h1>plus
+&nbsp;&nbsp;<img src="../../c.png" alt="Linux AMD Opteron" border="0" title="Linux AMD Opteron"></h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 #include &quot;plus.h&quot;
+0002 
+0003 #define IN_DATA_A prhs[0]
+0004 #define  IN_ADR_A prhs[1]
+0005 #define IN_META_A prhs[2]
+0006 #define IN_DATA_B prhs[3]
+0007 #define  IN_ADR_B prhs[4]
+0008 #define IN_META_B prhs[5]
+0009 
+0010 #define OUT_DATA  plhs[0]
+0011 #define  OUT_ADR  plhs[1]
+0012 #define OUT_META  plhs[2]
+0013 
+0014 #define INDEX(oct)  oct.data.ix
+0015 #define ADR(oct) oct.adr[INDEX(oct)]
+0016 #define MAX(a,b) (a)&gt;(b)?(a):(b)
+0017 
+0018 // Matlab I/O
+0019 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
+0020 {
+0021     /* Check input arguments */
+0022     <span class="keyword">if</span> (nlhs != 3)
+0023         mexErrMsgTxt(&quot;Exactly three LHS argument needed.&quot;);
+0024     
+0025     <span class="keyword">if</span> (nrhs != 6)
+0026         mexErrMsgTxt(&quot;Exactly six arguments needed.&quot;);
+0027 
+0028     octree octA, octB;
+0029     input_to_oct(&amp;octA, IN_DATA_A, IN_ADR_A, IN_META_A);
+0030     input_to_oct(&amp;octB, IN_DATA_B, IN_ADR_B, IN_META_B);
+0031 
+0032 #ifdef DEBUG    
+0033     oct_print(&amp;octA);
+0034     oct_print(&amp;octB);
+0035 #endif
+0036     
+0037     /* Check dimensions */
+0038     <span class="keyword">if</span> (octA.data_dim != octB.data_dim)
+0039         mexErrMsgTxt(&quot;The octrees need to have the same dimensions.&quot;);
+0040     
+0041     <span class="keyword">if</span> (octA.original_matrix_size[0] != octB.original_matrix_size[0] ||
+0042         octA.original_matrix_size[1] != octB.original_matrix_size[1] ||
+0043         octA.original_matrix_size[2] != octB.original_matrix_size[2])
+0044 
+0045         mexErrMsgTxt(&quot;The octrees need to represent same-size matrices.&quot;);
+0046     
+0047     octree octSum = sum(octA, octB);
+0048     
+0049 #ifdef DEBUG  
+0050     oct_print(&amp;octSum);
+0051 #endif
+0052     
+0053     oct_to_output(&amp;OUT_DATA, &amp;OUT_ADR, &amp;OUT_META, &amp;octSum);
+0054 }
+0055 
+0056 // Actual work
+0057 octree sum(octree octA, octree octB)
+0058 {   
+0059     // Create a too large octree to store the sum in
+0060     octree octC = oct_create(octA.data_len + octB.data_len,
+0061                              octA.data_dim,
+0062                              octA.original_matrix_size,
+0063                              octA.N,
+0064                              MAX(octA.eps_sq, octB.eps_sq),
+0065                              octA.enum_order);
+0066     
+0067     uint64_t total_vol = 1 &lt;&lt; 3*octA.N; 
+0068 
+0069     // Shift indices <span class="keyword">for</span> nicer calculations
+0070     ++octA.adr; ++octB.adr; ++octC.adr;
+0071     
+0072     <span class="keyword">for</span>(INDEX(octA) = INDEX(octB) = INDEX(octC) = 0;;) {
+0073         // C = A + B at current pieces
+0074         cv_add(&amp;octC.data, &amp;octA.data, &amp;octB.data);
+0075         
+0076         // Pieces of octA and octB at same adress?
+0077         <span class="keyword">if</span> (ADR(octA) == ADR(octB)) {
+0078             // End condition
+0079             <span class="keyword">if</span> (ADR(octA) &gt;= total_vol) {
+0080                 ADR(octC) = ADR(octA);
+0081                 <span class="keyword">break</span>;
+0082             }
+0083             
+0084             // Advance octA and octB
+0085             ADR(octC) = ADR(octA);
+0086             ++INDEX(octA); ++INDEX(octB);
+0087         } <span class="keyword">else</span> <span class="keyword">if</span> (ADR(octA) &lt; ADR(octB)) {
+0088             // Advance octA
+0089             ADR(octC) = ADR(octA);
+0090             ++INDEX(octA);
+0091         } <span class="keyword">else</span> {
+0092             // Advance octB
+0093             ADR(octC) = ADR(octB);
+0094             ++INDEX(octB);
+0095         }
+0096         ++INDEX(octC);
+0097     }
+0098 
+0099     // Shift back adresses
+0100     --octA.adr; --octB.adr; --octC.adr;
+0101     
+0102     // Remove unused memory and <span class="keyword">return</span>
+0103     oct_cut(&amp;octC,INDEX(octC)+1);
+0104     <span class="keyword">return</span> octC;
+0105 }</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

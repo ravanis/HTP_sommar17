@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of weight</title>
+  <meta name="keywords" content="weight">
+  <meta name="description" content="output = WEIGHT(a, w)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html +Math -->
+<h1>weight
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>output = WEIGHT(a, w)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function a = weight(a, w) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">output = WEIGHT(a, w)
+    Weights and vector field a with the weight w. The weight can be a
+    scalar or a scalar field.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="integral.html" class="code" title="function output = integral(a, weight)">integral</a>	output = INTEGRAL(a, b)</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function a = weight(a, w)</a>
+0002 <span class="comment">%output = WEIGHT(a, w)</span>
+0003 <span class="comment">%    Weights and vector field a with the weight w. The weight can be a</span>
+0004 <span class="comment">%    scalar or a scalar field.</span>
+0005     <span class="keyword">if</span> isa(a, <span class="string">'Yggdrasil.AbstractOctreePriority'</span>) || isa(w, <span class="string">'Yggdrasil.AbstractOctreePriority'</span>)
+0006         a_handle = @a.weight_;
+0007         w_handle = @w.weight_;
+0008         a = Yggdrasil.AbstractOctreePriority.prio(a,w,a_handle,w_handle);
+0009         <span class="keyword">return</span>;
+0010     <span class="keyword">end</span>
+0011 
+0012     <span class="keyword">if</span> ~isnumeric(a) || ~isnumeric(w)
+0013         error([<span class="string">'Can not weight '</span> class(a) <span class="string">' with '</span> class(w) <span class="string">'.'</span>])
+0014     <span class="keyword">end</span>
+0015 
+0016     <span class="comment">%Both a and w are matrices</span>
+0017     <span class="keyword">if</span> Yggdrasil.Utils.isscalar(w)
+0018        a = a * w; 
+0019        <span class="keyword">return</span>;
+0020     <span class="keyword">end</span>
+0021 
+0022     <span class="keyword">if</span> size(w,4) ~= 1
+0023        error(<span class="string">'The weight must be a scalar field.'</span>) 
+0024     <span class="keyword">end</span>
+0025 
+0026     <span class="keyword">if</span> any([size(a,1) ~= size(w,1)<span class="keyword">...</span>
+0027              size(a,2) ~= size(w,2)<span class="keyword">...</span>
+0028              size(a,3) ~= size(w,3)])
+0029         error(<span class="string">'Input arguments need to be the same size.'</span>); 
+0030     <span class="keyword">end</span>
+0031 
+0032     <span class="keyword">for</span> i = 1:size(a,4)
+0033         a(:,:,:,i) = a(:,:,:,i) .* w;
+0034     <span class="keyword">end</span>
+0035 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

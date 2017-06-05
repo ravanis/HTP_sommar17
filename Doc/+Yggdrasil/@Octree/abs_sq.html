@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of abs_sq</title>
+  <meta name="keywords" content="abs_sq">
+  <meta name="description" content="self = ABS_SQ(self)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @Octree -->
+<h1>abs_sq
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>self = ABS_SQ(self)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [ self ] = abs_sq( self ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">self = ABS_SQ(self)
+  A function that can handle both matrices and octrees.
+  It calculates the vectorial sum(abs(...)^2,4) operation.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="imag.html" class="code" title="function [oct] = imag(oct)">imag</a>	[oct] = IMAG(oct)</li><li><a href="real.html" class="code" title="function [oct] = real(oct)">real</a>	[oct] = REAL(oct)</li><li><a href="sum.html" class="code" title="function [ oct ] = sum(oct, const)">sum</a>	[ oct ] = SUM(oct, const)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="Octree.html" class="code" title="">Octree</a>	The great octree class</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [ self ] = abs_sq( self )</a>
+0002 <span class="comment">%self = ABS_SQ(self)</span>
+0003 <span class="comment">%  A function that can handle both matrices and octrees.</span>
+0004 <span class="comment">%  It calculates the vectorial sum(abs(...)^2,4) operation.</span>
+0005     self.data = <a href="sum.html" class="code" title="function [ oct ] = sum(oct, const)">sum</a>(<a href="real.html" class="code" title="function [oct] = real(oct)">real</a>(self.data).^2,1) + <a href="sum.html" class="code" title="function [ oct ] = sum(oct, const)">sum</a>(<a href="imag.html" class="code" title="function [oct] = imag(oct)">imag</a>(self.data).^2,1);
+0006     self.meta.eps = 2*self.meta.eps;
+0007 <span class="keyword">end</span>
+0008</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of create_Efield_oct</title>
+  <meta name="keywords" content="create_Efield_oct">
+  <meta name="description" content="CREATE_EFIELD_OCT( Efield_file_name, sigma_file_name)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html +Yggdrasil --><!-- ../menu.html +Utils --><!-- menu.html +Efield -->
+<h1>create_Efield_oct
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>CREATE_EFIELD_OCT( Efield_file_name, sigma_file_name)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function create_Efield_oct( Efield_file_name, sigma_file_name, rel_eps1, rel_eps2) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)"><pre class="comment">CREATE_EFIELD_OCT( Efield_file_name, sigma_file_name)
+   From a given signle frequency Efield .mat file, weights and 
+   save an octree version of of the E-field. The weight is 
+   \sqrt(sigma) and is used to simplify calculations 
+   of power density.
+INPUT:
+   Efield_file_name - The filename of the .mat file to be octreed and
+      weighted. The filename should not include the .mat part.
+   sigma_file_name - The filename for the sigma (conductivity) file.
+      If the file is a .mat it will be resaved as _sqrt.oct as this
+      simplifies futher calculations
+   rel_eps1, rel_eps2 are optional arguments setting the relative error of
+       approximation during octree creation. If only rel_eps1 is given
+       both E-field and Sigma will be approximated using rel_eps1.
+       If both rel_eps1 and rel_eps2 is given, 1 will be used for E-fields
+       and 2 will be used for Sigma.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function create_Efield_oct( Efield_file_name, sigma_file_name, rel_eps1, rel_eps2)</a>
+0002 <span class="comment">%CREATE_EFIELD_OCT( Efield_file_name, sigma_file_name)</span>
+0003 <span class="comment">%   From a given signle frequency Efield .mat file, weights and</span>
+0004 <span class="comment">%   save an octree version of of the E-field. The weight is</span>
+0005 <span class="comment">%   \sqrt(sigma) and is used to simplify calculations</span>
+0006 <span class="comment">%   of power density.</span>
+0007 <span class="comment">%INPUT:</span>
+0008 <span class="comment">%   Efield_file_name - The filename of the .mat file to be octreed and</span>
+0009 <span class="comment">%      weighted. The filename should not include the .mat part.</span>
+0010 <span class="comment">%   sigma_file_name - The filename for the sigma (conductivity) file.</span>
+0011 <span class="comment">%      If the file is a .mat it will be resaved as _sqrt.oct as this</span>
+0012 <span class="comment">%      simplifies futher calculations</span>
+0013 <span class="comment">%   rel_eps1, rel_eps2 are optional arguments setting the relative error of</span>
+0014 <span class="comment">%       approximation during octree creation. If only rel_eps1 is given</span>
+0015 <span class="comment">%       both E-field and Sigma will be approximated using rel_eps1.</span>
+0016 <span class="comment">%       If both rel_eps1 and rel_eps2 is given, 1 will be used for E-fields</span>
+0017 <span class="comment">%       and 2 will be used for Sigma.</span>
+0018     narginchk(2,4);
+0019     <span class="keyword">if</span> ~exist([sigma_file_name <span class="string">'_sqrt.oct'</span>],<span class="string">'file'</span>)
+0020         <span class="keyword">if</span> exist(<span class="string">'rel_eps2'</span>,<span class="string">'var'</span>)
+0021             Yggdrasil.Utils.Efield.create_sigma_oct(sigma_file_name, rel_eps2);
+0022         <span class="keyword">elseif</span> exist(<span class="string">'rel_eps1'</span>,<span class="string">'var'</span>)
+0023             Yggdrasil.Utils.Efield.create_sigma_oct(sigma_file_name, rel_eps1);
+0024         <span class="keyword">else</span>
+0025             Yggdrasil.Utils.Efield.create_sigma_oct(sigma_file_name);
+0026         <span class="keyword">end</span>
+0027     <span class="keyword">end</span>
+0028 
+0029     sigma_sqrt_oct = Yggdrasil.Utils.load(<span class="keyword">...</span>
+0030                         [sigma_file_name <span class="string">'_sqrt.oct'</span>]);
+0031     disp([<span class="string">'Weights and converts '</span> Efield_file_name<span class="keyword">...</span>
+0032         <span class="string">' to octree format, might take some time.'</span>])
+0033     <span class="keyword">if</span> exist(<span class="string">'rel_eps1'</span>,<span class="string">'var'</span>)
+0034         E_field_oct = Yggdrasil.Octree(<span class="keyword">...</span>
+0035            Yggdrasil.Utils.load([Efield_file_name <span class="string">'.mat'</span>]),<span class="keyword">...</span>
+0036            <span class="string">'rel_eps'</span>, rel_eps1);
+0037     <span class="keyword">else</span>
+0038         E_field_oct = Yggdrasil.Octree(<span class="keyword">...</span>
+0039             Yggdrasil.Utils.load([Efield_file_name <span class="string">'.mat'</span>]));
+0040     <span class="keyword">end</span>
+0041     
+0042     Yggdrasil.Utils.Efield.save_Efield_oct(<span class="keyword">...</span>
+0043         E_field_oct, sigma_sqrt_oct, Efield_file_name);
+0044     disp(<span class="string">'Done!'</span>)
+0045 <span class="keyword">end</span>
+0046</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

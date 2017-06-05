@@ -1,0 +1,140 @@
+function generate_fenics_parameters(overwriteOutput, overwriteModel)
+%GENERATE_FENICS_PARAMETERS(overwriteOutput, overwriteModel)
+%   Generates the mesh and matrices with parameters used by pennes.py. 
+%   This function are done in five steps:
+%   1. Set-up, initalize parameters and load necessary data from model
+%   2. Generate meshes
+%   3. (Optional) Stage 1, gather and collect data from databases 
+%   4. Stage 2, create parameter matrices based on indexed model
+%   5. Final stage, extrapolate the .mat files using nearest neighbor
+%
+%Input:
+% overwriteOutput: Option to regenerate matrices, default is false
+% overwriteModel: Option to recreate the model, default is false
+if nargin < 1
+    overwriteOutput = false;
+end
+if nargin < 2
+    overwriteModel = false;
+end
+
+% Get root path
+filename = which('generate_fenics_parameters');
+[rootpath,~,~] = fileparts(filename);
+resultpath = [rootpath filesep '..' filesep '2_Prep_FEniCS_results'];
+if ~exist(resultpath,'dir')
+    disp(['Creating result folder at ' resultpath]);
+    [success,message,~] = mkdir(resultpath);
+    if ~success
+       error(message); 
+    end
+end
+
+%% 1. Initilize and load model
+disp('1. Initilize and load model')
+% Import packages and addpaths
+import Extrapolation.*
+if strcmp(which('Extrapolation.load'), '')
+    error('Need addpath to the self-developed package ''Extrapolation''.')
+end
+
+addpath([rootpath filesep 'Scripts'])
+addpath(get_path('mesh_scripts'))
+addpath(get_path('tissue_data'))
+
+tissue_mat = Extrapolation.load(get_path('mat_index'));
+tumor_ind = 80;
+muscle_ind = 48;
+cerebellum_ind = 12;
+water_ind = 81;
+ext_air_ind = 1;
+int_air_ind = 2;
+disp('initialization done')
+%% 2. Generate mesh
+disp('2. Generating meshes')
+% Options for the mesh generation
+rad_bound = 7;
+dist_bound = 1;
+tet_vol = 15;
+% Ignore water and exterior air and interior air
+bin_mat = tissue_mat ~= water_ind...
+          & tissue_mat ~= ext_air_ind;
+
+if ~exist(get_path('mesh'), 'file') || overwriteModel
+    disp('Generating mesh from indexed model.')
+    % Create the mesh
+    bin_to_mesh(get_path('mesh'), bin_mat, rad_bound, dist_bound, tet_vol);
+else
+    disp('Model mesh already exists, using exsisting one. Delete to generate new mesh.')
+end
+if ~exist(get_path('tumor_mesh'), 'file') || overwriteModel
+    disp('Generating tumor mesh.')
+    % Create a tumor mesh
+    bin_to_mesh(get_path('tumor_mesh'), tissue_mat == tumor_ind, rad_bound, dist_bound, tet_vol);
+else
+    disp('Tumor mesh already exists, using exsisting one. Delete to generate new mesh.')
+end
+disp('Meshing done')
+%% 3. Stage 1 (Optional)
+% Turns on/off Stage 1, which will gather all data from databases
+do_stage_1 = false;
+
+if do_stage_1
+    disp('3. Stage 1: Compiling database data')
+    % Collect parameter data from databases and save as a textfile
+    combine_raw();
+    disp('Compilation done')
+else
+    disp('(Skipping) 3. Stage 1: Compiling database data')
+    disp('Will use precompiled data.')
+end
+
+%% 4. Stage 2
+disp('4. Stage 2: Creating parameter matrices based on indexed model')
+% Read the textfile created in Stage 1 and save the data as .mat files
+
+if do_stage_1 % The file to load depends if stage_1 is turned on
+    thermal_comp_keyword = 'stage1_thermal_compilation';
+else % If stage 1 is turned off then use premade compilation
+    thermal_comp_keyword = 'premade_thermal_compilation';
+end
+[thermal_conductivity, rest_perf_cap, modified_perf_cap, bnd_heat_trans, bnd_temp] =...
+    get_parameter_vectors(thermal_comp_keyword);
+
+% Finalize boundary condition
+create_bnd_matrices(overwriteOutput, tissue_mat, water_ind, bnd_heat_trans, bnd_temp);
+
+create_vol_matrices(overwriteOutput, tissue_mat, thermal_conductivity, modified_perf_cap);
+disp('Matrices done.')
+%% 5. Final
+disp('5. Final stage: Extrapolating data.')
+% See help finalize for explanation
+exist_thermal   = exist(get_path('xtrpol_thermal_cond_mat'), 'file');
+exist_perfusion = exist(get_path('xtrpol_perfusion_heatcapacity_mat'), 'file');
+exist_PLD       = exist(get_path('xtrpol_PLD'), 'file');
+
+if ~all([exist_thermal, exist_perfusion, exist_PLD]) || overwriteOutput   
+    % Get the nearest element inside the body and distances to the element for
+    % all elements
+    interior_mat = tissue_mat ~= water_ind & tissue_mat ~= ext_air_ind;
+    [~,nearest_points] = Extrapolation.meijster(interior_mat);
+
+    if ~exist_thermal
+        finalize('thermal_cond_mat', nearest_points);
+    end
+    if ~exist_perfusion
+        finalize('perfusion_heatcapacity_mat', nearest_points);
+    end
+    if ~exist_PLD
+        if ~exist(get_path('PLD'), 'file')    
+            error(['Missing PLD (Power loss density) at ''' get_path('PLD') '''.'])
+        end
+        finalize('PLD', nearest_points);
+    end
+end
+
+disp('Extrapolation done')
+disp('---------------------------')
+disp('FEniCS parameters generated')
+disp('---------------------------')
+end

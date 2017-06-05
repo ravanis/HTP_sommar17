@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of scalar_prod</title>
+  <meta name="keywords" content="scalar_prod">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html +C -->
+<h1>scalar_prod
+&nbsp;&nbsp;<img src="../../c.png" alt="Linux AMD Opteron" border="0" title="Linux AMD Opteron"></h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 #include &quot;scalar_prod.h&quot;
+0002 
+0003 #define IN_DATA_A prhs[0]
+0004 #define  IN_ADR_A prhs[1]
+0005 #define IN_META_A prhs[2]
+0006 #define IN_DATA_B prhs[3]
+0007 #define  IN_ADR_B prhs[4]
+0008 #define IN_META_B prhs[5]
+0009 
+0010 #define OUT_DATA  plhs[0]
+0011 #define  OUT_ADR  plhs[1]
+0012 #define OUT_META  plhs[2]
+0013 
+0014 #define INDEX(oct)  oct.data.ix
+0015 #define ADR(oct) oct.adr[INDEX(oct)]
+0016 #define MAX(a,b) (a)&gt;(b)?(a):(b)
+0017 
+0018 #define MACHINE_EPS_SQ 1E-16
+0019 
+0020 #define ADVANCE(octX, octY) /* <span class="keyword">if</span> ADR(octX) &lt; ADR(octY) */          \
+0021     <span class="keyword">if</span> (cv_iszero(&amp;octY.data, MACHINE_EPS_SQ)) { /* octY is zero */ \
+0022         /* Advance octX until octX.adr == octY.adr */               \
+0023         ADR(octC) = ADR(octY);                                      \
+0024         <span class="keyword">if</span> (ADR(octC) == total_vol) <span class="keyword">break</span>;                          \
+0025         INDEX(octX) += 8;                                           \
+0026         <span class="keyword">while</span> (ADR(octX) &lt; ADR(octY)) {                             \
+0027             INDEX(octX) += 7;                                       \
+0028         }                                                           \
+0029         ++INDEX(octY);                                              \
+0030     } <span class="keyword">else</span> {                                                        \
+0031         /* Advance octX once */                                     \
+0032         ADR(octC) = ADR(octX);                                      \
+0033         ++INDEX(octX);                                              \
+0034     }                                                               
+0035 
+0036 // Matlab I/O
+0037 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
+0038 {
+0039     /* Check input arguments */
+0040     <span class="keyword">if</span> (nlhs != 3)
+0041         mexErrMsgTxt(&quot;Exactly three LHS argument needed.&quot;);
+0042     
+0043     <span class="keyword">if</span> (nrhs != 6)
+0044         mexErrMsgTxt(&quot;Exactly six arguments needed.&quot;);
+0045 
+0046     octree octA, octB;
+0047     
+0048     input_to_oct(&amp;octA, IN_DATA_A, IN_ADR_A, IN_META_A);
+0049     input_to_oct(&amp;octB, IN_DATA_B, IN_ADR_B, IN_META_B);
+0050 
+0051 #ifdef DEBUG    
+0052     oct_print(&amp;octA);
+0053     oct_print(&amp;octB);
+0054 #endif
+0055     
+0056     /* Check dimensions */
+0057     <span class="keyword">if</span> (octA.data_dim != octB.data_dim)
+0058         mexErrMsgTxt(&quot;The octrees need to have the same dimensions.&quot;);
+0059     
+0060     <span class="keyword">if</span> (octA.original_matrix_size[0] != octB.original_matrix_size[0] ||
+0061         octA.original_matrix_size[1] != octB.original_matrix_size[1] ||
+0062         octA.original_matrix_size[2] != octB.original_matrix_size[2])
+0063         
+0064         mexErrMsgTxt(&quot;The octrees need to represent same-size matrices.&quot;);
+0065     
+0066     octree octProd = scalar_prod(octA, octB);
+0067     
+0068 #ifdef DEBUG  
+0069     oct_print(&amp;octProd);
+0070 #endif
+0071     
+0072     oct_to_output(&amp;OUT_DATA, &amp;OUT_ADR, &amp;OUT_META, &amp;octProd);
+0073 }
+0074 
+0075 // Actual work
+0076 octree scalar_prod(octree octA, octree octB)
+0077 {
+0078     // Create a too large octree to store the prod in
+0079     octree octC = oct_create(octA.data_len + octB.data_len,
+0080                              1,
+0081                              octA.original_matrix_size,
+0082                              octA.N,
+0083                              octA.eps_sq + octB.eps_sq + 2*sqrt(octA.eps_sq*octB.eps_sq),
+0084                              octA.enum_order);
+0085 
+0086     uint64_t total_vol = 1 &lt;&lt; 3*octA.N;
+0087 
+0088     // Shift indices <span class="keyword">for</span> nicer calculations
+0089     ++octA.adr; ++octB.adr; ++octC.adr;
+0090 
+0091     <span class="keyword">for</span>(INDEX(octA) = INDEX(octB) = INDEX(octC) = 0;;) {
+0092         // C = A .* B at current pieces
+0093         cv_scalar_prod(&amp;octC.data, &amp;octA.data, &amp;octB.data);
+0094 
+0095         // Pieces of octA and octB at same adress?
+0096         <span class="keyword">if</span> (ADR(octA) == ADR(octB)) {
+0097             // End condition
+0098             <span class="keyword">if</span> (ADR(octA) &gt;= total_vol) {
+0099                 ADR(octC) = ADR(octA);
+0100                 <span class="keyword">break</span>;
+0101             }
+0102 
+0103             // Advance octA and octB
+0104             ADR(octC) = ADR(octA);
+0105             ++INDEX(octA); ++INDEX(octB);
+0106         } <span class="keyword">else</span> <span class="keyword">if</span> (ADR(octA) &lt; ADR(octB)) {
+0107             // Advance octA
+0108             ADVANCE(octA, octB);
+0109         } <span class="keyword">else</span> { // If ADR(octA) &gt; ADR(octB)
+0110             // Advance octB
+0111             ADVANCE(octB, octA);
+0112         }
+0113         ++INDEX(octC);
+0114     }
+0115 
+0116     // Shift back adresses
+0117     --octA.adr; --octB.adr; --octC.adr;
+0118 
+0119     // Remove unused memory and <span class="keyword">return</span>
+0120     oct_cut(&amp;octC,INDEX(octC)+1);
+0121     <span class="keyword">return</span> octC;
+0122 }</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

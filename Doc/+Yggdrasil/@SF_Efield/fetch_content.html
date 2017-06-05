@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of fetch_content</title>
+  <meta name="keywords" content="fetch_content">
+  <meta name="description" content="varargout = FETCH_CONTENT(obj, field1, field2 ...)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @SF_Efield -->
+<h1>fetch_content
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>varargout = FETCH_CONTENT(obj, field1, field2 ...)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function varargout = fetch_content(obj, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">varargout = FETCH_CONTENT(obj, field1, field2 ...)
+   Fetches data, adr and meta through utils.load_maestro.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="SF_Efield.html" class="code" title="">SF_Efield</a>	</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = fetch_content(obj, varargin)</a>
+0002 <span class="comment">%varargout = FETCH_CONTENT(obj, field1, field2 ...)</span>
+0003 <span class="comment">%   Fetches data, adr and meta through utils.load_maestro.</span>
+0004 <span class="keyword">if</span> nargout == nargin-1
+0005     varargout = cell(nargout,1);
+0006     [data, adr, meta] = Yggdrasil.Utils.Efield.load_maestro(<span class="string">'fetch'</span>, obj);
+0007     <span class="keyword">for</span> i = 1:nargout
+0008         <span class="keyword">if</span> strcmp(varargin{i}, <span class="string">'data'</span>)
+0009             scalar = obj.C.values;
+0010             <span class="comment">% Handle common case of unscaled Efield</span>
+0011             <span class="keyword">if</span> scalar == 1
+0012                 varargout{i} = data;
+0013             <span class="keyword">else</span>
+0014                 varargout{i} = obj.C.values * data;
+0015             <span class="keyword">end</span>
+0016         <span class="keyword">elseif</span> strcmp(varargin{i}, <span class="string">'adr'</span>)
+0017             varargout{i} = adr;
+0018         <span class="keyword">elseif</span> strcmp(varargin{i}, <span class="string">'meta'</span>)
+0019             varargout{i} = meta;
+0020         <span class="keyword">else</span>
+0021             error([<span class="string">'Unknown field: '</span> varargin{i}]);
+0022         <span class="keyword">end</span>
+0023     <span class="keyword">end</span>
+0024 <span class="keyword">elseif</span> nargout &lt; nargin-1
+0025     error(<span class="string">'Too few output arguments.'</span>);
+0026 <span class="keyword">else</span>
+0027     error(<span class="string">'Too many output arguments.'</span>);
+0028 <span class="keyword">end</span>
+0029</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

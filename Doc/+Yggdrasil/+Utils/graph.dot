@@ -1,0 +1,14 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  ishequal -> size;
+  isrealscalar -> isscalar;
+  isscalar -> isscalar;
+  load -> load;
+  size -> size;
+
+  ishequal [URL="ishequal.html"];
+  isrealscalar [URL="isrealscalar.html"];
+  isscalar [URL="isscalar.html"];
+  load [URL="load.html"];
+  size [URL="size.html"];
+}

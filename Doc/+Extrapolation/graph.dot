@@ -1,0 +1,9 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  load -> load;
+  meijster -> meijster;
+
+  compile [URL="compile.html"];
+  load [URL="load.html"];
+  meijster [URL="meijster.html"];
+}

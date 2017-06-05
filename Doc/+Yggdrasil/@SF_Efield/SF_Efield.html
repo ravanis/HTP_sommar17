@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of SF_Efield</title>
+  <meta name="keywords" content="SF_Efield">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @SF_Efield -->
+<h1>SF_Efield
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="SF_Efield.html" class="code" title="">SF_Efield</a>	</li><li><a href="disp.html" class="code" title="function [ output ] = disp(sf_e)">disp</a>	[ output ] = DISP(sf_e) The disp for single frequincy E-field.</li><li><a href="fetch_content.html" class="code" title="function varargout = fetch_content(obj, varargin)">fetch_content</a>	varargout = FETCH_CONTENT(obj, field1, field2 ...)</li><li><a href="get_adr.html" class="code" title="function adr = get_adr(self, adr)">get_adr</a>	adr = GET_ADR(self, adr)</li><li><a href="get_data.html" class="code" title="function data = get_data(self, data)">get_data</a>	data = GET_DATA(self, data)</li><li><a href="get_meta.html" class="code" title="function meta = get_meta(self, meta)">get_meta</a>	meta = GET_META(self, meta)</li><li><a href="mtimes_.html" class="code" title="function [a] = mtimes_(a, b)">mtimes_</a>	[a] = MTIMES_(a, b)</li><li><a href="plus_.html" class="code" title="function [a] = plus_(a,b)">plus_</a>	Adds two SF_Efield</li><li><a href="scalar_prod_.html" class="code" title="function a = scalar_prod_(a, b)">scalar_prod_</a>	oct = SCALAR_PROD(a, b)</li><li><a href="scalar_prod_integral_.html" class="code" title="function a = scalar_prod_integral_(a, b)">scalar_prod_integral_</a>	oct = SCALAR_PROD(a, b)</li><li><a href="set_adr.html" class="code" title="function [self, adr] = set_adr(self, adr)">set_adr</a>	adr = SET_ADR(self, adr)</li><li><a href="set_data.html" class="code" title="function [self, data] = set_data(self, data)">set_data</a>	data = SET_DATA(self, data)</li><li><a href="set_meta.html" class="code" title="function [self, meta] = set_meta(self, meta)">set_meta</a>	meta = SET_META(self, meta)</li><li><a href="store_content.html" class="code" title="function self = store_content(self)">store_content</a>	STORE_CONTENT(self)</li><li><a href="times_.html" class="code" title="function [a] = times_(a, b)">times_</a>	[a] = MTIMES_(a, b)</li><li><a href="uminus.html" class="code" title="function [self] = uminus( self )">uminus</a>	[self] = UMINUS( self )</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="SF_Efield.html" class="code" title="">SF_Efield</a>	</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = SF_Efield(frequency, antenna_id, arrangement)</a></li><li><a href="#_sub2" class="code">function output = hash(self)</a></li><li><a href="#_sub3" class="code">function output = priority()</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 classdef <a href="SF_Efield.html" class="code" title="">SF_Efield</a> &lt; Yggdrasil.Octree
+0002     properties
+0003         frequency;
+0004         arrangement;
+0005         C;
+0006         is_content_local = true;
+0007     <span class="keyword">end</span>
+0008     properties (Access = protected)
+0009         my_hash;
+0010     <span class="keyword">end</span>
+0011     methods
+0012         <a name="_sub0" href="#_subfunctions" class="code">function self = SF_Efield(frequency, antenna_id, arrangement)</a>
+0013             <span class="keyword">if</span> nargin &lt; 2
+0014                 error(<span class="string">'Too few input arguments.'</span>); 
+0015             <span class="keyword">end</span>
+0016             <span class="keyword">if</span> nargin &gt; 3
+0017                 error(<span class="string">'Too many input arguments.'</span>); 
+0018             <span class="keyword">end</span>
+0019             
+0020             <span class="comment">% Initialise temporary placeholder octree</span>
+0021             self@Yggdrasil.Octree(NaN);
+0022             self.is_content_local = false; <span class="comment">% Use remote content</span>
+0023             
+0024             <span class="comment">% Set up internal SF_Efield properties</span>
+0025             self.frequency = frequency;
+0026             <span class="keyword">if</span> nargin == 2
+0027                 self.arrangement = 1;
+0028             <span class="keyword">else</span>
+0029                 self.arrangement = arrangement;
+0030             <span class="keyword">end</span>
+0031             
+0032             <span class="comment">% Set up antenna properties</span>
+0033             self.C = Yggdrasil.YggMap();
+0034             self.C = self.C + {antenna_id, 1};
+0035             
+0036             <span class="comment">% Set up hash</span>
+0037             self.my_hash = {[<span class="string">'A'</span> num2str(self.arrangement) <span class="keyword">...</span><span class="comment"> </span>
+0038                             <span class="string">'F'</span> num2str(self.frequency)]};
+0039         <span class="keyword">end</span>
+0040         
+0041         self = <a href="store_content.html" class="code" title="function self = store_content(self)">store_content</a>(self);
+0042         varargout = <a href="fetch_content.html" class="code" title="function varargout = fetch_content(obj, varargin)">fetch_content</a>(obj, varargin);
+0043         <a name="_sub1" href="#_subfunctions" class="code">function output = hash(self)</a>
+0044             output = self.my_hash; 
+0045         <span class="keyword">end</span>
+0046         
+0047         output = <a href="disp.html" class="code" title="function [ output ] = disp(sf_e)">disp</a>(sf_e);
+0048         self   = <a href="uminus.html" class="code" title="function [self] = uminus( self )">uminus</a>(self);
+0049         
+0050     <span class="keyword">end</span>
+0051     methods (Access = protected)
+0052         [self, data] = <a href="set_data.html" class="code" title="function [self, data] = set_data(self, data)">set_data</a>(self, data);
+0053         [self, adr ] = <a href="set_adr.html" class="code" title="function [self, adr] = set_adr(self, adr)">set_adr</a>(self, adr);
+0054         [self, meta] = <a href="set_meta.html" class="code" title="function [self, meta] = set_meta(self, meta)">set_meta</a>(self, meta);
+0055         
+0056         data = <a href="get_data.html" class="code" title="function data = get_data(self, data)">get_data</a>(self, data);
+0057         adr = <a href="get_adr.html" class="code" title="function adr = get_adr(self, adr)">get_adr</a>(self, adr);
+0058         meta = <a href="get_meta.html" class="code" title="function meta = get_meta(self, meta)">get_meta</a>(self, meta);
+0059         
+0060     <span class="keyword">end</span>
+0061     methods (Static)
+0062         <a name="_sub2" href="#_subfunctions" class="code">function output = priority()</a>
+0063            output = <a href="#_sub3" class="code" title="subfunction output = priority()">priority</a>@Yggdrasil.Octree() + 1; 
+0064         <span class="keyword">end</span>
+0065         output = <a href="plus_.html" class="code" title="function [a] = plus_(a,b)">plus_</a>(a,b);
+0066         output = <a href="mtimes_.html" class="code" title="function [a] = mtimes_(a, b)">mtimes_</a>(a,b);
+0067         output = <a href="times_.html" class="code" title="function [a] = times_(a, b)">times_</a>(a,b);
+0068         output = <a href="scalar_prod_.html" class="code" title="function a = scalar_prod_(a, b)">scalar_prod_</a>(a,b);
+0069         output = <a href="scalar_prod_integral_.html" class="code" title="function a = scalar_prod_integral_(a, b)">scalar_prod_integral_</a>(a,b);
+0070      <span class="keyword">end</span>
+0071  <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

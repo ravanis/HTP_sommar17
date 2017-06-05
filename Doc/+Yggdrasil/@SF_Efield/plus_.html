@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plus_</title>
+  <meta name="keywords" content="plus_">
+  <meta name="description" content="Adds two SF_Efield">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @SF_Efield -->
+<h1>plus_
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Adds two SF_Efield</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [a] = plus_(a,b) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">Adds two SF_Efield</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="plus_.html" class="code" title="function [a] = plus_(a,b)">plus_</a>	Adds two SF_Efield</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="SF_Efield.html" class="code" title="">SF_Efield</a>	</li><li><a href="plus_.html" class="code" title="function [a] = plus_(a,b)">plus_</a>	Adds two SF_Efield</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [a] = plus_(a,b)</a>
+0002 <span class="comment">%Adds two SF_Efield</span>
+0003 
+0004     <span class="keyword">if</span> ~isa(a, <span class="string">'Yggdrasil.SF_Efield'</span>) || ~isa(b, <span class="string">'Yggdrasil.SF_Efield'</span>)
+0005         error(<span class="string">'Can single frequency Efields only add with itself.'</span>)
+0006     <span class="keyword">end</span>
+0007     
+0008     <span class="comment">% If they are orthogonal time wise</span>
+0009     <span class="keyword">if</span> a.frequency ~= b.frequency || a.arrangement ~= b.arrangement
+0010         mf_obj = Yggdrasil.MF_Efield();
+0011         
+0012         t = mf_obj + a;
+0013         a = (t + b);
+0014         <span class="keyword">return</span>;
+0015     <span class="keyword">end</span>
+0016     
+0017     a = <a href="plus_.html" class="code" title="function [a] = plus_(a,b)">plus_</a>@Yggdrasil.Octree(a,b);
+0018     a.C = a.C + b.C;
+0019 <span class="keyword">end</span>
+0020</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of scalar_prod_integral_</title>
+  <meta name="keywords" content="scalar_prod_integral_">
+  <meta name="description" content="S = SCALAR_PROD_INTEGRAL_(a,b)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @MF_Efield -->
+<h1>scalar_prod_integral_
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>S = SCALAR_PROD_INTEGRAL_(a,b)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function S = scalar_prod_integral_(a,b) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">S = SCALAR_PROD_INTEGRAL_(a,b)
+   Takes the scalar prod integral between two MF_Efields or MF_Efields and
+   SF_Efield. In the case of MF vs MF the rhs MF is divided into SF.
+   If two E fields have different frequencies or arrangement their
+   their scalar prod integral is scalar 0.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="MF_Efield.html" class="code" title="">MF_Efield</a>	</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function S = scalar_prod_integral_(a,b)</a>
+0002 <span class="comment">%S = SCALAR_PROD_INTEGRAL_(a,b)</span>
+0003 <span class="comment">%   Takes the scalar prod integral between two MF_Efields or MF_Efields and</span>
+0004 <span class="comment">%   SF_Efield. In the case of MF vs MF the rhs MF is divided into SF.</span>
+0005 <span class="comment">%   If two E fields have different frequencies or arrangement their</span>
+0006 <span class="comment">%   their scalar prod integral is scalar 0.</span>
+0007     [a,b,mf_num] = Yggdrasil.MF_Efield.input_chk(a,b);
+0008 
+0009     <span class="keyword">if</span> mf_num == 1
+0010         k = b.hash();
+0011         [key_exist, index] = a.E.iskey(k);
+0012         <span class="keyword">if</span> key_exist
+0013             S = a.E.values(index).scalar_prod_integral_(b);
+0014         <span class="keyword">else</span>
+0015             S = 0;
+0016         <span class="keyword">end</span>
+0017         <span class="keyword">return</span>;
+0018     <span class="keyword">end</span>
+0019 
+0020     S = a.scalar_prod_integral_(b.values(1));
+0021     <span class="keyword">for</span> i = 2:length(b)
+0022         S = S + a.scalar_prod_integral_(b.values(i));
+0023     <span class="keyword">end</span>
+0024 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

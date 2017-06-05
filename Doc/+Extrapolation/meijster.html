@@ -1,0 +1,327 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of meijster</title>
+  <meta name="keywords" content="meijster">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html +Extrapolation -->
+<h1>meijster
+&nbsp;&nbsp;<img src="../c.png" alt="Linux AMD Opteron" border="0" title="Linux AMD Opteron"></h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="meijster.html" class="code" title="">meijster</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="meijster.html" class="code" title="">meijster</a>	</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre>0001 /**
+0002  * A 3d distance transform. Generalized from the 2d algorithm presented in [1].
+0003  * 
+0004  * [1] &quot;A General Alorithm <span class="keyword">for</span> Computing Distance Transform in Linear Time&quot;
+0005  *      A. Meijster, J. B. T. M. Roerdink, W. H. Hesselink
+0006  *      University of Groningen
+0007  */
+0008 
+0009 #include &quot;meijster.h&quot;
+0010 
+0011 
+0012 
+0013 // Error messages
+0014 #ifdef MATLAB
+0015 #define ERR(errstr)  mexErrMsgTxt(errstr)
+0016 #else
+0017 #define ERR(errstr)  perror(errstr); exit(-1)
+0018 #endif
+0019 
+0020 // Generic error printing
+0021 #define errcase(X) <span class="keyword">case</span> X: ERR(&quot;Argument of class &quot; #X &quot; is not supported.&quot;);
+0022 
+0023 // Generic code to convert data from type T
+0024 #define CONVDATA(T) { /* Scoping */              \
+0025     T *D = mxGetData(IN_DATA);                   \
+0026     size_t len = mxGetNumberOfElements(IN_DATA); \
+0027     B = malloc(len*sizeof(uint8_t));             \
+0028     <span class="keyword">for</span> (int i = 0; i &lt; len; ++i) {              \
+0029         B[i] = !!D[i];                           \
+0030     }}
+0031 
+0032 #define IN_DATA     prhs[0]
+0033 #define OUT_DATA_D  plhs[0]
+0034 #define OUT_DATA_I  plhs[1]
+0035 
+0036 #ifdef MATLAB
+0037 // Main <span class="keyword">function</span> in Matlab
+0038 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
+0039 {
+0040     /* Check input args */
+0041     <span class="keyword">if</span> (nrhs == 0) {
+0042         // Send help
+0043         printf(
+0044             &quot;NAME\n&quot;
+0045             &quot;       <a href="meijster.html" class="code" title="">meijster</a> - Computes a distance transform in (up to) 3 dimensions\n&quot;
+0046             &quot;SYNOPSIS\n&quot;
+0047             &quot;       <a href="meijster.html" class="code" title="">meijster</a>(matrix)\n&quot;
+0048             );
+0049         <span class="keyword">return</span>;
+0050     }
+0051 
+0052     <span class="keyword">if</span> (nrhs != 1) mexErrMsgTxt(&quot;Accepts exactly one argument.&quot;);
+0053     
+0054     /* Get data */
+0055     uint8_t *B;
+0056     
+0057     // Check class
+0058     <span class="keyword">switch</span>(mxGetClassID(IN_DATA)) {
+0059     // If uint8, load.
+0060     <span class="keyword">case</span> mxUINT8_CLASS: B = mxGetData(IN_DATA); <span class="keyword">break</span>;
+0061     // If numerical, convert.
+0062     <span class="keyword">case</span> mxLOGICAL_CLASS: CONVDATA(mxLogical); <span class="keyword">break</span>;
+0063     <span class="keyword">case</span> mxCHAR_CLASS:    CONVDATA(char);      <span class="keyword">break</span>;
+0064     <span class="keyword">case</span> mxDOUBLE_CLASS:  CONVDATA(double);    <span class="keyword">break</span>;
+0065     <span class="keyword">case</span> mxSINGLE_CLASS:  CONVDATA(float);     <span class="keyword">break</span>;
+0066     <span class="keyword">case</span> mxINT8_CLASS:    CONVDATA(int8_t);    <span class="keyword">break</span>;
+0067     <span class="keyword">case</span> mxINT16_CLASS:   CONVDATA(int16_t);   <span class="keyword">break</span>;
+0068     <span class="keyword">case</span> mxUINT16_CLASS:  CONVDATA(uint16_t);  <span class="keyword">break</span>;
+0069     <span class="keyword">case</span> mxINT32_CLASS:   CONVDATA(int32_t);   <span class="keyword">break</span>;
+0070     <span class="keyword">case</span> mxUINT32_CLASS:  CONVDATA(uint32_t);  <span class="keyword">break</span>;
+0071     <span class="keyword">case</span> mxINT64_CLASS:   CONVDATA(int64_t);   <span class="keyword">break</span>;
+0072     <span class="keyword">case</span> mxUINT64_CLASS:  CONVDATA(uint64_t);  <span class="keyword">break</span>;
+0073     // If other, panic.
+0074     errcase(mxUNKNOWN_CLASS);
+0075     errcase(mxCELL_CLASS);
+0076     errcase(mxSTRUCT_CLASS);
+0077     errcase(mxFUNCTION_CLASS);
+0078     errcase(mxVOID_CLASS);
+0079     // MATLAB returned something that it shouldn't be capable of returning.
+0080     default: mexErrMsgTxt(&quot;WTF is MATLAB doing?&quot;);
+0081     }
+0082     
+0083     /* Read and interpret matrix size */
+0084     int ndims = mxGetNumberOfDimensions(IN_DATA);
+0085     <span class="keyword">if</span> (ndims &gt; 3) mexErrMsgTxt(&quot;Array must be (at most) 3d.&quot;);
+0086     
+0087     const mwSize *size = mxGetDimensions(IN_DATA);
+0088     mwSize sX, sY, sZ;
+0089     
+0090     <span class="keyword">if</span> (ndims == 3) {
+0091         sX = size[0];
+0092         sY = size[1];
+0093         sZ = size[2];
+0094     } <span class="keyword">else</span> {
+0095         // Shift right
+0096         sX = 1;
+0097         sY = size[0];
+0098         sZ = size[1];
+0099 
+0100         <span class="keyword">if</span> (sZ == 1) {
+0101             // If Ax1 vector, interpret as 1x1xA
+0102             sZ = sY;
+0103             sY = 1;
+0104         }
+0105     }
+0106 
+0107     /* Allocate outputs */
+0108     OUT_DATA_D = mxCreateNumericArray(ndims, size, mxINT32_CLASS, mxREAL);
+0109     
+0110     // Switch types <span class="keyword">if</span> compiled <span class="keyword">for</span> 64-bit addresses
+0111     <span class="keyword">if</span> (sizeof(mwSize) == sizeof(size_t))
+0112         OUT_DATA_I = mxCreateNumericArray(ndims, size, mxUINT64_CLASS, mxREAL);
+0113     <span class="keyword">else</span>
+0114         OUT_DATA_I = mxCreateNumericArray(ndims, size, mxUINT32_CLASS, mxREAL);
+0115 
+0116     <span class="keyword">if</span> (OUT_DATA_D == NULL || OUT_DATA_I == NULL)
+0117         mexErrMsgTxt(&quot;Matrix creation failed.&quot;);
+0118     
+0119     int32_t *D = mxGetData(OUT_DATA_D);
+0120     mwSize  *g = mxGetData(OUT_DATA_I);
+0121 
+0122     meister(D, g, B, sX, sY, sZ);
+0123 }
+0124 #endif
+0125 
+0126 // Does the actual work, independent from Matlab stuff
+0127 int meister(int32_t *D, index_t *g, uint8_t *B, index_t sX, index_t sY, index_t sZ)
+0128 {
+0129     /* Allocate variables needed in calculations */
+0130     size_t numel = sX*sY*sZ;
+0131     int32_t *G_y = calloc(numel, sizeof(int32_t));
+0132     int32_t *G_z = calloc(numel, sizeof(int32_t));
+0133     int32_t *g_i = calloc(numel, sizeof(int32_t));
+0134     int32_t *g_j = calloc(numel, sizeof(int32_t));
+0135     int32_t *g_k = calloc(numel, sizeof(int32_t));
+0136 
+0137     <span class="keyword">if</span> (D == NULL || g == NULL ||
+0138         G_y == NULL || G_z == NULL ||
+0139         g_i == NULL || g_j == NULL || g_k == NULL)
+0140         ERR(&quot;Failed to allocate some pointers.&quot;);
+0141 
+0142     size_t shift;
+0143     int32_t inf = sX+sY+sZ;
+0144     int32_t inf_sq = inf*inf;
+0145     
+0146     size_t _i,_j,_k;
+0147 #pragma omp parallel default(shared) private(shift,_i,_j,_k)
+0148     {
+0149 #pragma omp <span class="keyword">for</span> schedule (static) collapse(2)
+0150     <span class="keyword">for</span> (size_t j = 0; j &lt; sY; ++j) {
+0151         <span class="keyword">for</span> (size_t i = 0; i &lt; sX; ++i) {
+0152             shift = i + sX*j;
+0153             meij_phase_1(G_z+shift, g_k+shift, B+shift,
+0154                             sZ, sX*sY, inf);
+0155         }
+0156     }
+0157 #pragma omp <span class="keyword">for</span> schedule (static) collapse(2)
+0158     <span class="keyword">for</span> (size_t i = 0; i &lt; sX; ++i) {
+0159         <span class="keyword">for</span> (size_t z = 0; z &lt; sZ; ++z) {
+0160             shift = i + sX*sY*z;
+0161             meij_phase_2(G_y+shift, g_j+shift, G_z+shift,
+0162                              sY, sX, inf_sq);
+0163         }
+0164     }
+0165     
+0166 #define IX(x,y,z) (x + y*sX + z*sX*sY)
+0167     
+0168     meij_phase_2(D, g_i, G_y, sX, 1, inf_sq);
+0169     <span class="keyword">if</span> (D[0] &gt;= inf_sq)
+0170         ERR(&quot;No points in volume.&quot;); 
+0171     
+0172 #pragma omp <span class="keyword">for</span> schedule (static) collapse(2)
+0173         <span class="keyword">for</span> (size_t z = 0; z &lt; sZ; ++z) {
+0174             <span class="keyword">for</span> (size_t y = 0; y &lt; sY; ++y) {
+0175                 shift = sX*y + sX*sY*z;
+0176                 meij_phase_2(D+shift, g_i+shift, G_y+shift,
+0177                                 sX, 1, inf_sq);
+0178             }
+0179         }
+0180 
+0181 #pragma omp <span class="keyword">for</span> schedule (static) collapse(3)
+0182         <span class="keyword">for</span> (size_t z = 0; z &lt; sZ; ++z) {
+0183             <span class="keyword">for</span> (size_t y = 0; y &lt; sY; ++y) {
+0184                 <span class="keyword">for</span> (size_t x = 0; x &lt; sX; ++x) {
+0185                     _i = g_i[IX( x, y,z)];
+0186                     _j = g_j[IX(_i, y,z)];
+0187                     _k = g_k[IX(_i,_j,z)];
+0188                     g[IX(x,y,z)] = IX(_i,_j,_k);
+0189                 }
+0190             }
+0191         }
+0192     } // End parallel
+0193     
+0194     free(G_y);
+0195     free(G_z);
+0196     free(g_i);
+0197     free(g_j);
+0198     free(g_k);
+0199 }
+0200 
+0201 void meij_phase_1(int32_t *G, int32_t *g, uint8_t *B,
+0202                size_t length, size_t stride, int32_t inf)
+0203 {
+0204     index_t last_el = (length-1)*stride;
+0205     
+0206     // Forward sweep
+0207     G[0] = B[0] ? 0 : inf;
+0208     g[0] = 0;
+0209     <span class="keyword">for</span> (index_t i = stride; i &lt;= last_el; i += stride) {
+0210         <span class="keyword">if</span>(B[i]) {
+0211             // G[i] is already zero 
+0212             g[i] = i/stride;
+0213         } <span class="keyword">else</span> {
+0214             G[i] = G[i - stride] + 1;
+0215             g[i] = g[i - stride];
+0216         }
+0217     }
+0218 
+0219     // Skip backward sweep <span class="keyword">if</span> empty column
+0220     <span class="keyword">if</span> (G[last_el] &lt; inf) {
+0221         g[last_el] = (length - 1) - G[last_el];
+0222         <span class="keyword">for</span> (index_t i = last_el; i &gt; 0; i -= stride) {
+0223             <span class="keyword">if</span> (G[i - stride] &gt; 1 + G[i]) { // Closest point is to the right
+0224                 G[i - stride] = G[i] + 1;
+0225                 g[i - stride] = g[i];
+0226             }
+0227         }
+0228     }
+0229 
+0230     // Square
+0231     <span class="keyword">for</span> (index_t i = 0; i &lt;= last_el; i += stride) {
+0232         G[i] = G[i]*G[i];
+0233     }
+0234 }
+0235 
+0236 #define _F(x, i, G) (x-i)*(x-i) + G
+0237 #define _SEP(u,i,G_u,G_i) ((u*u - i*i + G_u - G_i)/(2*(u-i)))
+0238 #define f(x,i) _F(x,i,G[i*stride])
+0239 #define sep(u,i) _SEP(u,i,G[u*stride],G[i*stride])
+0240 
+0241 void meij_phase_2(int32_t *D, int32_t *g, int32_t *G,
+0242                   size_t length, size_t stride, int32_t inf_sq)
+0243 {
+0244     int32_t* s = malloc(length*sizeof(int32_t));
+0245     int32_t* t = malloc(length*sizeof(int32_t));
+0246     int32_t w = 0;
+0247     int32_t q = 0;
+0248 
+0249     s[0] = 0; t[0] = 0; q = 0;
+0250 
+0251     // Scan 3
+0252     <span class="keyword">for</span> (int u = 1; u &lt; length; ++u) {
+0253         <span class="keyword">while</span> (q&gt;=0 &amp;&amp; f(t[q],s[q]) &gt; f(t[q],u))
+0254             --q;
+0255         <span class="keyword">if</span> (q &lt; 0) {
+0256             q = 0; s[0] = u;
+0257         } <span class="keyword">else</span> {
+0258             w = 1 + sep(s[q],u);
+0259 
+0260             <span class="keyword">if</span> (w &lt; length) {
+0261                 ++q; s[q] = u; t[q] = w;
+0262             }
+0263         }
+0264     }
+0265 
+0266     // Scan 4
+0267     <span class="keyword">for</span> (int u = length; u-- &gt; 0;) {
+0268         D[u*stride] = f(u, s[q]);
+0269 
+0270         g[u*stride] = D[u*stride] &gt;= inf_sq ? -1 : s[q];
+0271 
+0272         <span class="keyword">if</span> (u == t[q]) {
+0273             --q;
+0274         }
+0275     }
+0276 
+0277     free(s);
+0278     free(t);
+0279 }</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

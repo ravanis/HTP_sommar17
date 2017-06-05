@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of input_chk</title>
+  <meta name="keywords" content="input_chk">
+  <meta name="description" content="[x,y,mf_num] = INPUT_CHK(a,b)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @MF_Efield -->
+<h1>input_chk
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>[x,y,mf_num] = INPUT_CHK(a,b)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [x,y,mf_num] = input_chk(a,b) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">[x,y,mf_num] = INPUT_CHK(a,b)
+   Handles input checks for commutitive operators. The main use is
+   ensuring that a is a MF_Efield, the second use is count the number of
+   MF_Efields, this is used to differentiate between MF vs MF or SF vs MF.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="MF_Efield.html" class="code" title="">MF_Efield</a>	</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [x,y,mf_num] = input_chk(a,b)</a>
+0002 <span class="comment">%[x,y,mf_num] = INPUT_CHK(a,b)</span>
+0003 <span class="comment">%   Handles input checks for commutitive operators. The main use is</span>
+0004 <span class="comment">%   ensuring that a is a MF_Efield, the second use is count the number of</span>
+0005 <span class="comment">%   MF_Efields, this is used to differentiate between MF vs MF or SF vs MF.</span>
+0006     <span class="keyword">if</span> isnumeric(a) || isnumeric(b)
+0007         error(<span class="string">'Matrices is not supported.'</span>);
+0008     <span class="keyword">end</span>
+0009 
+0010     <span class="keyword">if</span> strcmp(class(a), <span class="string">'Yggdrasil.Octree'</span>) || <span class="keyword">...</span>
+0011        strcmp(class(b), <span class="string">'Yggdrasil.Octree'</span>)
+0012        error(<span class="string">'Plain octrees are not allowed.'</span>);
+0013     <span class="keyword">end</span>
+0014 
+0015     <span class="keyword">if</span> ~isa(a,<span class="string">'Yggdrasil.MF_Efield'</span>)
+0016         <span class="comment">% Switch order, [MF,SF]</span>
+0017         x = b;
+0018         y = a;
+0019         mf_num = 1;
+0020         <span class="keyword">return</span>
+0021     <span class="keyword">end</span>
+0022 
+0023     <span class="keyword">if</span> ~isa(b,<span class="string">'Yggdrasil.MF_Efield'</span>)
+0024         <span class="comment">% Correct order, [MF,SF]</span>
+0025         x = a;
+0026         y = b;
+0027         mf_num = 1;
+0028         <span class="keyword">return</span>
+0029     <span class="keyword">end</span>
+0030 
+0031     <span class="comment">% [MF,MF]</span>
+0032     x = a;
+0033     y = b;
+0034     mf_num = 2;
+0035 <span class="keyword">end</span>
+0036</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

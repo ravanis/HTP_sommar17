@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of unique_index</title>
+  <meta name="keywords" content="unique_index">
+  <meta name="description" content="index = UNIQUE_INDEX(monom)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html @CPoly -->
+<h1>unique_index
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>index = UNIQUE_INDEX(monom)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function index = unique_index(monom) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre class="comment">index = UNIQUE_INDEX(monom)
+   Creates an unique index for column vector in cell_of_vectors.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="CPoly.html" class="code" title="">CPoly</a>	This class handles complex polynomials of the type</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function index = unique_index(monom)</a>
+0002 <span class="comment">%index = UNIQUE_INDEX(monom)</span>
+0003 <span class="comment">%   Creates an unique index for column vector in cell_of_vectors.</span>
+0004 
+0005 <span class="comment">%Default val</span>
+0006 maximum_length = 0;
+0007 maximum_value = 0;
+0008 
+0009 <span class="keyword">for</span> i = 1:length(monom)
+0010     <span class="comment">%Find the longest row-vector</span>
+0011     maximum_length = max(maximum_length,length(monom{i}));
+0012    
+0013     <span class="comment">%Find the highest index used in a monomial</span>
+0014     maximum_value = max([maximum_value; abs(monom{i})]); 
+0015     
+0016 <span class="keyword">end</span>
+0017 
+0018 <span class="comment">%Compare the biggest number used in as an index</span>
+0019 <span class="keyword">if</span> double(maximum_length)*log2(double(maximum_value)) &gt; 62
+0020     error(<span class="string">'Too large polynomial to uniquely describe.'</span>)
+0021 <span class="keyword">end</span>
+0022 
+0023 <span class="comment">%Calculate the indecies</span>
+0024 index = zeros(size(monom));
+0025 <span class="keyword">for</span> i = 1:length(monom)
+0026     <span class="keyword">if</span> isempty(monom{i})
+0027         <span class="keyword">continue</span>;
+0028     <span class="keyword">end</span>
+0029     <span class="keyword">for</span> j = 1:length(monom{i})
+0030         index(i) = index(i) + monom{i}(j)*maximum_value^(j-1);
+0031     <span class="keyword">end</span>
+0032 <span class="keyword">end</span>
+0033 
+0034 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

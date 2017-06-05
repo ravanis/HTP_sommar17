@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of merge</title>
+  <meta name="keywords" content="merge">
+  <meta name="description" content="oct1 = MERGE(oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @Octree -->
+<h1>merge
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>oct1 = MERGE(oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function oct1 = merge(oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">oct1 = MERGE(oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8) 
+  This function merges 8 octrees into a single bigger octree. The first of
+  the 8 octrees metadata will be passed on to the merged octree.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="Octree.html" class="code" title="">Octree</a>	The great octree class</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function oct1 = merge(oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8)   </a>
+0002 <span class="comment">%oct1 = MERGE(oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8)</span>
+0003 <span class="comment">%  This function merges 8 octrees into a single bigger octree. The first of</span>
+0004 <span class="comment">%  the 8 octrees metadata will be passed on to the merged octree.</span>
+0005 
+0006    n = uint64(oct1.meta.N);
+0007    <span class="comment">% Increase size of the output octree</span>
+0008    oct1.meta.N = oct1.meta.N + 1;
+0009    oct1.meta.original_matrix_size = [2.^[oct1.meta.N] 2.^[oct1.meta.N]<span class="keyword">...</span>
+0010                                     2.^[oct1.meta.N]];
+0011 
+0012    <span class="keyword">if</span> (n ~= oct2.meta.N ||<span class="keyword">...</span>
+0013        n ~= oct3.meta.N ||<span class="keyword">...</span>
+0014        n ~= oct4.meta.N ||<span class="keyword">...</span>
+0015        n ~= oct5.meta.N ||<span class="keyword">...</span>
+0016        n ~= oct6.meta.N ||<span class="keyword">...</span>
+0017        n ~= oct7.meta.N ||<span class="keyword">...</span>
+0018        n ~= oct8.meta.N)
+0019        error(<span class="string">'Only possible to merge octrees of the same size'</span>);
+0020    <span class="keyword">end</span>
+0021    
+0022    oct1.adr = [oct1.adr(1:end-1),    <span class="keyword">...</span>
+0023            oct2.adr(1:end-1)+1*8^n,    <span class="keyword">...</span>
+0024            oct3.adr(1:end-1)+2*8^n,<span class="keyword">...</span>
+0025            oct4.adr(1:end-1)+3*8^n,<span class="keyword">...</span>
+0026            oct5.adr(1:end-1)+4*8^n,<span class="keyword">...</span>
+0027            oct6.adr(1:end-1)+5*8^n,<span class="keyword">...</span>
+0028            oct7.adr(1:end-1)+6*8^n,<span class="keyword">...</span>
+0029            oct8.adr(1:end  )+7*8^n];
+0030     
+0031     oct1.data = [oct1.data,<span class="keyword">...</span>
+0032             oct2.data,<span class="keyword">...</span>
+0033             oct3.data,<span class="keyword">...</span>
+0034             oct4.data,<span class="keyword">...</span>
+0035             oct5.data,<span class="keyword">...</span>
+0036             oct6.data,<span class="keyword">...</span>
+0037             oct7.data,<span class="keyword">...</span>
+0038             oct8.data];
+0039         
+0040 <span class="keyword">end</span>
+0041</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

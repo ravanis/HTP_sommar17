@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of YggMap</title>
+  <meta name="keywords" content="YggMap">
+  <meta name="description" content="YggMap is a class used to store data together with keys.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @YggMap -->
+<h1>YggMap
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>YggMap is a class used to store data together with keys.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment"> YggMap is a class used to store data together with keys. 
+ Two important features of this class:
+ It uses isequal to check if two keys are the same.
+ Values are added with plus, e.g. 'obj + {value,key}'.
+     If obj already contains values with that key, the value will be added
+     to the obj values.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="YggMap.html" class="code" title="">YggMap</a>	YggMap is a class used to store data together with keys.</li><li><a href="mtimes.html" class="code" title="function self = mtimes(self, rhs)">mtimes</a>	Ensure self being a Yggdrasil.YggMap</li><li><a href="plus.html" class="code" title="function self = plus(self, rhs)">plus</a>	self = PLUS(self, rhs)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="YggMap.html" class="code" title="">YggMap</a>	YggMap is a class used to store data together with keys.</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = YggMap()</a></li><li><a href="#_sub2" class="code">function output = length(self)</a></li><li><a href="#_sub3" class="code">function [iskey, index] = is_key(self,key)</a></li><li><a href="#_sub4" class="code">function varargout = subsref(obj,s)</a></li><li><a href="#_sub5" class="code">function a = subsasgn(a,s,b)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <span class="comment">% YggMap is a class used to store data together with keys.</span>
+0002 <span class="comment">% Two important features of this class:</span>
+0003 <span class="comment">% It uses isequal to check if two keys are the same.</span>
+0004 <span class="comment">% Values are added with plus, e.g. 'obj + {value,key}'.</span>
+0005 <span class="comment">%     If obj already contains values with that key, the value will be added</span>
+0006 <span class="comment">%     to the obj values.</span>
+0007 classdef <a href="YggMap.html" class="code" title="">YggMap</a>
+0008     properties
+0009         values;
+0010         keys;
+0011     <span class="keyword">end</span>
+0012     methods
+0013         <a name="_sub0" href="#_subfunctions" class="code">function self = YggMap()</a>
+0014         <span class="keyword">end</span>
+0015         
+0016         self = <a href="plus.html" class="code" title="function self = plus(self, rhs)">plus</a>(self, rhs);
+0017         self = <a href="mtimes.html" class="code" title="function self = mtimes(self, rhs)">mtimes</a>(self, rhs);
+0018         
+0019         <a name="_sub1" href="#_subfunctions" class="code">function output = length(self)</a>
+0020             output = <a href="#_sub2" class="code" title="subfunction output = length(self)">length</a>(self.keys);
+0021         <span class="keyword">end</span>
+0022         
+0023         <a name="_sub2" href="#_subfunctions" class="code">function [iskey, index] = is_key(self,key)</a>
+0024             <span class="keyword">for</span> index = 1:self.length()
+0025                 <span class="keyword">if</span> isequal(self.keys(index), key)
+0026                     iskey = true;
+0027                     <span class="keyword">return</span>;
+0028                 <span class="keyword">end</span>
+0029             <span class="keyword">end</span>
+0030             index = -1;
+0031             iskey = false;
+0032         <span class="keyword">end</span>
+0033         
+0034         <a name="_sub3" href="#_subfunctions" class="code">function varargout = subsref(obj,s)</a>
+0035             varargout = cell(1,nargout);
+0036             <span class="keyword">switch</span> s(1).type
+0037                 <span class="keyword">case</span> <span class="string">'()'</span>
+0038                     [iskey, index] = obj.is_key(s(1).subs{1});
+0039                     <span class="keyword">if</span> iskey
+0040                         value = obj.values(index);
+0041                     <span class="keyword">else</span>
+0042                         error(<span class="string">'Bad key given, there exist no value with this key.'</span>)
+0043                     <span class="keyword">end</span>
+0044                     
+0045                     <span class="keyword">if</span> <a href="#_sub2" class="code" title="subfunction output = length(self)">length</a>(s) &gt; 1
+0046                         [varargout{:}] = builtin(<span class="string">'subsref'</span>,value,s(2:end));
+0047                     <span class="keyword">else</span>
+0048                         varargout{1} = value;
+0049                     <span class="keyword">end</span>
+0050                 <span class="keyword">case</span> <span class="string">'.'</span>
+0051                     [varargout{:}] = builtin(<span class="string">'subsref'</span>,obj,s);
+0052                 <span class="keyword">case</span> <span class="string">'{}'</span>
+0053                     varargout = {builtin(<span class="string">'subsref'</span>,obj,s)};
+0054                 <span class="keyword">otherwise</span>
+0055                     error(<span class="string">'Not a valid indexing expression'</span>)
+0056             <span class="keyword">end</span>
+0057         <span class="keyword">end</span>
+0058         
+0059         <a name="_sub4" href="#_subfunctions" class="code">function a = subsasgn(a,s,b)</a>
+0060             <span class="keyword">switch</span> s(1).type
+0061                 <span class="keyword">case</span> <span class="string">'()'</span>
+0062                     s(1).subs
+0063                     <span class="keyword">if</span> <a href="#_sub2" class="code" title="subfunction output = length(self)">length</a>(s) == 1
+0064                         [iskey, index] = a.is_key(s(1).subs);
+0065                         
+0066                         <span class="keyword">if</span> iskey
+0067                             a.values(index) = b;
+0068                         <span class="keyword">else</span>
+0069                             a = a + {s(1).subs, b};
+0070                         <span class="keyword">end</span>
+0071                     <span class="keyword">else</span>
+0072                         a(s(1).subs) = <a href="#_sub5" class="code" title="subfunction a = subsasgn(a,s,b)">subsasgn</a>(a(s(1).subs),s(2:end),b);
+0073                     <span class="keyword">end</span>
+0074                 <span class="keyword">case</span> <span class="string">'.'</span>
+0075                     a = builtin(<span class="string">'subsasgn'</span>,a,s,b);
+0076                 <span class="keyword">case</span> <span class="string">'{}'</span>
+0077                     a = builtin(<span class="string">'subsasgn'</span>,a,s,b);
+0078                 <span class="keyword">otherwise</span>
+0079                     error(<span class="string">'Not a valid indexing expression'</span>)
+0080             <span class="keyword">end</span>
+0081         <span class="keyword">end</span>
+0082         
+0083     <span class="keyword">end</span>
+0084 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

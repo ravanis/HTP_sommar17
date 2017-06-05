@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of abs_sq</title>
+  <meta name="keywords" content="abs_sq">
+  <meta name="description" content="[ oct ] = ABS_SQ( mf_obj )">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../menu.html +Yggdrasil --><!-- menu.html @MF_Efield -->
+<h1>abs_sq
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>[ oct ] = ABS_SQ( mf_obj )</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [ P ] = abs_sq( mf_obj ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre class="comment">[ oct ] = ABS_SQ( mf_obj )
+   Calculates the PLD(power loss density) from a MF_Efield object</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="abs_sq.html" class="code" title="function [ P ] = abs_sq( mf_obj )">abs_sq</a>	[ oct ] = ABS_SQ( mf_obj )</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="MF_Efield.html" class="code" title="">MF_Efield</a>	</li><li><a href="abs_sq.html" class="code" title="function [ P ] = abs_sq( mf_obj )">abs_sq</a>	[ oct ] = ABS_SQ( mf_obj )</li></ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [ P ] = abs_sq( mf_obj )</a>
+0002 <span class="comment">%[ oct ] = ABS_SQ( mf_obj )</span>
+0003 <span class="comment">%   Calculates the PLD(power loss density) from a MF_Efield object</span>
+0004 
+0005 P = <a href="abs_sq.html" class="code" title="function [ P ] = abs_sq( mf_obj )">abs_sq</a>(mf_obj.E.values(1));
+0006 
+0007 <span class="keyword">for</span> i = 2:length(mf_obj.E)
+0008     P = P + <a href="abs_sq.html" class="code" title="function [ P ] = abs_sq( mf_obj )">abs_sq</a>(mf_obj.E.values(i));
+0009 <span class="keyword">end</span>
+0010 
+0011 <span class="keyword">end</span>
+0012</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

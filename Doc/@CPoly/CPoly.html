@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CPoly</title>
+  <meta name="keywords" content="CPoly">
+  <meta name="description" content="This class handles complex polynomials of the type">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html @CPoly -->
+<h1>CPoly
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This class handles complex polynomials of the type</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre class="comment">This class handles complex polynomials of the type 
+2*c_1*conj(c_2) + 4.2i*c_1*c_2.
+It is designed to speed up and to simplify creation of large polynomials.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="CPoly.html" class="code" title="">CPoly</a>	This class handles complex polynomials of the type</li><li><a href="conj.html" class="code" title="function a = conj(a)">conj</a>	a = CONJ(a)</li><li><a href="eq.html" class="code" title="function equal = eq(a,b)">eq</a>	equal = EQ(a,b)</li><li><a href="evaluate.html" class="code" title="function val = evaluate(poly, z_vec)">evaluate</a>	val = EVALUATE(poly, z_vec)</li><li><a href="isconst.html" class="code" title="function is_const = isconst(a)">isconst</a>	is_const = ISCONST(a)</li><li><a href="minus.html" class="code" title="function a = minus(a,b)">minus</a>	a = MINUS(a,b)</li><li><a href="mtimes.html" class="code" title="function a = mtimes(a,b)">mtimes</a>	a = MTIMES(a,b)</li><li><a href="ne.html" class="code" title="function not_equal = ne(a,b)">ne</a>	not_equal = NE(a,b)</li><li><a href="plus.html" class="code" title="function a = plus(a,b)">plus</a>	a = PLUS(a,b)</li><li><a href="reduce.html" class="code" title="function b = reduce(a)">reduce</a>	b = REDUCE(a)</li><li><a href="uminus.html" class="code" title="function a = uminus(a)">uminus</a>	a = UMINUS(a)</li><li><a href="unique_index.html" class="code" title="function index = unique_index(monom)">unique_index</a>	index = UNIQUE_INDEX(monom)</li><li><a href="uplus.html" class="code" title="function a = uplus(a)">uplus</a>	a = UPLUS(a)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="CPoly.html" class="code" title="">CPoly</a>	This class handles complex polynomials of the type</li><li><a href="mtimes.html" class="code" title="function a = mtimes(a,b)">mtimes</a>	a = MTIMES(a,b)</li><li><a href="reduce.html" class="code" title="function b = reduce(a)">reduce</a>	b = REDUCE(a)</li></ul>
+</div>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)">
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = CPoly(coefficient, variables)</a></li></ul>
+</div>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre>0001 <span class="comment">%This class handles complex polynomials of the type</span>
+0002 <span class="comment">%2*c_1*conj(c_2) + 4.2i*c_1*c_2.</span>
+0003 <span class="comment">%It is designed to speed up and to simplify creation of large polynomials.</span>
+0004 classdef <a href="CPoly.html" class="code" title="">CPoly</a>
+0005    properties
+0006       monom
+0007       coefficients
+0008    <span class="keyword">end</span>
+0009    methods
+0010       <span class="comment">%Constructor</span>
+0011       <a name="_sub0" href="#_subfunctions" class="code">function obj = CPoly(coefficient, variables)</a>
+0012          <span class="keyword">if</span> nargin == 0
+0013             error(<span class="string">'Too few input arguments'</span>);
+0014          <span class="keyword">end</span>
+0015          <span class="keyword">if</span> ~(nargin == 1 | nargin == 2) 
+0016             error(<span class="string">'Too many input arguments'</span>);
+0017          <span class="keyword">end</span>
+0018          
+0019          <span class="keyword">if</span> ~isnumeric(coefficient)
+0020              error(<span class="string">'Value must be numeric or defining a monomial.'</span>);
+0021          <span class="keyword">end</span>
+0022          
+0023          <span class="keyword">if</span> nargin == 1
+0024                obj.monom = {[]};
+0025                obj.coefficients = coefficient;
+0026          <span class="keyword">elseif</span> nargin == 2
+0027                <span class="keyword">if</span> ~isnumeric(variables)
+0028                     error(<span class="string">'Variables must be given as a integer.'</span>);
+0029                <span class="keyword">end</span>
+0030                
+0031                <span class="keyword">if</span> length(variables) ~= numel(variables)
+0032                   error(<span class="string">'The integer vector defining the monomial needs to be 1 dimensional.'</span>); 
+0033                <span class="keyword">end</span>
+0034                
+0035                <span class="keyword">if</span> length(variables) ~= size(variables,1)
+0036                   error(<span class="string">'The integer vector defining the monomial needs to be a column vector.'</span>); 
+0037                <span class="keyword">end</span>
+0038                
+0039                <span class="keyword">if</span> ~all(round(variables)==variables)
+0040                   error(<span class="string">'The vector defining the monomial needs to be an integer vector.'</span>); 
+0041                <span class="keyword">end</span>
+0042                
+0043                <span class="keyword">if</span> any(variables == 0)
+0044                   error(<span class="string">'The vector defining the monomial can not contain any zeroes.'</span>); 
+0045                <span class="keyword">end</span>
+0046                
+0047                obj.monom = {sort(int64(variables),<span class="string">'ascend'</span>)};
+0048                obj.coefficients = coefficient;
+0049          <span class="keyword">end</span>
+0050       <span class="keyword">end</span>
+0051       output = <a href="plus.html" class="code" title="function a = plus(a,b)">plus</a>(a,b);
+0052       output = <a href="minus.html" class="code" title="function a = minus(a,b)">minus</a>(a,b);
+0053       output = <a href="uplus.html" class="code" title="function a = uplus(a)">uplus</a>(a,b);
+0054       output = <a href="uminus.html" class="code" title="function a = uminus(a)">uminus</a>(a,b);
+0055       output = <a href="mtimes.html" class="code" title="function a = mtimes(a,b)">mtimes</a>(a,b);
+0056       output = mpower(a,b);
+0057       output = <a href="conj.html" class="code" title="function a = conj(a)">conj</a>(a);
+0058       output = <a href="reduce.html" class="code" title="function b = reduce(a)">reduce</a>(a);
+0059       output = <a href="eq.html" class="code" title="function equal = eq(a,b)">eq</a>(a,b);
+0060       output = <a href="ne.html" class="code" title="function not_equal = ne(a,b)">ne</a>(a,b);
+0061       output = <a href="isconst.html" class="code" title="function is_const = isconst(a)">isconst</a>(a);
+0062    <span class="keyword">end</span>
+0063    methods (Static)
+0064        output = <a href="unique_index.html" class="code" title="function index = unique_index(monom)">unique_index</a>(cell_of_vectors);
+0065    <span class="keyword">end</span>
+0066    methods
+0067        output = <a href="evaluate.html" class="code" title="function val = evaluate(poly, z_vec)">evaluate</a>(obj, vektor_of_z);
+0068    <span class="keyword">end</span>
+0069        
+0070 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

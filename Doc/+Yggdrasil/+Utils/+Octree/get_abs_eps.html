@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of get_abs_eps</title>
+  <meta name="keywords" content="get_abs_eps">
+  <meta name="description" content="[ abs_eps ] = GET_ABS_EPS( mat, rel_eps )">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../../../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- ../../menu.html +Yggdrasil --><!-- ../menu.html +Utils --><!-- menu.html +Octree -->
+<h1>get_abs_eps
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>[ abs_eps ] = GET_ABS_EPS( mat, rel_eps )</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [ abs_eps ] = get_abs_eps( mat, rel_eps ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)"><pre class="comment">[ abs_eps ] = GET_ABS_EPS( mat, rel_eps )
+   Solves the equation abs_eps = rel_eps*mean(DATA(DATA &gt;= abs_eps))
+   where DATA = sqrt(sum(mat.^2,4))
+   If the equation has many solutions the abs_eps with the largest
+   soloution is returned.
+   This function solves the problem of finding an absolute rounding error
+   abs_eps given a relative rounding error rel_eps. If all values in mat 
+   are not negligible the abs_eps = rel_eps*mean(sqrt(sum(mat.^2,4))).</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../../../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [ abs_eps ] = get_abs_eps( mat, rel_eps )</a>
+0002 <span class="comment">%[ abs_eps ] = GET_ABS_EPS( mat, rel_eps )</span>
+0003 <span class="comment">%   Solves the equation abs_eps = rel_eps*mean(DATA(DATA &gt;= abs_eps))</span>
+0004 <span class="comment">%   where DATA = sqrt(sum(mat.^2,4))</span>
+0005 <span class="comment">%   If the equation has many solutions the abs_eps with the largest</span>
+0006 <span class="comment">%   soloution is returned.</span>
+0007 <span class="comment">%   This function solves the problem of finding an absolute rounding error</span>
+0008 <span class="comment">%   abs_eps given a relative rounding error rel_eps. If all values in mat</span>
+0009 <span class="comment">%   are not negligible the abs_eps = rel_eps*mean(sqrt(sum(mat.^2,4))).</span>
+0010 
+0011 <span class="keyword">if</span> rel_eps == 0
+0012     abs_eps = 0;
+0013     <span class="keyword">return</span>;
+0014 <span class="keyword">end</span>
+0015 
+0016 <span class="comment">% DATA is &quot;size&quot; of all data points</span>
+0017 DATA = single(sqrt(Yggdrasil.Math.abs_sq(mat)));
+0018 
+0019 <span class="comment">% This algorithm is built around dividing all points into three groups.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% First group &quot;in&quot; are all points that so far are determined to be &gt;=</span>
+0022 <span class="comment">% abs_eps, aka non-negligible.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Second group &quot;out&quot; are all points that so far are determined to be &lt;</span>
+0025 <span class="comment">% abs_eps, aka negligible.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Third group &quot;P&quot; are all points that so far are undetermined to be either</span>
+0028 <span class="comment">% &quot;out&quot; or &quot;in&quot;</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% The algorithm iteretive move points from P into either &quot;in&quot; or &quot;out&quot;.</span>
+0031 <span class="comment">% At the same time it moves upper and lower limits of &lt; abs_eps and &gt;= abs_eps.</span>
+0032 <span class="comment">% When P can not get smaller, upper converges to the soloution.</span>
+0033 
+0034 P = DATA(:); <span class="comment">% Start out by P = DATA</span>
+0035 clear DATA;
+0036 upper = max(P); <span class="comment">% A first (too large) approximation of &gt;= abs_eps/rel_eps</span>
+0037 lower = mean(P); <span class="comment">% A first (too small) approximation of &lt; abs_eps/rel_eps</span>
+0038 
+0039 prev_num_in  = 0; <span class="comment">% Last iteration's number of points in &quot;in&quot;</span>
+0040 prev_num_not_out = numel(P); <span class="comment">% Last iteration's number of points in &quot;out&quot;</span>
+0041 
+0042 has_converged_outside = false; <span class="comment">% If &quot;out&quot; is filled</span>
+0043 
+0044 <span class="keyword">while</span> true
+0045     
+0046     <span class="comment">% Start looking at canditates to be moved from &quot;P&quot; to &quot;in&quot;</span>
+0047     put_in = P &gt;= upper*rel_eps;
+0048     <span class="keyword">if</span> all(~put_in) <span class="comment">% If there are no candidates</span>
+0049         <span class="keyword">break</span>;
+0050     <span class="keyword">else</span>
+0051         <span class="comment">% Move candidates from &quot;P&quot; to &quot;in&quot; and recalculate the upper bound</span>
+0052         num_in = sum(put_in(:)) + prev_num_in;
+0053         upper = (prev_num_in*upper + sum(P(put_in)))<span class="keyword">...</span>
+0054                  /num_in;
+0055         P = P(~put_in); <span class="comment">% Remove points from P</span>
+0056     <span class="keyword">end</span>
+0057     
+0058     <span class="comment">% Try to move points in &quot;P&quot; to &quot;out&quot;, this is only done because</span>
+0059     <span class="comment">% it makes &quot;P&quot; smaller.</span>
+0060     <span class="keyword">if</span> ~has_converged_outside
+0061         put_out =  P &lt; lower*rel_eps;
+0062         <span class="keyword">if</span> all(~put_out)
+0063             has_converged_outside = true;
+0064         <span class="keyword">else</span>    
+0065             num_not_out = prev_num_not_out - sum(put_out(:));
+0066             lower = (lower*prev_num_not_out - sum(P(put_out)))<span class="keyword">...</span><span class="comment"> % Sum of all values not outside</span>
+0067                         /num_not_out; <span class="comment">% Number of values</span>
+0068             P = P(~put_out);
+0069         <span class="keyword">end</span>
+0070     <span class="keyword">end</span>
+0071 <span class="keyword">end</span>
+0072 
+0073 abs_eps = rel_eps*upper;
+0074 
+0075 <span class="keyword">end</span>
+0076</pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

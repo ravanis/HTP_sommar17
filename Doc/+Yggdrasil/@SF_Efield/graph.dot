@@ -1,0 +1,42 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  SF_Efield -> SF_Efield;
+  SF_Efield -> disp;
+  SF_Efield -> fetch_content;
+  SF_Efield -> get_adr;
+  SF_Efield -> get_data;
+  SF_Efield -> get_meta;
+  SF_Efield -> mtimes_;
+  SF_Efield -> plus_;
+  SF_Efield -> scalar_prod_;
+  SF_Efield -> scalar_prod_integral_;
+  SF_Efield -> set_adr;
+  SF_Efield -> set_data;
+  SF_Efield -> set_meta;
+  SF_Efield -> store_content;
+  SF_Efield -> times_;
+  SF_Efield -> uminus;
+  abs_sq -> abs_sq;
+  disp -> disp;
+  mtimes_ -> mtimes_;
+  plus_ -> plus_;
+  times_ -> mtimes_;
+
+  SF_Efield [URL="SF_Efield.html"];
+  abs_sq [URL="abs_sq.html"];
+  disp [URL="disp.html"];
+  fetch_content [URL="fetch_content.html"];
+  get_adr [URL="get_adr.html"];
+  get_data [URL="get_data.html"];
+  get_meta [URL="get_meta.html"];
+  mtimes_ [URL="mtimes_.html"];
+  plus_ [URL="plus_.html"];
+  scalar_prod_ [URL="scalar_prod_.html"];
+  scalar_prod_integral_ [URL="scalar_prod_integral_.html"];
+  set_adr [URL="set_adr.html"];
+  set_data [URL="set_data.html"];
+  set_meta [URL="set_meta.html"];
+  store_content [URL="store_content.html"];
+  times_ [URL="times_.html"];
+  uminus [URL="uminus.html"];
+}

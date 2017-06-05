@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of compile</title>
+  <meta name="keywords" content="compile">
+  <meta name="description" content="COMPILE()">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html +Yggdrasil -->
+<h1>compile
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>COMPILE()</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function compile() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre class="comment">COMPILE()
+   Compiles all of Yggdrasils C files.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)">
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+</div>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment" style="background-image:url(../brain.png)"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function compile()</a>
+0002 <span class="comment">%COMPILE()</span>
+0003 <span class="comment">%   Compiles all of Yggdrasils C files.</span>
+0004 
+0005 <span class="comment">% Change directory to Yggdrasil</span>
+0006 old_dir = pwd;
+0007 [folder, ~, ~] = fileparts(mfilename(<span class="string">'fullpath'</span>)); <span class="comment">% Get compiles folder</span>
+0008 cd(folder)
+0009 
+0010 <span class="comment">% Do stuff</span>
+0011 <span class="keyword">if</span> ispc 
+0012     <span class="comment">% Windows</span>
+0013     cflags = <span class="string">'-std=c99 -O3'</span>;
+0014 <span class="keyword">else</span>
+0015     <span class="comment">% Non-windows</span>
+0016     cflags = <span class="string">'-std=c99 -O3 -fPIC'</span>;
+0017 <span class="keyword">end</span>
+0018 
+0019 <span class="comment">% Complie call, x is name of file to be compiled</span>
+0020 cc = @(x) eval([<span class="string">'mex CFLAGS='''</span> cflags <span class="string">''''</span><span class="keyword">...</span>
+0021     <span class="string">' -DMATLAB -I+C/src/Lib '</span><span class="keyword">...</span>
+0022     <span class="string">'-outdir +C '</span><span class="keyword">...</span>
+0023     <span class="string">'-output '</span> x <span class="string">' +C/src/'</span> x <span class="string">'/'</span> x <span class="string">'.c'</span>]);
+0024 
+0025 disp(<span class="string">'Compiling Yggdrasil C code.'</span>)
+0026 cc(<span class="string">'mat_to_oct'</span>);
+0027 cc(<span class="string">'oct_to_mat'</span>);
+0028 cc(<span class="string">'plus'</span>);
+0029 cc(<span class="string">'times'</span>);
+0030 cc(<span class="string">'scalar_prod'</span>);
+0031 cc(<span class="string">'weight'</span>);
+0032 cc(<span class="string">'scalar_prod_integral'</span>);
+0033 disp(<span class="string">'Success!'</span>)
+0034 
+0035 <span class="comment">% Go back to old directory</span>
+0036 cd(old_dir)
+0037 
+0038 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 04-Sep-2016 23:50:57 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
