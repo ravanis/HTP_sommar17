@@ -1,10 +1,10 @@
 function [ mat ] = lowPassFilter( mat, smoothVol )
-%Cuts away the highest frequencies in a frequency. Does a "smooth" cut with
-%a gauss distribution. Uses a convulotion instead of working in the
-%frequency plane.
+%Does a "smooth" cut with a gauss distribution. Uses a 
+%convulotion instead of working in the frequency plane.
 
-%Converts the pasFreq to a proper variance sigma (INTE KLAR, needs math)
+%Converts the smoothing Volume to sigma (radius of the sphere)
 sigma=(3*smoothVol/(4*pi))^(1/3);
+%4*sigma covers all of the distibution
 matSize=ceil([4*sigma, 4*sigma, 4*sigma]);
 
 %The center of the Gauss distr. 
