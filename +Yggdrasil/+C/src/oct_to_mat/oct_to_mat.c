@@ -43,7 +43,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     }
 
     // Create the output matrix
-    int dims[4] = {L, L, L, data_dim};
+    size_t dims[4] = {L, L, L, data_dim};
     OUT_MAT = mxCreateNumericArray(4,dims,mxSINGLE_CLASS,mxCOMPLEX);   
   
     real_mat = (float*)mxGetData(    OUT_MAT);   
