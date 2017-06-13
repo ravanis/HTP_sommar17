@@ -42,7 +42,7 @@ addpath([rootpath filesep 'Scripts'])
 addpath(get_path('mesh_scripts'))
 addpath(get_path('tissue_data'))
 
-tissue_mat = Extrapolation.load(get_path('mat_index'));
+tissue_mat = Extrapolation.load(get_path('mat_index', modelType));
 
 switch modelType
     case 'duke'

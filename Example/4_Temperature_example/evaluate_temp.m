@@ -1,10 +1,10 @@
-function [temp_mat, tx] = evaluate_temp(overwriteOutput)
+function [temp_mat, tx] = evaluate_temp(modelType, overwriteOutput)
 %function [temp_mat] = EVALUATE_TEMP(overwriteOutput)
 %   Reads the output from example 3(FEniCS temp. simulations)
 %   and transforms it into a .mat file. It also ends with some evaluation
 %   of the temperature, such as T90, T70, T50.
     
-    if nargin == 0
+    if nargin == 1
         overwriteOutput = false;
     end
 
@@ -25,7 +25,7 @@ function [temp_mat, tx] = evaluate_temp(overwriteOutput)
     end
     
     % Load all tissues
-    tissue_mat = Extrapolation.load([datapath filesep 'tissue_mat.mat']);
+    tissue_mat = Extrapolation.load([datapath filesep 'tissue_mat_' modelType '.mat']);
     [a,b,c] = size(tissue_mat);
     
     % Skip transforming the temperature if .mat already exists

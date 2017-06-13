@@ -1,4 +1,4 @@
-function [P] = EF_optimization(freq, nbrEfields)
+function [P] = EF_optimization(freq, nbrEfields, modelType)
 %[P] = EF_OPTIMIZATION()
 %   Calculates a optimization of E-fields to maximize power in tumor while
 %   minimizing hotspots. The resulting power loss density will then be
@@ -23,7 +23,7 @@ function [P] = EF_optimization(freq, nbrEfields)
     Yggdrasil.Utils.Efield.load_maestro('init', Efilename, sigma, rel_eps);
     
     % Convert sigma from .txt to a volumetric matrix
-    create_sigma_mat(freq);
+    create_sigma_mat(freq, modelType);
     % Create Efield objects
     e = cell(nbrEfields,1);
     for i = 1:nbrEfields
@@ -31,8 +31,16 @@ function [P] = EF_optimization(freq, nbrEfields)
     end
     
     % Load information of where tumor is
-    tissue_mat = Yggdrasil.Utils.load([rootpath filesep 'Data' filesep 'tissue_mat.mat']);
-    tumor_oct = Yggdrasil.Octree(single(tissue_mat==80));
+    tissue_mat = Yggdrasil.Utils.load([rootpath filesep 'Data' filesep 'tissue_mat_' modelType '.mat']);
+    switch modelType
+        case 'duke' 
+            tumor_ind = 80;
+        case 'child' 
+            tumor_ind = 9;
+        otherwise
+            disp('Model type not available. Enter your model indices in EF_optimization')
+    end
+    tumor_oct = Yggdrasil.Octree(single(tissue_mat==tumor_ind));
     
     % Optimize
     % A simple easy optimization used for testing purposes.

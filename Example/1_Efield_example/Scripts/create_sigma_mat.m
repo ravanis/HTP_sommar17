@@ -1,4 +1,4 @@
-function  create_sigma_mat(freq)
+function  create_sigma_mat(freq, modelType)
 %CREATE_SIGMA_MAT(freq)
 
     filename = which('create_sigma_mat');
@@ -7,7 +7,7 @@ function  create_sigma_mat(freq)
     parampath = [datapath ...
                 'df_duke_neck_cst_' num2str(freq) 'MHz.txt'];
     tissue_mat = Yggdrasil.Utils.load([datapath...
-                'tissue_mat.mat']);
+                'tissue_mat_' modelType '.mat']);
             
     % Read the first file and save the wanted collums
     paramMat = caseread(parampath);
@@ -22,9 +22,17 @@ function  create_sigma_mat(freq)
     sigma_mat = sigma(index_to_row(tissue_mat));
     
     % Remove conductivity of non-biological data
-    water_ind = 81;
-    ext_air_ind = 1;
-    int_air_ind = 2;
+    switch modelType
+        case 'duke'
+            water_ind = 81;
+            ext_air_ind = 1;
+            int_air_ind = 2;
+        case 'child' 
+            water_ind = 30;
+            ext_air_ind = 1;
+            int_air_ind = 5;
+        otherwise disp('Model type not available. Enter your model indices in create_sigma_mat.')
+    end
     
     sigma_mat(tissue_mat == water_ind) = 0;
     sigma_mat(tissue_mat == ext_air_ind) = 0;
