@@ -1,4 +1,4 @@
-function run_1
+function run_1(freq, nbrEfields)
 %RUN_1
 %   Run example 1
     olddir = pwd;
@@ -6,7 +6,7 @@ function run_1
     cd([rootpath filesep '..'])
 
     addpath([rootpath filesep '1_Efield_example'])
-    EF_optimization
+    EF_optimization(freq, nbrEfields)
     
     % Use the following to the advanced optimization
     %addpath([rootpath filesep '1_Efield_example_advanced'])

@@ -1,4 +1,4 @@
-function [P] = EF_optimization()
+function [P] = EF_optimization(freq, nbrEfields)
 %[P] = EF_OPTIMIZATION()
 %   Calculates a optimization of E-fields to maximize power in tumor while
 %   minimizing hotspots. The resulting power loss density will then be
@@ -23,11 +23,11 @@ function [P] = EF_optimization()
     Yggdrasil.Utils.Efield.load_maestro('init', Efilename, sigma, rel_eps);
     
     % Convert sigma from .txt to a volumetric matrix
-    create_sigma_mat(434);
+    create_sigma_mat(freq);
     % Create Efield objects
-    e = cell(16,1);
-    for i = 1:16
-        e{i}  = Yggdrasil.SF_Efield(434, i );
+    e = cell(nbrEfields,1);
+    for i = 1:nbrEfields
+        e{i}  = Yggdrasil.SF_Efield(freq, i );
     end
     
     % Load information of where tumor is

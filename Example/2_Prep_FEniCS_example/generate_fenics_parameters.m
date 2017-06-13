@@ -1,4 +1,4 @@
-function generate_fenics_parameters(overwriteOutput, overwriteModel)
+function generate_fenics_parameters(modelType, overwriteOutput, overwriteModel)
 %GENERATE_FENICS_PARAMETERS(overwriteOutput, overwriteModel)
 %   Generates the mesh and matrices with parameters used by pennes.py. 
 %   This function are done in five steps:
@@ -11,10 +11,10 @@ function generate_fenics_parameters(overwriteOutput, overwriteModel)
 %Input:
 % overwriteOutput: Option to regenerate matrices, default is false
 % overwriteModel: Option to recreate the model, default is false
-if nargin < 1
+if nargin < 2
     overwriteOutput = false;
 end
-if nargin < 2
+if nargin < 3
     overwriteModel = false;
 end
 
@@ -43,13 +43,27 @@ addpath(get_path('mesh_scripts'))
 addpath(get_path('tissue_data'))
 
 tissue_mat = Extrapolation.load(get_path('mat_index'));
-tumor_ind = 80;
-muscle_ind = 48;
-cerebellum_ind = 12;
-water_ind = 81;
-ext_air_ind = 1;
-int_air_ind = 2;
+
+switch modelType
+    case 'duke'
+        tumor_ind = 80;
+        muscle_ind = 48;
+        cerebellum_ind = 12;
+        water_ind = 81;
+        ext_air_ind = 1;
+        int_air_ind = 2;
+    case 'child' 
+        tumor_ind = 9;
+        muscle_ind = 3;
+        cerebellum_ind = 8;
+        water_ind = 30;
+        ext_air_ind = 1;
+        int_air_ind = 5;
+    otherwise
+        disp('Model type not available. Enter your model indices in generate_fenics_parameters.')
+end
 disp('initialization done')
+
 %% 2. Generate mesh
 disp('2. Generating meshes')
 % Options for the mesh generation
