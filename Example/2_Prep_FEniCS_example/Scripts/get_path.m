@@ -25,8 +25,6 @@ if nargin < 2
             path = [tissuepath 'boundrary_condition.m'];
         case 'temperature'
             path = [tissuepath 'temperature.m'];
-        case 'cst_data'
-            path = [tissuepath 'df_duke_neck_cst_800MHz.txt'];
         case 'map_index'
             path = [tissuepath 'thermal_db_index_to_mat_index.m'];
         case 'thermal_db'
@@ -74,6 +72,14 @@ else
             path = [sourcepath 'P_' modelType '_' num2str(freq) 'MHz.mat'];
         case 'xtrpol_pld'
             path = [resultpath 'P_' modelType '_' num2str(freq) 'MHz.mat'];
+        case 'cst_data'
+            if startsWith(modelType, 'duke')==1
+                path = [tissuepath 'df_duke_neck_cst_' num2str(freq) 'MHz.txt'];
+            elseif modelType == 'child'
+                path = [tissuepath 'df_chHead_cst_' num2str(freq) 'MHz.txt'];
+            else
+                error('Model type not available. Enter the full name of your model tissue_file in create_sigma_mat.')
+            end
     end
 end
 

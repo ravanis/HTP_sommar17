@@ -1,11 +1,18 @@
 function  create_sigma_mat(freq, modelType)
-%CREATE_SIGMA_MAT(freq)
+%CREATE_SIGMA_MAT(freq, modelType)
 
 filename = which('create_sigma_mat');
 [scriptpath,~,~] = fileparts(filename);
 datapath = [scriptpath filesep '..' filesep 'Data' filesep];
-parampath = [datapath ...
-    'df_duke_neck_cst_' num2str(freq) 'MHz.txt'];
+
+if startsWith(modelType, 'duke')==1
+    parampath = [datapath 'df_duke_neck_cst_' num2str(freq) 'MHz.txt'];
+elseif modelType == 'child'
+    parampath = [datapath 'df_chHead_cst_' num2str(freq) 'MHz.txt'];
+else
+    error('Model type not available. Enter the full name of your model tissue_file in create_sigma_mat.')
+end
+
 tissue_mat = Yggdrasil.Utils.load([datapath...
     'tissue_mat_' modelType '.mat']);
 
