@@ -8,7 +8,7 @@
 
 %tissue_filepath='F:\Models\Duke-tumorModels\tissue_files\test_duke_debye_600MHz.txt';
 
- function [HTQ, SARmaxTum, TC]=getHTQ(TissueMatrix,SARMatrix, tissue_filepath)
+ function [HTQ, SARmaxTum, TC]=getHTQ(TissueMatrix, SARMatrix, tissue_filepath)
  
 %----INPUT PARAMETERS----
 % TissueMatrix - voxel data tissue matrix
@@ -36,9 +36,9 @@ sizeA=size(A);
 
 tumorTissue= B== tumorValue;
 if ~isempty(cystTumorValue)
-    tumorTissue= tumorTissue + (B==cystTumorValue);
+     tumorTissue= tumorTissue + (B==cystTumorValue);
 end
-
+ 
 %Creating tumor SAR matrix by multiplying SAR-matrix and tumor tissue matrix
 tumorMatrix=tumorTissue.*A;
 

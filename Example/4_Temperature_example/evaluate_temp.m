@@ -1,10 +1,10 @@
-function [temp_mat, tx] = evaluate_temp(modelType, overwriteOutput)
+function [temp_mat, tx] = evaluate_temp(modelType, freq, overwriteOutput)
 %function [temp_mat] = EVALUATE_TEMP(overwriteOutput)
 %   Reads the output from example 3(FEniCS temp. simulations)
 %   and transforms it into a .mat file. It also ends with some evaluation
 %   of the temperature, such as T90, T70, T50.
     
-    if nargin == 1
+    if nargin < 3
         overwriteOutput = false;
     end
 
@@ -44,12 +44,12 @@ function [temp_mat, tx] = evaluate_temp(modelType, overwriteOutput)
                error(message); 
             end
         end
-        save([resultpath filesep 'temp.mat'], 'mat', '-v7.3');
+        save([resultpath filesep 'temp_' modelType '_' num2str(freq) 'MHz.mat'], 'mat', '-v7.3');
     else % If the .mat file already exists
         disp('Using previously calcuated temperature .mat file.')
-        temp_mat = Extrapolation.load([resultpath filesep 'temp.mat']);
+        temp_mat = Extrapolation.load([resultpath filesep 'temp_' modelType '_' num2str(freq) 'MHz.mat']);
     end
     
     % Evaluate tumor temp
-    [tx] = tumor_temp(temp_mat);
+    [tx] = tumor_temp(temp_mat, modelType);
 end

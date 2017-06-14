@@ -1,4 +1,4 @@
-function run_4(modelType)
+function run_4(modelType, freq)
 %RUN_4
 %   Run example 4
     olddir = pwd;
@@ -7,7 +7,7 @@ function run_4(modelType)
 
     addpath ..
     addpath 4_Temperature_example
-    evaluate_temp(modelType, true);
+    evaluate_temp(modelType, freq, true);
 
     cd(olddir)
 end

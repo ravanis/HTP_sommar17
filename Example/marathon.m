@@ -14,6 +14,7 @@ modelType = 'duke_tongue'; % Current alternatives:
 goal_power_tumor = 0.18; % Goal power in tumor [W]
 % ------------------------------------------------------
 % ------------------------------------------------------
+addpath Evaluation
 
 hyp_compile
 hyp_init
@@ -25,7 +26,8 @@ run_1(freq, nbrEfields, modelType, goal_power_tumor)
 disp('Done')
 
 %% run_2
-clc
+% Only needs to be run once for each model! Only P-matrix that changes.
+
 run_2(modelType, freq)
 disp('Done')
 
@@ -33,8 +35,20 @@ disp('Done')
 disp('Run_3 should be done in FEniCS, you fool!')
 
 %% run_4
-run_4(modelType);
+run_4(modelType, freq);
 disp('Done')
 
+%% OPTIONAL EVALUATION %%%%%%%%%%%%%%%%%%%%
 
+%% myslicer PLD
+scale = 200;
 
+plot_myslice_PLD(scale, modelType, freq)
+
+%% myslicer T
+scale = 1000;
+
+plot_myslice_temp(scale, modelType, freq)
+
+%% Quality indicators
+quality_indicators(modelType, freq)
