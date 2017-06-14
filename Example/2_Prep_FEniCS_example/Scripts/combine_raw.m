@@ -1,14 +1,14 @@
-function  combine_raw()
+function  combine_raw(modelType)
 %COMBINE_RAW()
 %   Gathers all data needed from different sources and stores them in one
 %   tab separated textfile called thermal_compilation.
-           
+
 index_map = thermal_db_index_to_mat_index();
 
 % Values for tumor which didn't exist in the database the rest of the data
 % was gathered from
 % Source http://cancerres.aacrjournals.org/content/canres/49/23/6449.full.pdf (2016-07-07)
-% Mean value for Grade 3-4 
+% Mean value for Grade 3-4
 perf_tumor = 0.795; % ml/(g min)
 perf_tumor = perf_tumor /(1000*60); % m^3 / (kg s)
 
@@ -24,7 +24,7 @@ paramMat(end-1:end,:)= []; % Removes the last two rows
 
 % Creates three columns containing name, index and density values
 [name, index, ~, ~, ~, dens] = strread(paramMat', '%s %d %f %d %f %f',...
-                                           'whitespace', '\t');
+    'whitespace', '\t');
 
 % Read from the database
 val = xlsread(get_path('thermal_db'), 'Thermal_dielectric_acoustic_MR', '', 'basic');
@@ -53,9 +53,17 @@ name_out(:) = {'Empty'};
 name_out(index) = name;
 
 % Indexes needed for modifying the rest perfusion
-tumor_ind = 80;
-muscle_ind = 48;
-cerebellum_ind = 12;
+if startsWith(modelType, 'duke') == 1
+    tumor_ind = 80;
+    muscle_ind = 48;
+    cerebellum_ind = 12;
+elseif modelType == 'child'
+    tumor_ind = 9;
+    muscle_ind = 3;
+    cerebellum_ind = 8;
+else
+    error('Model type not available. Enter your model indices in combine_raw.')
+end
 
 % Replace the placeholder values for the tumor
 thermal_conductivity_out(tumor_ind) = thermal_cond_tumor;
@@ -78,7 +86,7 @@ f = fopen(get_path('stage1_thermal_compilation'), 'w');
 index_out = 1:max(index);
 for i = index_out
     fprintf(f, '%s\t%d\t%g\t%g\t%g\t%g\t%g\n', name_out{i}, index_out(i),...
-    heat_cap_out(i), thermal_conductivity_out(i), perf_out(i), modified_perf(i), dens_out(i));
+        heat_cap_out(i), thermal_conductivity_out(i), perf_out(i), modified_perf(i), dens_out(i));
 end
 fprintf(f, '%s\t%s\t%s\t%s\t%s\t%s\t%s\n', 'Material', 'Index',...
     'Heat capacity[J/kg/°C]', 'Thermal conductivity[W/m/°C]', 'Rest perfusion[m^3/s/kg]', ...

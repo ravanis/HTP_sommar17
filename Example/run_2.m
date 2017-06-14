@@ -1,4 +1,4 @@
-function run_2(modelType)
+function run_2(modelType, freq)
 %RUN_1_AND_2
 %   Run example 2
     olddir = pwd;
@@ -9,7 +9,7 @@ function run_2(modelType)
     addpath ../Libs/iso2mesh
     addpath 2_Prep_FEniCS_example
     
-    generate_fenics_parameters(modelType, true)
+    generate_fenics_parameters(modelType, freq, true)
 
     cd(olddir)
 end

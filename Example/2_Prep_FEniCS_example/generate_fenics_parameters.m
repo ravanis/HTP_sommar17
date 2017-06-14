@@ -1,20 +1,20 @@
-function generate_fenics_parameters(modelType, overwriteOutput, overwriteModel)
+function generate_fenics_parameters(modelType, freq, overwriteOutput, overwriteModel)
 %GENERATE_FENICS_PARAMETERS(overwriteOutput, overwriteModel)
-%   Generates the mesh and matrices with parameters used by pennes.py. 
+%   Generates the mesh and matrices with parameters used by pennes.py.
 %   This function are done in five steps:
 %   1. Set-up, initalize parameters and load necessary data from model
 %   2. Generate meshes
-%   3. (Optional) Stage 1, gather and collect data from databases 
+%   3. (Optional) Stage 1, gather and collect data from databases
 %   4. Stage 2, create parameter matrices based on indexed model
 %   5. Final stage, extrapolate the .mat files using nearest neighbor
 %
 %Input:
 % overwriteOutput: Option to regenerate matrices, default is false
 % overwriteModel: Option to recreate the model, default is false
-if nargin < 2
+if nargin < 3
     overwriteOutput = false;
 end
-if nargin < 3
+if nargin < 4
     overwriteModel = false;
 end
 
@@ -26,7 +26,7 @@ if ~exist(resultpath,'dir')
     disp(['Creating result folder at ' resultpath]);
     [success,message,~] = mkdir(resultpath);
     if ~success
-       error(message); 
+        error(message);
     end
 end
 
@@ -44,23 +44,22 @@ addpath(get_path('tissue_data'))
 
 tissue_mat = Extrapolation.load(get_path('mat_index', modelType));
 
-switch modelType
-    case 'duke'
-        tumor_ind = 80;
-        muscle_ind = 48;
-        cerebellum_ind = 12;
-        water_ind = 81;
-        ext_air_ind = 1;
-        int_air_ind = 2;
-    case 'child' 
-        tumor_ind = 9;
-        muscle_ind = 3;
-        cerebellum_ind = 8;
-        water_ind = 30;
-        ext_air_ind = 1;
-        int_air_ind = 5;
-    otherwise
-        disp('Model type not available. Enter your model indices in generate_fenics_parameters.')
+if startsWith(modelType, 'duke') == 1
+    tumor_ind = 80;
+    muscle_ind = 48;
+    cerebellum_ind = 12;
+    water_ind = 81;
+    ext_air_ind = 1;
+    int_air_ind = 2;
+elseif modelType == 'child'
+    tumor_ind = 9;
+    muscle_ind = 3;
+    cerebellum_ind = 8;
+    water_ind = 30;
+    ext_air_ind = 1;
+    int_air_ind = 5;
+else
+    error('Model type not available. Enter your model indices in generate_fenics_parameters.')
 end
 disp('initialization done')
 
@@ -72,7 +71,7 @@ dist_bound = 1;
 tet_vol = 15;
 % Ignore water and exterior air and interior air
 bin_mat = tissue_mat ~= water_ind...
-          & tissue_mat ~= ext_air_ind;
+    & tissue_mat ~= ext_air_ind;
 
 if ~exist(get_path('mesh'), 'file') || overwriteModel
     disp('Generating mesh from indexed model.')
@@ -96,7 +95,7 @@ do_stage_1 = false;
 if do_stage_1
     disp('3. Stage 1: Compiling database data')
     % Collect parameter data from databases and save as a textfile
-    combine_raw();
+    combine_raw(modelType);
     disp('Compilation done')
 else
     disp('(Skipping) 3. Stage 1: Compiling database data')
@@ -125,14 +124,14 @@ disp('5. Final stage: Extrapolating data.')
 % See help finalize for explanation
 exist_thermal   = exist(get_path('xtrpol_thermal_cond_mat'), 'file');
 exist_perfusion = exist(get_path('xtrpol_perfusion_heatcapacity_mat'), 'file');
-exist_PLD       = exist(get_path('xtrpol_PLD'), 'file');
+exist_PLD       = exist(get_path('xtrpol_PLD', modelType, freq), 'file');
 
-if ~all([exist_thermal, exist_perfusion, exist_PLD]) || overwriteOutput   
+if ~all([exist_thermal, exist_perfusion, exist_PLD]) || overwriteOutput
     % Get the nearest element inside the body and distances to the element for
     % all elements
     interior_mat = tissue_mat ~= water_ind & tissue_mat ~= ext_air_ind;
     [~,nearest_points] = Extrapolation.meijster(interior_mat);
-
+    
     if ~exist_thermal
         finalize('thermal_cond_mat', nearest_points);
     end
@@ -140,10 +139,10 @@ if ~all([exist_thermal, exist_perfusion, exist_PLD]) || overwriteOutput
         finalize('perfusion_heatcapacity_mat', nearest_points);
     end
     if ~exist_PLD
-        if ~exist(get_path('PLD'), 'file')    
-            error(['Missing PLD (Power loss density) at ''' get_path('PLD') '''.'])
+        if ~exist(get_path('PLD', modelType, freq), 'file')
+            error(['Missing PLD (Power loss density) at ''' get_path('PLD', modelType, freq) '''.'])
         end
-        finalize('PLD', nearest_points);
+        finalize('PLD', nearest_points, modelType, freq);
     end
 end
 

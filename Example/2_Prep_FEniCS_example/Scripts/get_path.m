@@ -1,4 +1,4 @@
-function [path] = get_path(str, modelType)
+function [path] = get_path(str, modelType, freq)
 %function [path] = get_path(str)
 %   Returns the absolute path of a file given by a keyword. This is used to
 %   simplify file loading/saving.
@@ -44,8 +44,6 @@ if nargin < 2
             path = [stage2path 'thermal_cond.mat'];
         case 'perfusion_heatcapacity_mat'
             path = [stage2path 'perfusion_heatcapacity.mat'];
-        case 'pld'
-            path = [sourcepath 'P.mat'];
             
             % Final data, ready to be used by FEniCS
         case 'bnd_heat_transfer_mat'
@@ -58,19 +56,24 @@ if nargin < 2
             path = [resultpath 'thermal_cond.mat'];
         case 'xtrpol_perfusion_heatcapacity_mat'
             path = [resultpath 'perfusion_heatcapacity.mat'];
-        case 'xtrpol_pld'
-            path = [resultpath 'P.mat'];
         case 'mesh'
             path = [resultpath 'mesh.xml'];
         case 'tumor_mesh'
             path = [resultpath 'tumor_mesh.obj'];
     end
-else
+elseif nargin==2
     switch(lower(str))
         case 'mat_index'
             path = [tissuepath 'tissue_mat_' modelType '.mat'];
         otherwise
             error(['Unknown path to file: ''' str '''.'])
+    end
+else
+    switch(lower(str))
+        case 'pld'
+            path = [sourcepath 'P_' modelType '_' num2str(freq) 'MHz.mat'];
+        case 'xtrpol_pld'
+            path = [resultpath 'P_' modelType '_' num2str(freq) 'MHz.mat'];
     end
 end
 

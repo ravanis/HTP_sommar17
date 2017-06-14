@@ -1,4 +1,4 @@
-function run_1(freq, nbrEfields, modelType)
+function run_1(freq, nbrEfields, modelType, goal_power_tumor)
 %RUN_1
 %   Run example 1
     olddir = pwd;
@@ -6,7 +6,7 @@ function run_1(freq, nbrEfields, modelType)
     cd([rootpath filesep '..'])
 
     addpath([rootpath filesep '1_Efield_example'])
-    EF_optimization(freq, nbrEfields, modelType)
+    EF_optimization(freq, nbrEfields, modelType, goal_power_tumor)
     
     % Use the following to the advanced optimization
     %addpath([rootpath filesep '1_Efield_example_advanced'])
