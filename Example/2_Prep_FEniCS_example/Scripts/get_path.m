@@ -63,6 +63,8 @@ elseif nargin==2
     switch(lower(str))
         case 'mat_index'
             path = [tissuepath 'tissue_mat_' modelType '.mat'];
+        case 'rho'
+            path = [tissuepath 'rho_' modelType '.mat'];
         otherwise
             error(['Unknown path to file: ''' str '''.'])
     end

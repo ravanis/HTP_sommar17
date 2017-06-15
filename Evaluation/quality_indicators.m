@@ -1,6 +1,9 @@
 function quality_indicators(modelType, freq)
 % Returns quality indicators HTQ, TC25, SARmaxTum
 
+addpath Example\1_Efield_example\Scripts
+addpath Example\2_Prep_FEniCS_example\Scripts
+
 % Get paths
 filename = which('quality_indicators');
 [evalpath,~,~] = fileparts(filename);
@@ -31,5 +34,5 @@ addpath Evaluation\qualInds
 
 disp(['HTQ is ' num2str(HTQ)])
 disp(['TC25 is ' num2str(TC(1))])
-disp(['Maximum SAR in tumor is ' num2str(SARmaxTum) 'W'])
+disp(['Maximum SAR in tumor is ' num2str(SARmaxTum) ' W'])
 end

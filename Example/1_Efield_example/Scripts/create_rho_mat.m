@@ -1,9 +1,15 @@
 function q= create_rho_mat(modelType, freq)
 % creates a matrix of the density at each position
 
+if exist(get_path('rho', modelType),'file')
+    disp('Rho already exists, delete to create new.')
+    return;
+end
+
 filename = which('create_rho_mat');
 [scriptpath,~,~] = fileparts(filename);
 datapath = [scriptpath filesep '..' filesep 'Data' filesep];
+
 if startsWith(modelType, 'duke') == 1
     parampath = [datapath 'df_duke_neck_cst_' num2str(freq) 'MHz.txt'];
 elseif modelType == 'child'

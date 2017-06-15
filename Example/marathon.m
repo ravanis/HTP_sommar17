@@ -7,13 +7,17 @@
 % ------------------------------------------------------
 % ---- Enter data --------------------------------------
 % ------------------------------------------------------
-freq = 800; % MHz
+freq = 600; % MHz
 nbrEfields = 16; 
 modelType = 'duke_tongue'; % Current alternatives: 
 %    duke_tongue/duke_nasal/duke_neck/child
-goal_power_tumor = 0.18; % Goal power in tumor [W]
+goal_power_tumor = 0.5; % Goal power in tumor [W]
 % ------------------------------------------------------
 % ------------------------------------------------------
+
+disp('Settings saved.')
+
+%% Compile files
 addpath Evaluation
 
 hyp_compile
