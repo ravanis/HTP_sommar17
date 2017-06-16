@@ -7,7 +7,7 @@
 % ------------------------------------------------------
 % ---- Enter data --------------------------------------
 % ------------------------------------------------------
-freq = 600; % MHz
+freq = 450; % MHz
 nbrEfields = 16; 
 modelType = 'duke_tongue'; % Current alternatives: 
 %    duke_tongue/duke_nasal/duke_neck/child
@@ -27,6 +27,12 @@ disp('Done!')
 
 %% run_1
 run_1(freq, nbrEfields, modelType, goal_power_tumor)
+disp('Done')
+
+%% run_1_adv
+freq_vec = [450, 600]; % vector with TWO frequencies
+
+run_1_adv(freq_vec, nbrEfields, modelType)
 disp('Done')
 
 %% run_2

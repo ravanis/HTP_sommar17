@@ -1,13 +1,12 @@
-function run_1(freq, nbrEfields, modelType, goal_power_tumor)
-%RUN_1
+function run_1_adv(freq_vec, nbrEfields, modelType)
+%RUN_1_ADV
 %   Run example 1
     olddir = pwd;
     [rootpath,~,~] = fileparts(mfilename('fullpath'));
     cd([rootpath filesep '..'])
 
     addpath([rootpath filesep '1_Efield_example'])
-    EF_optimization(freq, nbrEfields, modelType, goal_power_tumor)
-    find_settings(modelType, freq)
+    EF_optimization_adv(freq_vec, nbrEfields, modelType)
     
     cd(olddir)
 end
