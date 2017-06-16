@@ -1,6 +1,11 @@
 function  create_sigma_mat(freq, modelType)
 %CREATE_SIGMA_MAT(freq, modelType)
 
+if exist(get_path('sigma', modelType, freq),'file')
+    disp(Sigma already exists, delete to create new.')
+    return;
+end
+
 filename = which('create_sigma_mat');
 [scriptpath,~,~] = fileparts(filename);
 datapath = [scriptpath filesep '..' filesep 'Data' filesep];

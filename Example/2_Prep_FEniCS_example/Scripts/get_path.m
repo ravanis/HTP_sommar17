@@ -74,6 +74,10 @@ else
             path = [sourcepath 'P_' modelType '_' num2str(freq) 'MHz.mat'];
         case 'xtrpol_pld'
             path = [resultpath 'P_' modelType '_' num2str(freq) 'MHz.mat'];
+        case 'sigma'
+            path = [tissuepath 'sigma_' modelType '_' num2str(freq) 'MHz.mat'];
+        case 'sigma_adv'
+            path = [tissuepath 'sigma_adv' modelType '_' num2str(freq) 'MHz.mat'];
         case 'cst_data'
             if startsWith(modelType, 'duke')==1
                 path = [tissuepath 'df_duke_neck_cst_' num2str(freq) 'MHz.txt'];

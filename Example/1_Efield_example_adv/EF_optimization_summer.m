@@ -1,5 +1,5 @@
-function [] = EF_optimizationSummer()
-%[P] = EF_OPTIMIZATIONSUMMER()
+function [] = EF_optimization_summer(freq_vec, nbrEfields, modelType)
+%[P] = EF_OPTIMIZATION_SUMMER()
 %   Calculates a optimization of E-fields to maximize power in tumor while
 %   minimizing hotspots. The resulting power loss densities and antenna settings  will then be
 %   saved to the results folder.
@@ -18,18 +18,18 @@ addpath(scriptpath)
 
 % Initialize load_maestro to be able to load E_fields
 Efilename = @(f,a)[datapath filesep 'Efield_F' num2str(f) '_A' num2str(a)];
-sigma     = @(f)[datapath filesep 'sigma_' num2str(f)];
+sigma     = @(f)[datapath filesep 'sigma_adv_' modelType '_' num2str(f) 'MHz'];
 rel_eps = 0.1;
 Yggdrasil.Utils.Efield.load_maestro('init', Efilename, sigma, rel_eps);
 
 % Convert sigma from .txt to a volumetric matrix
-frequencies = [450 800];
+frequencies = freq_vec;
 n = length(frequencies);
 f_1 = frequencies(1);
 f_2 = frequencies(2);
 % Convert sigma from .txt to a volumetric matrix
 for f = frequencies
-    create_sigma_mat(f);
+    create_sigma_mat_adv(f);
 end
 % Create Efield objects for two frequencies
 e_f1 = cell(1,16);
@@ -41,13 +41,23 @@ end
 
 
 % Load information of where tumor is, and healthy tissue
-tissue_mat = Yggdrasil.Utils.load([rootpath filesep 'Data' filesep 'tissue_mat.mat']);
-tumor_oct = Yggdrasil.Octree(single(tissue_mat==80));
-tumor_mat = to_mat(tumor_oct);
+tissue_mat = Yggdrasil.Utils.load([rootpath filesep 'Data' filesep 'tissue_mat_' modelType '.mat']);
 
-water_ind = 81;
-ext_air_ind = 1;
-int_air_ind = 2;
+if startsWith(modelType, 'duke') == 1
+    tumor_oct = Yggdrasil.Octree(single(tissue_mat==80));
+    water_ind = 81;
+    ext_air_ind = 1;
+    int_air_ind = 2;
+elseif modelType == 'child'
+    tumor_oct = Yggdrasil.Octree(single(tissue_mat==9));
+    water_ind = 30;
+    ext_air_ind = 1;
+    int_air_ind = 5;
+else
+    error('Model type not available. Enter your model indices in EF_optimization_summer')
+end
+
+tumor_mat = to_mat(tumor_oct);
 head_mat = tissue_mat~=water_ind & ...
     tissue_mat~=ext_air_ind & ...
     tissue_mat~=int_air_ind;
@@ -102,7 +112,7 @@ mat_1 = p_opt_1.to_mat;
 mat_2 = p_opt_2.to_mat;
 mat = p_opt.to_mat;
 
-resultpath = [rootpath filesep '..' filesep '1_Efield_results'];
+resultpath = [rootpath filesep '..' filesep '1_Efield_results_summer'];
 
 if ~exist(resultpath,'dir')
     disp(['Creating result folder at ' resultpath]);
@@ -112,11 +122,11 @@ if ~exist(resultpath,'dir')
     end
 end
 
-save([resultpath filesep 'P_1.mat'], 'mat_1', '-v7.3');
-save([resultpath filesep 'settings_1.mat'], 'settings_1', '-v7.3');
-save([resultpath filesep 'p_opt.mat'], 'mat', '-v7.3');
-save([resultpath filesep 'P_2.mat'], 'mat_2', '-v7.3');
-save([resultpath filesep 'settings_2.mat'], 'settings_2', '-v7.3');
+save([resultpath filesep 'P_1_' modelType '_' num2str(f_1) 'MHz.mat'], 'mat_1', '-v7.3');
+save([resultpath filesep 'settings_complex_1_' modelType '_' num2str(f_1) 'MHz.mat'], 'settings_1', '-v7.3');
+save([resultpath filesep 'P_opt_' modelType '_' num2str(f_1) '-' num2str(f_2) 'MHz.mat'], 'mat', '-v7.3');
+save([resultpath filesep 'P_2_' modelType '_' num2str(f_2) 'MHz.mat'], 'mat_2', '-v7.3');
+save([resultpath filesep 'settings_complex_2_' modelType '_' num2str(f_2) 'MHz.mat'], 'settings_2', '-v7.3');
 
 % Empty load_maestro
 Yggdrasil.Utils.Efield.load_maestro('empty');

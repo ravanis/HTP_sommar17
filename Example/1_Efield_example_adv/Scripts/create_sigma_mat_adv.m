@@ -1,6 +1,11 @@
 function  create_sigma_mat_adv(freq, modelType)
 %CREATE_SIGMA_MAT(freq, modelType)
 
+if exist(get_path('sigma_adv', modelType, freq),'file')
+    disp(Sigma_adv already exists, delete to create new.')
+    return;
+end
+
 filename = which('create_sigma_mat_adv');
 [scriptpath,~,~] = fileparts(filename);
 

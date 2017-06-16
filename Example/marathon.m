@@ -61,4 +61,6 @@ scale = 1000;
 plot_myslice_temp(scale, modelType, freq)
 
 %% Quality indicators
+% Stå i HTP_sommar17
+
 quality_indicators(modelType, freq)

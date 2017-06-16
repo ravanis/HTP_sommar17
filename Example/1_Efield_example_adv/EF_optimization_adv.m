@@ -21,6 +21,16 @@ datapath = [rootpath filesep '..' ...
 scriptpath = [rootpath filesep 'Scripts'];
 addpath(scriptpath)
 
+% Create results folder
+resultpath = [rootpath filesep '1_Efield_results_summer'];
+if ~exist(resultpath,'dir')
+    disp(['Creating result folder at ' resultpath]);
+    [success,message,~] = mkdir(resultpath);
+    if ~success
+        error(message);
+    end
+end
+
 % Initialize load_maestro to be able to load E_fields
 Efilename = @(f,a)[datapath filesep 'Efield_F' num2str(f) '_A' num2str(a)];
 sigma     = @(f)[datapath filesep 'sigma_adv_' modelType '_' num2str(f) 'MHz'];
