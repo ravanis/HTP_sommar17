@@ -1,4 +1,4 @@
-function  combine_raw(modelType)
+function  combine_raw(modelType, freq)
 %COMBINE_RAW()
 %   Gathers all data needed from different sources and stores them in one
 %   tab separated textfile called thermal_compilation.
@@ -19,7 +19,7 @@ thermal_cond_tumor = 0.89 * 1.48 * 10^(-3); % cal / (s cm degree C)
 thermal_cond_tumor = thermal_cond_tumor * 4.184 * 100; % W / (m degree C)
 
 % Read the first file and save the wanted collums
-paramMat = caseread(get_path('cst_data'));
+paramMat = caseread(get_path('cst_data', modelType, freq));
 paramMat(end-1:end,:)= []; % Removes the last two rows
 
 % Creates three columns containing name, index and density values
