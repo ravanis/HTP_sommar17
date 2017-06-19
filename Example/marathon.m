@@ -18,7 +18,6 @@ goal_power_tumor = 0.5; % Goal power in tumor [W]
 disp('Settings saved.')
 
 %% Compile files
-addpath Evaluation
 
 hyp_compile
 hyp_init
@@ -37,7 +36,7 @@ run_1_adv(freq_vec, nbrEfields, modelType)
 disp('Done!')
 
 %% run_1_summer
-freq_vec = [450, 600]; % vector with TWO frequencies
+freq_vec = [600, 800]; % vector with TWO frequencies
 
 run_1_summer(freq_vec, nbrEfields, modelType)
 disp('Done!')
@@ -54,8 +53,6 @@ disp('Run_3 should be done in FEniCS, you fool!')
 %% run_4
 run_4(modelType, freq);
 disp('Done!')
-
-
 
 %% OPTIONAL EVALUATION %%%%%%%%%%%%%%%%%%%%
 %% myslicer PLD

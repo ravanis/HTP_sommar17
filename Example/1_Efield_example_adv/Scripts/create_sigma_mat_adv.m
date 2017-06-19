@@ -48,5 +48,5 @@ sigma_mat(water_ind) = 0;
 sigma_mat(ext_air_ind) = 0;
 sigma_mat(int_air_ind) = 0;
 
-save([datapath 'sigma_adv_' num2str(freq) '.mat'], 'sigma_mat', '-v7.3');
+save([datapath 'sigma_adv_' modelType '_' num2str(freq) 'MHz.mat'], 'sigma_mat', '-v7.3');
 end
