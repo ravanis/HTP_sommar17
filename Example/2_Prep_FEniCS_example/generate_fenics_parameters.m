@@ -95,7 +95,7 @@ do_stage_1 = false;
 if do_stage_1
     disp('3. Stage 1: Compiling database data')
     % Collect parameter data from databases and save as a textfile
-    combine_raw(modelType);
+    combine_raw(modelType, freq);
     disp('Compilation done')
 else
     disp('(Skipping) 3. Stage 1: Compiling database data')
