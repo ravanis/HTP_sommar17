@@ -50,7 +50,7 @@ f = @(X)(CPoly.eval_f(X,numer_CPoly,mapp_CPoly_to_real,mapp_CPoly_to_imag,mapp_r
     / CPoly.eval_f(X,denom_CPoly,mapp_CPoly_to_real,mapp_CPoly_to_imag,mapp_realvar_to_fvar));
 
 
-X = fminsearch(f,rand(n,1));
+X = fminsearch(f,rand(n,1))
 %X = particleswarm(f,n);
 
 realZ = containers.Map('KeyType','int64','ValueType','double');

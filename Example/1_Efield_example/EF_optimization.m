@@ -17,7 +17,7 @@ scriptpath = [rootpath filesep 'Scripts'];
 addpath(scriptpath)
 
 % Initialize load_maestro to be able to load E_fields
-Efilename = @(f,a)[datapath filesep 'Efield_F' num2str(f) '_A' num2str(a)];
+Efilename = @(f,a)[datapath filesep 'Efield_' num2str(f) 'MHz_A' num2str(a) '_' modelType];
 sigma     = @(f)[datapath filesep 'sigma_' modelType '_' num2str(f) 'MHz'];
 rel_eps = 0.1;
 Yggdrasil.Utils.Efield.load_maestro('init', Efilename, sigma, rel_eps);

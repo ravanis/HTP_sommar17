@@ -9,7 +9,6 @@ function run_2(modelType, freq)
     addpath ../Libs/iso2mesh
     addpath 2_Prep_FEniCS_example
     
-    generate_fenics_parameters(modelType, freq, true)
-
+    generate_fenics_parameters(modelType, freq, true) % Default: (modelType, freq, false, false)
     cd(olddir)
 end

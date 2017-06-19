@@ -22,7 +22,6 @@ scriptpath = [rootpath filesep 'Scripts'];
 addpath(scriptpath)
 
 % Create results folder
-resultpath = [rootpath filesep '1_Efield_results_summer'];
 if ~exist(resultpath,'dir')
     disp(['Creating result folder at ' resultpath]);
     [success,message,~] = mkdir(resultpath);
@@ -32,7 +31,7 @@ if ~exist(resultpath,'dir')
 end
 
 % Initialize load_maestro to be able to load E_fields
-Efilename = @(f,a)[datapath filesep 'Efield_F' num2str(f) '_A' num2str(a)];
+Efilename = @(f,a)[datapath filesep 'Efield_' num2str(f) 'MHz_A' num2str(a) '_' modelType];
 sigma     = @(f)[datapath filesep 'sigma_adv_' modelType '_' num2str(f) 'MHz'];
 rel_eps = 0.4;
 Yggdrasil.Utils.Efield.load_maestro('init', Efilename, sigma, rel_eps);
@@ -42,7 +41,7 @@ n = length(frequencies);
 
 % Convert sigma from .txt to a volumetric matrix
 for f = frequencies
-    create_sigma_mat_adv(f);
+    create_sigma_mat_adv(f, modelType);
 end
 htq_mat = zeros(n);
 m1_mat = zeros(n);
@@ -78,7 +77,7 @@ e_primary = cell(n,1);
 e_secondary = cell(n,1);
 for j = 1:n
     % Create Efield objects
-    num_ant = 16;
+    num_ant = nbrEfields;
     e_j = cell(num_ant,1);
     for i = 1:num_ant
         e_j{i}  = Yggdrasil.SF_Efield(frequencies(j), i);
@@ -96,6 +95,10 @@ for j = 1:n
     e_opt_main = optimize_M1(e_primary{j},tumor_oct);
     p_opt = abs_sq(e_opt_main);
     p_opt_mat = to_mat(abs_sq(e_opt_main));
+    
+    save([resultpath filesep 'P_opt_' modelType '_' ...
+        num2str(frequencies(j)) 'MHz.mat'], 'p_opt_mat')
+    
     for jtilde = 1:n
         disp(['Optimizing M1 on (' num2str(j) ...
             ',' num2str(jtilde) ') out of ('...
@@ -115,6 +118,9 @@ for j = 1:n
         lin_htq_mat(j,jtilde) = f(x)*tumor_vol/(head_minus_tumor_vol*perc);
         lin_m1_mat(j,jtilde) = M_1(p_opt, tumor_oct)*tumor_vol/head_vol;
         lin_m2_mat(j,jtilde) = M_2(p_opt, tumor_oct)*(tumor_vol^2)/head_vol;
+        
+        save([resultpath filesep 'P_opt_alt_' num2str(frequencies(j)) '_' modelType '_' ...
+            num2str(frequencies(jtilde)) 'MHz.mat'], 'p_opt_alt_mat')
     end
 end
 
@@ -139,7 +145,8 @@ for j = 1:n
         end
         e_opt = optimize_M2(e,tumor_oct);
         p_opt = abs_sq(e_opt);
-        quad_htq_mat(j,jtilde) = HTQ(p_opt,tumor_oct,head_minus_tumor_vol,0.01)
+        
+        quad_htq_mat(j,jtilde) = HTQ(p_opt_mat,tumor_oct,head_minus_tumor_vol,0.01)
         quad_m1_mat(j,jtilde) = M_1(p_opt, tumor_oct)*tumor_vol/head_vol
         quad_m2_mat(j,jtilde) = M_2(p_opt, tumor_oct)*(tumor_vol^2)/head_vol
     end

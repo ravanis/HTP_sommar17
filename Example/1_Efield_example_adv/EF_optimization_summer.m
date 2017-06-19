@@ -17,7 +17,7 @@ scriptpath = [rootpath filesep 'Scripts'];
 addpath(scriptpath)
 
 % Initialize load_maestro to be able to load E_fields
-Efilename = @(f,a)[datapath filesep 'Efield_F' num2str(f) '_A' num2str(a)];
+Efilename = @(f,a)[datapath filesep 'Efield_' num2str(f) 'MHz_A' num2str(a) '_' modelType];
 sigma     = @(f)[datapath filesep 'sigma_adv_' modelType '_' num2str(f) 'MHz'];
 rel_eps = 0.1;
 Yggdrasil.Utils.Efield.load_maestro('init', Efilename, sigma, rel_eps);
@@ -32,9 +32,9 @@ for f = frequencies
     create_sigma_mat_adv(f);
 end
 % Create Efield objects for two frequencies
-e_f1 = cell(1,16);
-e_f2 = cell(1,16);
-for i = 1:16
+e_f1 = cell(1,nbrEfields);
+e_f2 = cell(1,nbrEfields);
+for i = 1:nbrEfields
     e_f1{i} = Yggdrasil.SF_Efield(f_1, i);
     e_f2{i} = Yggdrasil.SF_Efield(f_2, i);
 end
