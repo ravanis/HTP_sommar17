@@ -1,8 +1,8 @@
 List of files:
 
 boundary_condition.m
-df_duke_neck_cst_600MHz.txt
-tissue_mat.mat
+df_duke_neck_cst_400MHz.txt
+tissue_mat_modelType.mat
 temperature.m
 thermal_db_index_to_mat_index.m
 

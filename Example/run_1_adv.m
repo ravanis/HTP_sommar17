@@ -5,12 +5,11 @@ function run_1_adv(freq_vec, nbrEfields, modelType)
     [rootpath,~,~] = fileparts(mfilename('fullpath'));
     cd([rootpath filesep '..'])
 
-    addpath([rootpath filesep '1_Efield_example'])
+    addpath([rootpath filesep '1_Efield_example_adv'])
     EF_optimization_adv(freq_vec, nbrEfields, modelType)
     
-    for i = freq_vec
-        find_settings(modelType, i)
-    end
-    
+    addpath([rootpath filesep '1_Efield_example' filesep 'Scripts'])
+    %find_settings(modelType, freq_vec(1), freq_vec(2))
+    disp('Wont find settings')
     cd(olddir)
 end

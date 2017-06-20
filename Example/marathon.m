@@ -7,7 +7,7 @@
 % ------------------------------------------------------
 % ---- Enter data --------------------------------------
 % ------------------------------------------------------
-freq = 450; % MHz
+freq = 400; % MHz
 nbrEfields = 16; 
 modelType = 'duke_tongue'; % Current alternatives: 
 %    duke_tongue/duke_nasal/duke_neck/child
@@ -18,7 +18,6 @@ goal_power_tumor = 0.5; % Goal power in tumor [W]
 disp('Settings saved.')
 
 %% Compile files
-addpath Evaluation
 
 hyp_compile
 hyp_init
@@ -27,29 +26,35 @@ disp('Done!')
 
 %% run_1
 run_1(freq, nbrEfields, modelType, goal_power_tumor)
-disp('Done')
+disp('Done!')
 
 %% run_1_adv
-freq_vec = [450, 600]; % vector with TWO frequencies
+clc
+freq_vec = [400, 600]; % vector with TWO frequencies
 
 run_1_adv(freq_vec, nbrEfields, modelType)
-disp('Done')
+disp('Done!')
+
+%% run_1_summer
+freq_vec = [600, 800]; % vector with TWO frequencies
+
+run_1_summer(freq_vec, nbrEfields, modelType)
+disp('Done!')
 
 %% run_2
 % Only needs to be run once for each model! Only P-matrix that changes.
 
 run_2(modelType, freq)
-disp('Done')
+disp('Done!')
 
 %% run_3
 disp('Run_3 should be done in FEniCS, you fool!')
 
 %% run_4
 run_4(modelType, freq);
-disp('Done')
+disp('Done!')
 
 %% OPTIONAL EVALUATION %%%%%%%%%%%%%%%%%%%%
-
 %% myslicer PLD
 scale = 200;
 

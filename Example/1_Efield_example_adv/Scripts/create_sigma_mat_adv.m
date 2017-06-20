@@ -1,8 +1,9 @@
 function  create_sigma_mat_adv(freq, modelType)
 %CREATE_SIGMA_MAT(freq, modelType)
 
+addpath Example\2_Prep_FEniCS_example\Scripts
 if exist(get_path('sigma_adv', modelType, freq),'file')
-    disp(Sigma_adv already exists, delete to create new.')
+    disp('Sigma_adv already exists, delete to create new.')
     return;
 end
 
@@ -47,5 +48,5 @@ sigma_mat(water_ind) = 0;
 sigma_mat(ext_air_ind) = 0;
 sigma_mat(int_air_ind) = 0;
 
-save([datapath 'sigma_adv_' num2str(freq) '.mat'], 'sigma_mat', '-v7.3');
+save([datapath 'sigma_adv_' modelType '_' num2str(freq) 'MHz.mat'], 'sigma_mat', '-v7.3');
 end

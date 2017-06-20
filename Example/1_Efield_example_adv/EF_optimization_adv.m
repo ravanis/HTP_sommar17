@@ -22,7 +22,6 @@ scriptpath = [rootpath filesep 'Scripts'];
 addpath(scriptpath)
 
 % Create results folder
-resultpath = [rootpath filesep '1_Efield_results_summer'];
 if ~exist(resultpath,'dir')
     disp(['Creating result folder at ' resultpath]);
     [success,message,~] = mkdir(resultpath);
@@ -32,7 +31,7 @@ if ~exist(resultpath,'dir')
 end
 
 % Initialize load_maestro to be able to load E_fields
-Efilename = @(f,a)[datapath filesep 'Efield_F' num2str(f) '_A' num2str(a)];
+Efilename = @(f,a)[datapath filesep 'Efield_' num2str(f) 'MHz_A' num2str(a) '_' modelType];
 sigma     = @(f)[datapath filesep 'sigma_adv_' modelType '_' num2str(f) 'MHz'];
 rel_eps = 0.4;
 Yggdrasil.Utils.Efield.load_maestro('init', Efilename, sigma, rel_eps);
@@ -42,7 +41,7 @@ n = length(frequencies);
 
 % Convert sigma from .txt to a volumetric matrix
 for f = frequencies
-    create_sigma_mat_adv(f);
+    create_sigma_mat_adv(f, modelType);
 end
 htq_mat = zeros(n);
 m1_mat = zeros(n);
@@ -78,7 +77,7 @@ e_primary = cell(n,1);
 e_secondary = cell(n,1);
 for j = 1:n
     % Create Efield objects
-    num_ant = 16;
+    num_ant = nbrEfields;
     e_j = cell(num_ant,1);
     for i = 1:num_ant
         e_j{i}  = Yggdrasil.SF_Efield(frequencies(j), i);
@@ -92,58 +91,95 @@ for j = 1:n
     e_secondary{j} = select_best(e_j,3,tumor_oct);
 end
 
+% starting values for finding best combination
+bestHTQ = [100 0 0]; % starting value for HTQ and indeces
+best_e_opt_main = optimize_M1(e_primary{1},tumor_oct);
+best_p_opt_final = abs_sq(best_e_opt_main);
+best_e_opt_alt = optimize_M1(e_secondary{1},tumor_oct,best_p_opt_final);
+a=0;
+% Optimize M1
 for j = 1:n
     e_opt_main = optimize_M1(e_primary{j},tumor_oct);
     p_opt = abs_sq(e_opt_main);
     p_opt_mat = to_mat(abs_sq(e_opt_main));
+    
     for jtilde = 1:n
         disp(['Optimizing M1 on (' num2str(j) ...
             ',' num2str(jtilde) ') out of ('...
             num2str(n) ',' num2str(n) ').'])
         e_opt_alt = optimize_M1(e_secondary{jtilde},tumor_oct,p_opt);
-        
         p_opt_alt_mat = to_mat(abs_sq(e_opt_alt));
-        %mix_p = real(to_mat(scalar_prod(e_opt_alt,e_opt_main)));
-        
         perc = 0.01;
         f = @(x)(HTQ(x^2 * p_opt_mat + (1-x)^2 * p_opt_alt_mat...
             ,tumor_mat,head_minus_tumor_vol,perc));
+        
         % Combine them
         x = fminsearch(f,1);
         e_opt = x*e_opt_main+(1-x)*e_opt_alt;
-        p_opt = abs_sq(e_opt);
+        p_opt_final = abs_sq(e_opt);
         lin_htq_mat(j,jtilde) = f(x)*tumor_vol/(head_minus_tumor_vol*perc);
-        lin_m1_mat(j,jtilde) = M_1(p_opt, tumor_oct)*tumor_vol/head_vol;
-        lin_m2_mat(j,jtilde) = M_2(p_opt, tumor_oct)*(tumor_vol^2)/head_vol;
+        lin_m1_mat(j,jtilde) = M_1(p_opt_final, tumor_oct)*tumor_vol/head_vol;
+        lin_m2_mat(j,jtilde) = M_2(p_opt_final, tumor_oct)*(tumor_vol^2)/head_vol;
+        
+        if lin_htq_mat(j,jtilde) <= bestHTQ(1) %saves the best combination of frequencies
+            bestHTQ(1) = lin_htq_mat(j,jtilde); % best HTQ-value
+            bestHTQ(2) = j; %frequency 1 used for best HTQ
+            bestHTQ(3) = jtilde; %frequency 2 used for best HTQ
+            best_e_opt_main = e_opt_main; %used to calculate settings for freq 1
+            best_e_opt_alt = e_opt_alt; %used to calculate settings for freq 2
+            best_p_opt_final = p_opt_final; %p-matrix for best combination of freq
+            a=a+1
+        end
     end
 end
+bestHTQ
+% save best p_opt
+save([resultpath filesep 'P_opt_' modelType '_1_' num2str(frequencies(bestHTQ(2))) ...
+    '_2_' num2str(frequencies(bestHTQ(3))) 'MHz.mat'], 'best_p_opt_final')
 
+% save settings_complex
+amp1 = best_e_opt_main.C.values;
+amp2 = best_e_opt_alt.C.values;
+ant1 = best_e_opt_main.C.keys;
+ant2 = best_e_opt_alt.C.keys;
+
+settings_complex1 = [amp1' ant1'];
+settings_complex2 = [amp2' ant2'];
+
+save([resultpath filesep 'settings_complex_' modelType '_1_' num2str(frequencies(bestHTQ(2))) ...
+    '_2_' num2str(frequencies(bestHTQ(3))) 'MHz_(1).mat'], 'settings_complex1', '-v7.3');
+save([resultpath filesep 'settings_complex_' modelType '_1_' num2str(frequencies(bestHTQ(2))) ...
+    '_2_' num2str(frequencies(bestHTQ(3))) 'MHz_(2).mat'], 'settings_complex2', '-v7.3');
+
+% Show indicators
 lin_htq_mat
 lin_m1_mat
 lin_m2_mat
 
-for j = 1:n
-    for jtilde = j:n
-        disp(['Optimizing M2 on (' num2str(j) ...
-            ',' num2str(jtilde) ') out of ('...
-            num2str(n) ',' num2str(n) ').'])
-        N = length(e_primary{j});
-        M = length(e_secondary{jtilde});
-        
-        e = cell(N+M,1);
-        for i = 1:N
-            e{i} = e_primary{j}{i};
-        end
-        for i = 1:M
-            e{i+N} = e_secondary{jtilde}{i};
-        end
-        e_opt = optimize_M2(e,tumor_oct);
-        p_opt = abs_sq(e_opt);
-        quad_htq_mat(j,jtilde) = HTQ(p_opt,tumor_oct,head_minus_tumor_vol,0.01)
-        quad_m1_mat(j,jtilde) = M_1(p_opt, tumor_oct)*tumor_vol/head_vol
-        quad_m2_mat(j,jtilde) = M_2(p_opt, tumor_oct)*(tumor_vol^2)/head_vol
-    end
-end
+% optimize M2
+% for j = 1:n
+%     for jtilde = j:n
+%         disp(['Optimizing M2 on (' num2str(j) ...
+%             ',' num2str(jtilde) ') out of ('...
+%             num2str(n) ',' num2str(n) ').'])
+%         N = length(e_primary{j});
+%         M = length(e_secondary{jtilde});
+%
+%         e = cell(N+M,1);
+%         for i = 1:N
+%             e{i} = e_primary{j}{i};
+%         end
+%         for i = 1:M
+%             e{i+N} = e_secondary{jtilde}{i};
+%         end
+%         e_opt = optimize_M2(e,tumor_oct);
+%         p_opt = abs_sq(e_opt);
+%
+%         quad_htq_mat(j,jtilde) = HTQ(p_opt_mat,tumor_oct,head_minus_tumor_vol,0.01)
+%         quad_m1_mat(j,jtilde) = M_1(p_opt, tumor_oct)*tumor_vol/head_vol
+%         quad_m2_mat(j,jtilde) = M_2(p_opt, tumor_oct)*(tumor_vol^2)/head_vol
+%     end
+% end
 
 
 

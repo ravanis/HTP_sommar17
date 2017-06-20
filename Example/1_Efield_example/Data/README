@@ -1,23 +1,14 @@
 List of files:
 
-Efield_F600_A1.mat
-Efield_F600_A2.mat
-Efield_F600_A3.mat
-Efield_F600_A4.mat
-Efield_F600_A5.mat
-Efield_F600_A6.mat
-Efield_F600_A7.mat
-Efield_F600_A8.mat
-Efield_F600_A9.mat
-Efield_F600_A10.mat
-Efield_F600_A11.mat
-Efield_F600_A12.mat
-Efield_F600_A13.mat
-Efield_F600_A14.mat
-Efield_F600_A15.mat
-Efield_F600_A16.mat
-tissue_mat.mat
-df_duke_neck_cst_600MHz.txt
+Efield_400MHz_A1_modelType.mat
+Efield_400MHz_A2_modelType.mat
+Efield_400MHz_A3_modelType.mat
+Efield_400MHz_A4_modelType.mat
+...
+Efield_400MHz_An_modelType.mat	% n = antal antenner
+
+tissue_mat_modelType.mat
+df_duke_neck_cst_400MHz.txt % child df_chHead_cst_400MHz.txt
 
 --------------------
 All files are expected to be version 7.3 MAT files.

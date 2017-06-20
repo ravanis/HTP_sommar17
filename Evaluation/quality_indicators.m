@@ -1,8 +1,8 @@
 function quality_indicators(modelType, freq)
 % Returns quality indicators HTQ, TC25, SARmaxTum
 
-addpath Example\1_Efield_example\Scripts
-addpath Example\2_Prep_FEniCS_example\Scripts
+addpath Example\1_Efield_example\Scripts\       
+addpath Example\2_Prep_FEniCS_example\Scripts\  
 
 % Get paths
 filename = which('quality_indicators');
