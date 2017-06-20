@@ -88,7 +88,7 @@ if ~exist(get_path('tumor_mesh'), 'file') || overwriteModel
     % Create a tumor mesh
     bin_to_mesh(get_path('tumor_mesh'), tissue_mat == tumor_ind, rad_bound, dist_bound, tet_vol);
 else
-    disp('Tumor mesh already exists, using exsisting one. Delete to generate new mesh.')
+    disp('Tumor mesh already exists, using existing one. Delete to generate new mesh.')
 end
 disp('Meshing done')
 %% 3. Stage 1 (Optional)
@@ -124,11 +124,15 @@ create_vol_matrices(overwriteOutput, tissue_mat, thermal_conductivity, modified_
 disp('Matrices done.')
 %% 5. Final
 disp('5. Final stage: Extrapolating data.')
+
 % See help finalize for explanation
 exist_thermal   = exist(get_path('xtrpol_thermal_cond_mat'), 'file');
 exist_perfusion = exist(get_path('xtrpol_perfusion_heatcapacity_mat'), 'file');
-exist_PLD       = exist(get_path('xtrpol_PLD', modelType, freq), 'file');
-
+if length(freq)>1
+    exist_PLD       = exist(get_path('xtrpol_PLD_adv', modelType, freq), 'file');
+elseif length(freq)==1
+    exist_PLD       = exist(get_path('xtrpol_PLD', modelType, freq), 'file');
+end
 if ~all([exist_thermal, exist_perfusion, exist_PLD]) || overwriteOutput
     % Get the nearest element inside the body and distances to the element for
     % all elements
@@ -142,10 +146,20 @@ if ~all([exist_thermal, exist_perfusion, exist_PLD]) || overwriteOutput
         finalize('perfusion_heatcapacity_mat', nearest_points);
     end
     if ~exist_PLD
-        if ~exist(get_path('PLD', modelType, freq), 'file')
-            error(['Missing PLD (Power loss density) at ''' get_path('PLD', modelType, freq) '''.'])
+        if length(freq)>1
+            if ~exist(get_path('PLD_adv', modelType, freq), 'file')
+                error(['Missing PLD_adv (Power loss density) at ''' get_path('PLD_adv', modelType, freq) '''.'])
+            end
+        elseif length(freq)==1
+            if ~exist(get_path('PLD', modelType, freq), 'file')
+                error(['Missing PLD (Power loss density) at ''' get_path('PLD', modelType, freq) '''.'])
+            end
         end
-        finalize('PLD', nearest_points, modelType, freq);
+        if length(freq)>1
+            finalize('PLD_adv', nearest_points, modelType, freq);
+        elseif length(freq)==1
+            finalize('PLD', nearest_points, modelType, freq);
+        end
     end
 end
 

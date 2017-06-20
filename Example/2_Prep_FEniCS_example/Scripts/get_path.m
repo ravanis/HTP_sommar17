@@ -72,8 +72,15 @@ else
     switch(lower(str))
         case 'pld'
             path = [sourcepath 'P_' modelType '_' num2str(freq) 'MHz.mat'];
+        case 'pld_adv'
+            [P_adv_filename] = find_P_adv(modelType, freq);
+            path = [sourcepath '..' filesep '1_Efield_results_adv' filesep ...
+                P_adv_filename];
         case 'xtrpol_pld'
             path = [resultpath 'P_' modelType '_' num2str(freq) 'MHz.mat'];
+        case 'xtrpol_pld_adv'
+            [P_adv_filename] = find_P_adv(modelType, freq);
+            path = [resultpath P_adv_filename];
         case 'sigma'
             path = [tissuepath 'sigma_' modelType '_' num2str(freq) 'MHz.mat'];
         case 'sigma_adv'

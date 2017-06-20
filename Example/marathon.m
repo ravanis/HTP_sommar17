@@ -7,7 +7,9 @@
 % ------------------------------------------------------
 % ---- Enter data --------------------------------------
 % ------------------------------------------------------
-freq = 400; % MHz
+freq = 400; % MHz, IF SIMPLE USE ONE FREQUENCY
+freq_vec = [400, 600]; % MHz, IF ADVANCED USE TWO
+
 nbrEfields = 16; 
 modelType = 'duke_tongue'; % Current alternatives: 
 %    duke_tongue/duke_nasal/duke_neck/child
@@ -18,9 +20,8 @@ goal_power_tumor = 0.5; % Goal power in tumor [W]
 disp('Settings saved.')
 
 %% Compile files
-
-hyp_compile
-hyp_init
+hyp_compile;
+hyp_init;
 
 disp('Done!')
 
@@ -29,21 +30,17 @@ run_1(freq, nbrEfields, modelType, goal_power_tumor)
 disp('Done!')
 
 %% run_1_adv
-clc
-freq_vec = [400, 600];  % vector with TWO frequencies
-
 run_1_adv(freq_vec, nbrEfields, modelType)
 disp('Done!')
 
 %% run_1_summer
-freq_vec = [600, 800]; % vector with TWO frequencies
-
 run_1_summer(freq_vec, nbrEfields, modelType)
 disp('Done!')
 
 %% run_2
+clc
 % Only needs to be run once for each model! Only P-matrix that changes.
-run_2(modelType, freq)
+run_2(modelType, freq_vec) % IF SIMPLE USE FREQ, IF ADVANCED USE FREQ_VEC
 disp('Done!')
 
 %% run_3
