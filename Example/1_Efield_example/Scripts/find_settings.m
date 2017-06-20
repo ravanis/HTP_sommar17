@@ -1,7 +1,7 @@
-function find_settings(modelType, freq1, freq2)
+function find_settings(modelType, goal_power_tumor, freq)
 % Calculates settings for the current optimization using the
 % settings_complex matrix obtained from run_1.
-% Can handle one or two frequencies
+% Only handles one frequency
 
 % Find rootpath
 filename = which('find_settings');
@@ -9,27 +9,12 @@ filename = which('find_settings');
 rootpath = [scriptpath filesep '..' filesep '..'];
 
 % Load complex settings matrix
-if nargin == 2
-    load_name = [rootpath filesep '1_Efield_results' filesep ...
+if exist([rootpath filesep '1_Efield_results' filesep ...
+        'settings_complex_' modelType '_' num2str(freq) 'MHz.mat'], 'file')
+load_name = [rootpath filesep '1_Efield_results' filesep ...
         'settings_complex_' modelType '_' num2str(freq) 'MHz.mat'];
-elseif nargin == 3
-    if exist([rootpath filesep '1_Efield_results' filesep ...
-            'settings_complex_' modelType '_1_' num2str(freq1) ...
-            '_2_' num2str(freq2) 'MHz.mat'], 'file')
-        load_name = [rootpath filesep '1_Efield_results' filesep ...
-            'settings_complex_' modelType '_1_' num2str(freq1) ...
-            '_2_' num2str(freq2) 'MHz.mat'];
-    elseif exist([rootpath filesep '1_Efield_results' filesep ...
-            'settings_complex_' modelType '_1_' num2str(freq2) ...
-            '_2_' num2str(freq1) 'MHz.mat'], 'file')
-        load_name = [rootpath filesep '1_Efield_results' filesep ...
-            'settings_complex_' modelType '_1_' num2str(freq2) ...
-            '_2_' num2str(freq1) 'MHz.mat'];
-    else
-        error('Cannot find settings_complex file')
-    end
 else
-    error('Too many frequencies!')
+    error('Cannot find settings_complex file. Check name or number of frequencies in input.')
 end
 settings_complex = Yggdrasil.Utils.load(load_name);
 
@@ -52,7 +37,7 @@ end
 
 % Save settings
 settings = [amp/max(amp(:)), fas, (settings_complex(:,2))];
-save([rootpath filesep '1_Efield_example' filesep 'Scripts' filesep 'settings_' modelType '_' freq 'MHz.mat'], 'settings');
+save([rootpath filesep '1_Efield_example' filesep 'Scripts' filesep 'settings_' modelType '_' freq 'MHz_GP' goal_power_tumor '.mat'], 'settings');
 
 disp('The settings are:')
 disp('  Amplitude   Phase    Antenna')

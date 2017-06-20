@@ -30,7 +30,7 @@ disp('Done!')
 
 %% run_1_adv
 clc
-freq_vec = [400, 600]; % vector with TWO frequencies
+freq_vec = [400, 600];  % vector with TWO frequencies
 
 run_1_adv(freq_vec, nbrEfields, modelType)
 disp('Done!')
@@ -43,7 +43,6 @@ disp('Done!')
 
 %% run_2
 % Only needs to be run once for each model! Only P-matrix that changes.
-
 run_2(modelType, freq)
 disp('Done!')
 

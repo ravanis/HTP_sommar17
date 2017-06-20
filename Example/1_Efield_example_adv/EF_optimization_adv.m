@@ -33,7 +33,7 @@ end
 % Initialize load_maestro to be able to load E_fields
 Efilename = @(f,a)[datapath filesep 'Efield_' num2str(f) 'MHz_A' num2str(a) '_' modelType];
 sigma     = @(f)[datapath filesep 'sigma_adv_' modelType '_' num2str(f) 'MHz'];
-rel_eps = 0.4;
+rel_eps = 0.1;
 Yggdrasil.Utils.Efield.load_maestro('init', Efilename, sigma, rel_eps);
 
 frequencies = freq_vec;
@@ -96,7 +96,7 @@ bestHTQ = [100 0 0]; % starting value for HTQ and indeces
 best_e_opt_main = optimize_M1(e_primary{1},tumor_oct);
 best_p_opt_final = abs_sq(best_e_opt_main);
 best_e_opt_alt = optimize_M1(e_secondary{1},tumor_oct,best_p_opt_final);
-a=0;
+
 % Optimize M1
 for j = 1:n
     e_opt_main = optimize_M1(e_primary{j},tumor_oct);
@@ -128,11 +128,10 @@ for j = 1:n
             best_e_opt_main = e_opt_main; %used to calculate settings for freq 1
             best_e_opt_alt = e_opt_alt; %used to calculate settings for freq 2
             best_p_opt_final = p_opt_final; %p-matrix for best combination of freq
-            a=a+1
         end
     end
 end
-bestHTQ
+
 % save best p_opt
 save([resultpath filesep 'P_opt_' modelType '_1_' num2str(frequencies(bestHTQ(2))) ...
     '_2_' num2str(frequencies(bestHTQ(3))) 'MHz.mat'], 'best_p_opt_final')
@@ -180,63 +179,6 @@ lin_m2_mat
 %         quad_m2_mat(j,jtilde) = M_2(p_opt, tumor_oct)*(tumor_vol^2)/head_vol
 %     end
 % end
-
-
-
-%
-%     % Optimize
-%     % A simple easy optimization used for testing purposes.
-%     iter = 5;
-%     goal_power_tumor = 0.18; % Goal power in tumor [W]
-%     disp(['Optimizating E-fields, ' num2str(iter) ' iterations.'])
-%     e_opt = Yggdrasil.Utils.Efield.optimize_Efield(e,tumor_oct);
-%
-%     % Calculate power loss density, and normalize to 1W in tumor
-%     P = abs_sq(e_opt);
-%     power_in_tumor = scalar_prod_integral(P, tumor_oct)/1E9;
-%     P = P/power_in_tumor; % Normalize to 1W in tumor
-%     e_opt = e_opt*(1/sqrt(power_in_tumor)); % Same with Efield
-%     P_mean = P;
-%
-%     disp('Iteration 1 done.')
-%
-%     for i = 2:5
-%         % Find the optimal combination of Efields using the mean from prev
-%         % iterations
-%         e_opt = Yggdrasil.Utils.Efield.optimize_Efield(e,tumor_oct,P_mean);
-%
-%         % Calculate power loss density
-%         P = abs_sq(e_opt);
-%         power_in_tumor = scalar_prod_integral(P, tumor_oct)/1E9;
-%         P = P/power_in_tumor; % Normalize to 1W in tumor
-%         e_opt = e_opt*(1/sqrt(power_in_tumor)); % Same with Efield
-%         %P_mean = ((i-1)*P_mean + P)/(i); % Mean
-%         P_mean = (P_mean + P)/2; % Exponential mean
-%         disp(['Iteration ' num2str(i) ' done.'])
-%     end
-%
-%     % Set goal power in tumor
-%     P = P*goal_power_tumor;
-%     e_opt = e_opt*sqrt(goal_power_tumor);
-%
-%     % Find amplitudes of active E-fields
-%     amp = e_opt.C.values;
-%     ant = e_opt.C.keys;
-%     settings = [amp' ant'];
-%
-%     % Save power loss density
-%     mat = P.to_mat;
-%     resultpath = [rootpath filesep '..' filesep '1_Efield_results'];
-%
-%     if ~exist(resultpath,'dir')
-%         disp(['Creating result folder at ' resultpath]);
-%         [success,message,~] = mkdir(resultpath);
-%         if ~success
-%            error(message);
-%         end
-%     end
-%     save([resultpath filesep 'P.mat'], 'mat', '-v7.3');
-%     save([resultpath filesep 'settings.mat'], 'settings', '-v7.3');
 
 % Empty load_maestro
 Yggdrasil.Utils.Efield.load_maestro('empty');

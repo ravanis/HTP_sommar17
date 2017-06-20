@@ -92,8 +92,8 @@ if ~exist(resultpath,'dir')
     end
 end
 
-save([resultpath filesep 'P_' modelType '_' num2str(freq) 'MHz.mat'], 'mat', '-v7.3');
-save([resultpath filesep 'settings_complex_' modelType '_' num2str(freq) 'MHz.mat'], 'settings_complex', '-v7.3');
+save([resultpath filesep 'P_' modelType '_' num2str(freq) 'MHz_GP' goal_power_tumor '.mat'], 'mat', '-v7.3');
+save([resultpath filesep 'settings_complex_' modelType '_' num2str(freq) 'MHz_GP' goal_power_tumor '.mat'], 'settings_complex', '-v7.3');
 
 % Empty load_maestro
 Yggdrasil.Utils.Efield.load_maestro('empty');
