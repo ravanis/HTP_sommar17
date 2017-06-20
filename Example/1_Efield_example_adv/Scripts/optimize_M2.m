@@ -83,7 +83,7 @@ function [ E_opt ] = optimize_M2( E, weight1, weight2 )
     
     E_opt = coeff(reZ,imZ,1)*E{1};
     for i = 2:length(E)
-        E_opt = coeff(reZ,imZ,i)*E{i};
+        E_opt = E_opt + coeff(reZ,imZ,i)*E{i};
     end
     
 end
