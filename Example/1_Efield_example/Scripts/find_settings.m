@@ -49,7 +49,6 @@ end
 
 % Save settings
 settings= [amp/max(amp(:)), fas];
-%save([rootpath filesep '1_Efield_example' filesep 'Scripts' filesep 'settings_' modelType '_' freq 'MHz_GP' goal_power_tumor '.mat'], 'settings');
 
 fileID=fopen([rootpath filesep '1_Efield_example' filesep 'Scripts' filesep 'settings_' modelType '_' freq 'MHz_GP' goal_power_tumor '.txt'],'w');
 fprintf(fileID,'%s %d\r\n','frequency:',freq);
