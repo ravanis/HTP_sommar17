@@ -8,9 +8,7 @@ function run_1_summer(freq_vec, nbrEfields, modelType)
     addpath([rootpath filesep '1_Efield_example'])
     EF_optimization_summer(freq_vec, nbrEfields, modelType)
     
-    for i = freq_vec
-        find_settings(modelType, i)
-    end
+   %find_settings_adv(modelType, freq_vec(1), freq_vec(2))
     
     cd(olddir)
 end
