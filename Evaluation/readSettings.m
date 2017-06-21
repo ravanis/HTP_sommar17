@@ -1,4 +1,4 @@
-function [ settings, freq, timeShare ] = readSettings( settingsPath, isSingle )
+function [ settings, timeShare, freq ] = readSettings( settingsPath, isSingle )
 %readSettings: Reads settings from setting txt-file
 %
 %   INPUT: Absolut path to settings ending with .txt
