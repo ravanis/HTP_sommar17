@@ -17,15 +17,15 @@ end
 
 % Read settings from txt file and create squared amplitude vector
 [settings, freq, timeShare]=readSettings(settingPath,oneSetting);
-M = size(freq,1); % Nbr of settings
+M = length(freq); % Nbr of settings
 N = size(settings,1); % Nbr of antennas
 
 ampSq = zeros(M,N);
 ampSq(1,:) = settings(:,1).^2;
 
 if oneSetting == 0
-    for i = 1:M
-        ampSq(i,:)=settings(:,i+2).^2;
+    for i = 1:M-1
+        ampSq(i+1,:)=settings(:,i+2).^2;
     end
 end
 
@@ -74,7 +74,7 @@ for i = 1:M
     ax  = subplot(M+1,width,width*i);
     descr = {['Setting nbr: ' num2str(i)];
         ['Frequency: ' num2str(freq(i)) ' MHz'];
-        ['Time share: ' sprintf('%3.1f%%',100*timeShare(i)) ' %']};
+        ['Time share: ' sprintf('%3.1f%%',100*timeShare(i))]};
     text(.015,0.35,descr);
     set(text,'Interpreter', 'latex','FontSize', 10);
     set ( ax, 'visible', 'off')
