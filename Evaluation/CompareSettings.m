@@ -24,9 +24,9 @@ settingPath2=['D:' fileSep 'KandFFT' filesep 'Results' 'KandFFT' filesep...
 
 % reads settings
 
-[settings1, timeShare1] = readSettings( settingPath1, isSingle );
+[settings1, timeShare1, ~] = readSettings( settingPath1, isSingle );
 
-[settings2, timeShare2] = readSettings( settingPath2, isSingle );
+[settings2, timeShare2, ~] = readSettings( settingPath2, isSingle );
 
 % loads tissue matrix
 
