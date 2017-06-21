@@ -78,7 +78,9 @@ e_opt = e_opt*sqrt(goal_power_tumor);
 % Find amplitudes of active E-fields
 amp = e_opt.C.values;
 ant = e_opt.C.keys;
-settings_complex = [amp' ant'];
+
+settings_complex=zeros(nbrEfields,1);
+settings_complex(ant) = amp;
 
 % Save power loss density
 mat = P.to_mat;

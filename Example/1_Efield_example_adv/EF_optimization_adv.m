@@ -1,4 +1,4 @@
-function [lin_htq_mat,lin_m1_mat,lin_m2_mat, quad_htq_mat,quad_m1_mat,quad_m2_mat] = EF_optimization_adv(freq_vec, nbrEfields, modelType)
+function [bestHTQ] = EF_optimization_adv(freq_vec, nbrEfields, modelType)
 %[P] = EF_OPTIMIZATION()
 %   Calculates a optimization of E-fields to maximize power in tumor while
 %   minimizing hotspots. The resulting power loss density will then be
@@ -96,6 +96,7 @@ bestHTQ = [100 0 0]; % starting value for HTQ and indeces
 best_e_opt_main = optimize_M1(e_primary{1},tumor_oct);
 best_p_opt_final = abs_sq(best_e_opt_main);
 best_e_opt_alt = optimize_M1(e_secondary{1},tumor_oct,best_p_opt_final);
+time_settings=zeros(2,1);
 
 % Optimize M1
 for j = 1:n
@@ -128,6 +129,7 @@ for j = 1:n
             best_e_opt_main = e_opt_main; %used to calculate settings for freq 1
             best_e_opt_alt = e_opt_alt; %used to calculate settings for freq 2
             best_p_opt_final = p_opt_final; %p-matrix for best combination of freq
+            time_settings = [x 1-x];
         end
     end
 end
@@ -142,9 +144,14 @@ amp2 = best_e_opt_alt.C.values;
 ant1 = best_e_opt_main.C.keys;
 ant2 = best_e_opt_alt.C.keys;
 
-settings_complex1 = [amp1' ant1'];
-settings_complex2 = [amp2' ant2'];
+settings_complex1=zeros(nbrEfields,1);
+settings_complex2=zeros(nbrEfields,1);
+settings_complex1(ant1) = amp1;
+settings_complex2(ant2) = amp2;
 
+% saves complex antenna settings and time settings
+save([resultpath filesep 'time_settings_' modelType '_1_' num2str(frequencies(bestHTQ(2))) ...
+    '_2_' num2str(frequencies(bestHTQ(3))) 'MHz.mat'], 'time_settings', '-v7.3');
 save([resultpath filesep 'settings_complex_' modelType '_1_' num2str(frequencies(bestHTQ(2))) ...
     '_2_' num2str(frequencies(bestHTQ(3))) 'MHz_(1).mat'], 'settings_complex1', '-v7.3');
 save([resultpath filesep 'settings_complex_' modelType '_1_' num2str(frequencies(bestHTQ(2))) ...

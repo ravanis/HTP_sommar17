@@ -18,6 +18,19 @@ else
 end
 settings_complex = Yggdrasil.Utils.load(load_name);
 
+% Load time settings matrix if there are more than 2 frequencies
+if(length(freq)>1)
+if exist([rootpath filesep '1_Efield_results' filesep ...
+        'settings_' modelType '_' num2str(freq) 'MHz.mat'], 'file')
+load_name = [rootpath filesep '1_Efield_results' filesep ...
+        'settings_complex_' modelType '_' num2str(freq) 'MHz.mat'];
+else
+    error('Cannot find settings_complex file. Check name or number of frequencies in input.')
+end
+settings_complex = Yggdrasil.Utils.load(load_name);
+
+
+
 % Calculate phase and amplitude
 N = length(settings_complex);
 fas = zeros(N,1);
@@ -36,8 +49,16 @@ for i = 1:length(fas)
 end
 
 % Save settings
-settings = [amp/max(amp(:)), fas, (settings_complex(:,2))];
-save([rootpath filesep '1_Efield_example' filesep 'Scripts' filesep 'settings_' modelType '_' freq 'MHz_GP' goal_power_tumor '.mat'], 'settings');
+settings= [amp/max(amp(:)), fas];
+%save([rootpath filesep '1_Efield_example' filesep 'Scripts' filesep 'settings_' modelType '_' freq 'MHz_GP' goal_power_tumor '.mat'], 'settings');
+
+fileID=fopen([rootpath filesep '1_Efield_example' filesep 'Scripts' filesep 'settings_' modelType '_' freq 'MHz_GP' goal_power_tumor '.txt'],'w');
+fprintf(fileID,'%6s %d\r\n','frequency:',freq);
+for i=1:length(settings)
+fprintf(fileID,'%5.2f %5.2f\r\n',settings(i,:));
+end
+fprintf(fileID,'%s','\\Amplitude \\Phase');
+fclose(fileID);
 
 disp('The settings are:')
 disp('  Amplitude   Phase    Antenna')
