@@ -8,15 +8,37 @@
 
 %tissue_filepath='F:\Models\Duke-tumorModels\tissue_files\test_duke_debye_600MHz.txt';
 
- function [HTQ, SARmaxTum, TC]=getHTQ(TissueMatrix, SARMatrix, tissue_filepath)
+ function [HTQ, SARmaxTum, TC]=getHTQ(TissueMatrix, SARMatrix, modelType, freq, x)
  
 %----INPUT PARAMETERS----
 % TissueMatrix - voxel data tissue matrix
 % SARMatrix - Specific Absorption Rate matrix
 % NOTE: The SARMatrix and TissueMatrix need to have the same size and
 % resolution
-
+if length(freq)==1
+if startsWith(modelType, 'duke') == 1
+    tissue_filepath = ([datapath filesep 'df_duke_neck_cst_' num2str(freq) 'MHz.txt']);
+    elseif modelType == 'child'
+        tissue_filepath = ([datapath filesep 'df_chHead_cst_' num2str(freq) 'MHz.txt']);
+    else
+        error('Model not available. Add to quality_indicators.')
+end
 [tissueData, tissue_names]=importTissueFile(tissue_filepath);
+elseif length(freq)>1
+    if startsWith(modelType, 'duke') == 1
+        for i = length(freq)
+    tissue_filepath(i) = ([datapath filesep 'df_duke_neck_cst_' num2str(freq(i)) 'MHz.txt']);
+        end
+    elseif modelType == 'child'
+        for i = length(freq)
+        tissue_filepath(i) = ([datapath filesep 'df_chHead_cst_' num2str(i) 'MHz.txt']);
+        end
+    else
+        error('Model not available. Add to quality_indicators.')
+    end
+    [tissueData, tissue_names]=weightedTissuefile(tissue_filepath, x);
+end
+
 tumorIndex=find(strcmp('Tumor',tissue_names));
 cystTumorIndex=find(strcmp('Cyst-Tumor',tissue_names));
 tumorValue=tissueData(tumorIndex,1);

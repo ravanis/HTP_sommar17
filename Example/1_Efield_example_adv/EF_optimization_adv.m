@@ -1,4 +1,4 @@
-function [bestHTQ] = EF_optimization_adv(freq_vec, nbrEfields, modelType)
+function EF_optimization_adv(freq_vec, nbrEfields, modelType)
 %[P] = EF_OPTIMIZATION()
 %   Calculates a optimization of E-fields to maximize power in tumor while
 %   minimizing hotspots. The resulting power loss density will then be

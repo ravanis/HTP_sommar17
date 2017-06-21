@@ -29,7 +29,9 @@ function [temp_mat, tx] = evaluate_temp(modelType, freq, overwriteOutput)
     [a,b,c] = size(tissue_mat);
     
     % Skip transforming the temperature if .mat already exists
-    if ~exist([resultpath filesep 'temp.mat'], 'file') || overwriteOutput
+   
+    if ~exist([resultpath filesep 'temp_' modelType '_' num2str(freq) 'MHz.mat'], 'file') || overwriteOutput || length(freq)>1
+        
         % Transform FEniCS-format to .mat
         disp('Transforming temperature format, will take some time.')
         temp_mat = read_temperature(temppath,1,1,1,a,b,c);
@@ -44,7 +46,10 @@ function [temp_mat, tx] = evaluate_temp(modelType, freq, overwriteOutput)
                error(message); 
             end
         end
+        if length(freq)==1
         save([resultpath filesep 'temp_' modelType '_' num2str(freq) 'MHz.mat'], 'mat', '-v7.3');
+        elseif length(freq)>1
+        save([resultpath filesep 'temp_' modelType '_1_' num2str(freq(1)) '_2_' num2str(freq(2)) 'MHz.mat'], 'mat', '-v7.3');    
     else % If the .mat file already exists
         disp('Using previously calcuated temperature .mat file.')
         temp_mat = Extrapolation.load([resultpath filesep 'temp_' modelType '_' num2str(freq) 'MHz.mat']);
