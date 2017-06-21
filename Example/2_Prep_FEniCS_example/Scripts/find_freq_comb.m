@@ -36,7 +36,7 @@ switch fileType
         for i = freq_vec
             for j = freq_vec
                 if exist([rootpath filesep '1_Efield_results_adv' filesep ...
-                        'settings_complex_' modelType '_1_' num2str(i) '_2_' num2str(j) 'MHz'], 'file')
+                        'settings_complex_' modelType '_1_' num2str(i) '_2_' num2str(j) 'MHz_(1).mat'], 'file')
                     freq_comb_filename = ['settings_complex_' modelType '_1_' num2str(i) ...
                         '_2_' num2str(j) 'MHz'];
                 end

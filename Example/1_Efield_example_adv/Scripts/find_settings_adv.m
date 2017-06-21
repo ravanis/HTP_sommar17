@@ -7,22 +7,20 @@ function find_settings_adv(modelType, freq)
 filename = which('find_settings_adv');
 [scriptpath,~,~] = fileparts(filename);
 rootpath = [scriptpath filesep '..' filesep '..'];
+resultpath = [rootpath filesep '1_Efield_results_adv'];
 
 % Load complex settings matrix
-[freq_comb_filename1]= find_freq_comb(modelType, freq, 'settings_complex')
-for i = length(freq)
-    load_name(i) = [resultpath filesep freq_comb_filename1 '_(' num2str(i) ').mat'];
-    load_name_1 = load_name(1)
-    load_name_2 = load_name(2)
-end
+[freq_comb_filename1]= find_freq_comb(modelType, freq, 'settings_complex');
+load_name_1 = [resultpath filesep freq_comb_filename1 '_(1).mat'];
+load_name_2 = [resultpath filesep freq_comb_filename1 '_(2).mat'];
 
 % loads the time quota for the treatment
-[freq_comb_filename2]= find_freq_comb(modelType, freq, 'time_settings')
+[freq_comb_filename2]= find_freq_comb(modelType, freq, 'time_settings');
 load_name_time = [resultpath filesep freq_comb_filename2];
 settings_time=Yggdrasil.Utils.load(load_name_time);
 
 % Calculate phase and amplitude
-for j = 1:(nargin-1)
+for j = 1:length(freq)
     if j == 1
         settings_complex = Yggdrasil.Utils.load(load_name_1);
     elseif j == 2
@@ -45,8 +43,7 @@ for j = 1:(nargin-1)
     end
     
     % Save settings
-    freq = [freq1 freq2];
-    settings = [amp/max(amp(:)), fas, (settings_complex(:,2))];
+    settings = [amp/max(amp(:)), fas, (settings_complex(:))];
     
     fileID=fopen([rootpath filesep '1_Efield_results_adv' filesep 'settings_' modelType '_' num2str(freq(j)) 'MHz_(' num2str(j) ').txt'],'w');
     fprintf(fileID,'%s %.2f %.2f\r\n','time quota:',settings_time);
@@ -56,10 +53,5 @@ for j = 1:(nargin-1)
     end
     fprintf(fileID,'%s','\\Amp \\Phase \\Amp \\Phase');
     fclose(fileID);
-    
-    
-    disp(['The settings for ' num2str(j) ' are:'])
-    disp('  Amplitude   Phase  ')
-    disp([settings])
 end
 end
