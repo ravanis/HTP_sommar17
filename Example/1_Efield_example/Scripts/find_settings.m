@@ -28,8 +28,7 @@ else
     error('Cannot find settings_complex file. Check name or number of frequencies in input.')
 end
 settings_complex = Yggdrasil.Utils.load(load_name);
-
-
+delete(load_name);
 
 % Calculate phase and amplitude
 N = length(settings_complex);
@@ -53,11 +52,11 @@ settings= [amp/max(amp(:)), fas];
 %save([rootpath filesep '1_Efield_example' filesep 'Scripts' filesep 'settings_' modelType '_' freq 'MHz_GP' goal_power_tumor '.mat'], 'settings');
 
 fileID=fopen([rootpath filesep '1_Efield_example' filesep 'Scripts' filesep 'settings_' modelType '_' freq 'MHz_GP' goal_power_tumor '.txt'],'w');
-fprintf(fileID,'%6s %d\r\n','frequency:',freq);
+fprintf(fileID,'%s %d\r\n','frequency:',freq);
 for i=1:length(settings)
-fprintf(fileID,'%5.2f %5.2f\r\n',settings(i,:));
+fprintf(fileID,'%.2f %.2f\r\n',settings(i,:));
 end
-fprintf(fileID,'%s','\\Amplitude \\Phase');
+fprintf(fileID,'%s','\\Amp \\Phase');
 fclose(fileID);
 
 disp('The settings are:')

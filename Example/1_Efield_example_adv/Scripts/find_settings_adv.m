@@ -30,13 +30,16 @@ end
 
 % loads the time quota for the treatment
 settings_time=Yggdrasil.Utils.load(load_name_time);
+delete(load_name_time);
 
 % Calculate phase and amplitude
 for j = 1:(nargin-1)
     if j == 1
         settings_complex = Yggdrasil.Utils.load(load_name_1);
+        delete(load_name_1);
     elseif j == 2
         settings_complex = Yggdrasil.Utils.load(load_name_2);
+        delete(load_name_2);
     end
     N = size(settings_complex);
     fas = zeros(N(1),1);
@@ -60,12 +63,12 @@ for j = 1:(nargin-1)
     %save([rootpath filesep '1_Efield_results_adv' filesep 'settings_' modelType '_' num2str(freq(j)) 'MHz_(' num2str(j) ').mat'], 'settings');
     
     fileID=fopen([rootpath filesep '1_Efield_results_adv' filesep 'settings_' modelType '_' num2str(freq(j)) 'MHz_(' num2str(j) ').txt'],'w');
-    fprintf(fileID,'%6s %.2f %.2f\r\n','time quota:',settings_time);
-    fprintf(fileID,'%6s %d %d\r\n','frequencies:',freq);
+    fprintf(fileID,'%s %.2f %.2f\r\n','time quota:',settings_time);
+    fprintf(fileID,'%s %d %d\r\n','frequencies:',freq);
     for i=1:length(settings)
-        fprintf(fileID,'%5.2f %5.2f %5.2f %5.2f\r\n',settings(i,:));
+        fprintf(fileID,'%.2f %.2f %.2f %.2f\r\n',settings(i,:));
     end
-    fprintf(fileID,'%s','\\Amplitude \\Phase \\Amplitude \\Phase');
+    fprintf(fileID,'%s','\\Amp \\Phase \\Amp \\Phase');
     fclose(fileID);
     
     
