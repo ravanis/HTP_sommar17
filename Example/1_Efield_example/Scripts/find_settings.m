@@ -52,10 +52,5 @@ end
 settings = [amp/max(amp(:)), fas];
 settings_time=1;
 
-writeSettings( resultpath, settings, settings_time, modelType, freq, goal_power_tumor);
-
-disp('The settings are:')
-disp('  Amplitude   Phase    Antenna')
-disp([settings])
-
+writeSettings(resultpath, settings, settings_time, modelType, freq, goal_power_tumor);
 end
