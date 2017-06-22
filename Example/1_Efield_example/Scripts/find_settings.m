@@ -13,7 +13,7 @@ resultpath = [rootpath filesep '1_Efield_results'];
 if exist([rootpath filesep '1_Efield_results' filesep ...
         'settings_complex_' modelType '_' num2str(freq) 'MHz_GP' num2str(goal_power_tumor) '.mat'], 'file')
 load_name = [rootpath filesep '1_Efield_results' filesep ...
-        'settings_complex_' modelType '_' num2str(freq) 'MHz_GP' num2str(goal_power_tumor) 'mat'];
+        'settings_complex_' modelType '_' num2str(freq) 'MHz_GP' num2str(goal_power_tumor) '.mat'];
 else
     error('Cannot find settings_complex file. Check name or number of frequencies in input.')
 end
