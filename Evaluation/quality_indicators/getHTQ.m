@@ -1,10 +1,10 @@
-% Returns the HTQ (hot spot SAR to tumor SAR quotient) and maximum SAR in
+% Returns the HTQ (hot spot PLD to tumor PLD quotient) and maximum PLD in
 % tumor, and TC. 
 % HTQ is defined as the mean in the top 1 percentile of healthy tissue
 % divided by the mean in the tumor.
 % TC is the tumor volume cover percentage of 25,50 and 75% of the maximum
-% SAR value in healthy tissue.
-% To find SARmaxTum from PLDmaxTum, divide with rho
+% PLD value in healthy tissue.
+% To find PLDmaxTum from PLDmaxTum, divide with rho
 
 % Created by JW 01-14
 
@@ -12,17 +12,17 @@
  
 %----INPUT PARAMETERS----
 % TissueMatrix - voxel data tissue matrix
-% SARMatrix - Specific Absorption Rate matrix
-% NOTE: The SARMatrix and TissueMatrix need to have the same size and
+% PLD - Power Loss Density matrix, it is also possible to use a PLD matrix
+% NOTE: The PLD and TissueMatrix need to have the same size and
 % resolution
 
-filename = which('create_sigma_mat');
+filename = which('find_settings');
 [scriptpath,~,~] = fileparts(filename);
 datapath = [scriptpath filesep '..' filesep 'Data' filesep];
 
-if startsWith(modelType, 'duke') == 1
+if startsWith(lower(modelType), 'duke') == 1
     tissue_filepath = ([datapath 'df_duke_neck_cst_400MHz.txt']);
-elseif modelType == 'child'
+elseif strcmpi(modelType,'child')
     tissue_filepath = ([datapath 'df_chHead_cst_400MHz.txt']);
 else
     error('Assumed to retrieve indices for frequency 400 MHz (no matter which frequency you use), the tissuefile for this frequency is missing.')
@@ -49,16 +49,6 @@ for i=1:length(tissue_names)
         nonTissueValues=[nonTissueValues tissueData(i,1)];
     end
     
-% tumorIndex=find(strcmpi('Tumor',tissue_names));
-% cystTumorIndex=find(strcmpi('Cyst-Tumor',tissue_names));
-% tumorValue=tissueData(tumorIndex,1);
-% cystTumorValue=tissueData(cystTumorIndex,1);
-% 
-% airIndex=find(~cellfun('isempty',(strfind(lower(tissue_names),'air'))));
-% waterIndex=find(~cellfun('isempty',(strfind(lower(tissue_names),'water'))));
-% exteriorIndex=find(~cellfun('isempty',(strfind(lower(tissue_names),'exterior'))));
-% nonTissueIndeces=[airIndex;waterIndex;exteriorIndex];
-% nonTissueValues=tissueData(nonTissueIndeces,1);
 end        
 
 A=PLD;
@@ -72,52 +62,57 @@ if ~isempty(cystTumorValue)
      tumorTissue= tumorTissue + (B==cystTumorValue);
 end
  
-%Creating tumor SAR matrix by multiplying SAR-matrix and tumor tissue matrix
+%Creating tumor PLD matrix by multiplying PLD-matrix and tumor tissue matrix
 tumorMatrix=tumorTissue.*A;
 
 
 %Creating 0/1 healthy tissue matrix excluding Tumor and multiplying it with
-%SAR matrix
+%PLD matrix
 
 onlyTissue=ones(size(A));
 for i=1:length(nonTissueValues)
            onlyTissue=onlyTissue.*(TissueMatrix~=nonTissueValues(i)); 
 end
 
-healthySARmatrix=A.*onlyTissue.*(tumorMatrix==0);
+healthyPLD=A.*onlyTissue.*(tumorMatrix==0);
 
 
-% ----- Sort and get SARv1 value ------
+% ----- Sort and get PLDv1 value ------
+
+% Number of elements in the tissue
+[rowTissue, ~]=find(PLD);
+
+% Reshape PLD matrix to a vector to be able to sort
+PLD_vec=reshape(PLD,sizeA(1).*sizeA(2).*sizeA(3),1);
+sortPLD_vec=sort(PLD_vec,'descend');
+%Create correct length on healthy vector
+sortPLD_vec=sortPLD_vec(1:size(rowTissue));
 
 % Number of elements in the healthy tissue
-[rowHEALTHY, ~]=find(healthySARmatrix);
+[rowHealthyTissue, ~]=find(healthyPLD);
 
-% Reshape healthy matrix to a vector to be able to sort
-healthyVector=reshape(healthySARmatrix,sizeA(1).*sizeA(2).*sizeA(3),1);
-sortHealthyVector=sort(healthyVector,'descend');
+% Reshape healthy PLD matrix to a vector to be able to sort
+healthyPLD_vec=reshape(healthyPLD,sizeA(1).*sizeA(2).*sizeA(3),1);
+sortHealthyPLD_vec=sort(healthyPLD_vec,'descend');
 %Create correct length on healthy vector
-sortHealthyVector=sortHealthyVector(1:size(rowHEALTHY));
+sortHealthyPLD_vec=sortHealthyPLD_vec(1:size(rowHealthyTissue));
 
-sizeSort=size(sortHealthyVector);
-% Calculate SARv1 value
-SARv1=mean(sortHealthyVector(1:round(sizeSort(1).*0.01)));
-
-% Sort and get SARtarget value
+% Calculate PLDv1 value
+PLDv1=mean(sortHealthyPLD_vec(1:round(length(sortHealthyPLD_vec).*0.01)));
 
 % Create sorted tumor vector
 [rowTUM, ~]=find(tumorMatrix);
 tumorVector=reshape(tumorMatrix,sizeA(1).*sizeA(2).*sizeA(3),1);
 sortTumorVector=sort(tumorVector,'descend');
-tumorVector=sortTumorVector(1:size(rowTUM));
-sizeTum=size(tumorVector);
-meanSARtarget=mean(tumorVector);
+tumorVector=sortTumorVector(1:length(rowTUM));
+meanPLDtarget=mean(tumorVector);
 
-HTQ=SARv1/meanSARtarget;
+HTQ=PLDv1/meanPLDtarget;
 PLDmaxTum=tumorVector(1);
 
 % Tumor coverage
-TC(1)=sum(tumorVector>0.25*sortHealthyVector(1))/sizeTum(1); % TC25
-TC(2)=sum(tumorVector>0.5*sortHealthyVector(1))/sizeTum(1);  % TC50
-TC(3)=sum(tumorVector>0.75*sortHealthyVector(1))/sizeTum(1); % TC75
+TC(1)=sum(tumorVector>0.25*sortPLD_vec(1))/length(tumorVector); % TC25
+TC(2)=sum(tumorVector>0.5*sortPLD_vec(1))/length(tumorVector);  % TC50
+TC(3)=sum(tumorVector>0.75*sortPLD_vec(1))/length(tumorVector); % TC75
 
 end
