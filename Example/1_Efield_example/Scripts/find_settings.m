@@ -7,6 +7,7 @@ function find_settings(modelType, goal_power_tumor, freq)
 filename = which('find_settings');
 [scriptpath,~,~] = fileparts(filename);
 rootpath = [scriptpath filesep '..' filesep '..'];
+resultpath = [rootpath filesep '1_Efield_results'];
 
 % Load complex settings matrix
 if exist([rootpath filesep '1_Efield_results' filesep ...
@@ -48,15 +49,10 @@ for i = 1:length(fas)
 end
 
 % Save settings
-settings= [amp/max(amp(:)), fas];
+settings = [amp/max(amp(:)), fas];
+settings_time=1;
 
-fileID=fopen([rootpath filesep '1_Efield_example' filesep 'Scripts' filesep 'settings_' modelType '_' freq 'MHz_GP' goal_power_tumor '.txt'],'w');
-fprintf(fileID,'%s %d\r\n','frequency:',freq);
-for i=1:length(settings)
-fprintf(fileID,'%.2f %.2f\r\n',settings(i,:));
-end
-fprintf(fileID,'%s','\\Amp \\Phase');
-fclose(fileID);
+writeSettings( resultpath, settings, settings_time, modelType, freq, goal_power_tumor);
 
 disp('The settings are:')
 disp('  Amplitude   Phase    Antenna')

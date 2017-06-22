@@ -49,14 +49,12 @@ for j = 1:length(freq)
 end
 
 freq = [str2num(used_freq(1:3)) str2num(used_freq(4:6))];
-fileID=fopen([resultpath filesep 'settings_' modelType '_1_' used_freq(1:3) '_2_' used_freq(4:6) 'MHz.txt'],'w');
-fprintf(fileID,'%s %.2f %.2f\r\n','time quota:',settings_time);
-fprintf(fileID,'%s %d %d\r\n','frequencies:', freq);
-for i=1:length(settings)
-    fprintf(fileID,'%.2f %.2f %.2f %.2f\r\n',settings(i,:));
-end
-fprintf(fileID,'%s','\\Amp \\Phase \\Amp \\Phase');
-fclose(fileID);
+
+% change to actual goal power if this ends up to being used here also. It
+% will also be necessary to change the file name in writeSettings also.
+goal_power_tumor=1; 
+
+writeSettings( resultpath,settings, settings_time, modelType, freq, goal_power_tumor);
 
 delete([resultpath filesep freq_comb_filename2])
 end
