@@ -50,11 +50,7 @@ end
 
 freq = [str2num(used_freq(1:3)) str2num(used_freq(4:6))];
 
-% change to actual goal power if this ends up to being used here also. It
-% will also be necessary to change the file name in writeSettings also.
-goal_power_tumor=1; 
-
-writeSettings( resultpath,settings, settings_time, modelType, freq, goal_power_tumor);
+writeSettings( resultpath, settings, settings_time, modelType, freq);
 
 delete([resultpath filesep freq_comb_filename2])
 end
