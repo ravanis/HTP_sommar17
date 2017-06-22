@@ -62,9 +62,5 @@ plot_myslice_temp(scale, modelType, freq)
 
 %% Quality indicators
 % Stå i HTP_sommar17
-% Kan köras med freq eller freq_vec
-% VAR NOGA MED ATT SKRIVA FREQ_VEC I ORDNING SÅ ATT DET ÖVERENSSTÄMMER MED
-% ATT FREQ1 HAR ANDEL X OCH FREQ2 HAR ANDEL 1-X
-x = 
-quality_indicators(modelType, freq_vec, x) %fixa x! behöver fixa så den kan 
-%köra med/utan x eller så den laddar x om freq_vec
+
+x = quality_indicators(modelType, freq_vec) % Kan köras med freq eller freq_vec

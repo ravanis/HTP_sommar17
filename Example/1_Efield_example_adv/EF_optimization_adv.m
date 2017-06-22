@@ -111,12 +111,16 @@ for j = 1:n
         e_opt_alt = optimize_M1(e_secondary{jtilde},tumor_oct,p_opt);
         p_opt_alt_mat = to_mat(abs_sq(e_opt_alt));
         perc = 0.01;
-        f = @(x)(HTQ(x^2 * p_opt_mat + (1-x)^2 * p_opt_alt_mat...
+         f = @(x)(HTQ(x^2 * p_opt_mat + (1-x)^2 * p_opt_alt_mat...
             ,tumor_mat,head_minus_tumor_vol,perc));
         
         % Combine them
+        %x = fmincon(f,[0.8],[],[],[],[], 0,1)
         x = fminsearch(f,1);
-        x = x/(x+(1-x))
+        a = 0; b = 1;
+        z = a +(b-a)*sin(x).^2;
+        x = z;
+
         %x = particleswarm(f,1, 0,1)
         e_opt = x*e_opt_main+(1-x)*e_opt_alt;
         p_opt_final = abs_sq(e_opt);
@@ -163,31 +167,6 @@ save([resultpath filesep 'settings_complex_' modelType '_1_' num2str(frequencies
 lin_htq_mat
 lin_m1_mat
 lin_m2_mat
-
-% optimize M2
-% for j = 1:n
-%     for jtilde = j:n
-%         disp(['Optimizing M2 on (' num2str(j) ...
-%             ',' num2str(jtilde) ') out of ('...
-%             num2str(n) ',' num2str(n) ').'])
-%         N = length(e_primary{j});
-%         M = length(e_secondary{jtilde});
-%
-%         e = cell(N+M,1);
-%         for i = 1:N
-%             e{i} = e_primary{j}{i};
-%         end
-%         for i = 1:M
-%             e{i+N} = e_secondary{jtilde}{i};
-%         end
-%         e_opt = optimize_M2(e,tumor_oct);
-%         p_opt = abs_sq(e_opt);
-%
-%         quad_htq_mat(j,jtilde) = HTQ(p_opt_mat,tumor_oct,head_minus_tumor_vol,0.01)
-%         quad_m1_mat(j,jtilde) = M_1(p_opt, tumor_oct)*tumor_vol/head_vol
-%         quad_m2_mat(j,jtilde) = M_2(p_opt, tumor_oct)*(tumor_vol^2)/head_vol
-%     end
-% end
 
 % Empty load_maestro
 Yggdrasil.Utils.Efield.load_maestro('empty');

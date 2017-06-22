@@ -27,10 +27,10 @@ frequencies = freq_vec;
 n = length(frequencies);
 f_1 = frequencies(1);
 f_2 = frequencies(2);
-% Convert sigma from .txt to a volumetric matrix
 for f = frequencies
     create_sigma_mat_adv(f);
 end
+
 % Create Efield objects for two frequencies
 e_f1 = cell(1,nbrEfields);
 e_f2 = cell(1,nbrEfields);
@@ -38,7 +38,6 @@ for i = 1:nbrEfields
     e_f1{i} = Yggdrasil.SF_Efield(f_1, i);
     e_f2{i} = Yggdrasil.SF_Efield(f_2, i);
 end
-
 
 % Load information of where tumor is, and healthy tissue
 tissue_mat = Yggdrasil.Utils.load([rootpath filesep 'Data' filesep 'tissue_mat_' modelType '.mat']);
