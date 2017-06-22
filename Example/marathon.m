@@ -7,7 +7,7 @@
 % ------------------------------------------------------
 % ---- Enter data --------------------------------------
 % ------------------------------------------------------
-freq = 600; % MHz, IF SIMPLE USE ONE FREQUENCY
+freq = 400; % MHz, IF SIMPLE USE ONE FREQUENCY
 freq_vec = [400, 400]; % MHz, IF ADVANCED USE TWO
 
 nbrEfields = 16; 
@@ -26,6 +26,7 @@ hyp_init;
 disp('Done!')
 
 %% run_1
+clc
 run_1(freq, nbrEfields,  modelType, goal_power_tumor)
 disp('Done!')
 

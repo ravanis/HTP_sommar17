@@ -45,7 +45,6 @@ disp(['Removed ' num2str(sum(Q<=max(Q)/10)) ' Efields.'])
             e_i = Efield_objects{i};
             e_j = Efield_objects{j};
             P = scalar_prod(e_i,e_j);
-
             A(i,j) = scalar_prod_integral(P,weight1)/1e9;
             if nargin == 2
                 B(i,j) = integral(P)/1e9;
@@ -58,6 +57,7 @@ disp(['Removed ' num2str(sum(Q<=max(Q)/10)) ' Efields.'])
     P_nom = CPoly(0);
     P_den = CPoly(0);
     n = length(Efield_objects);
+    
     % Create the polynomials
     for i = 1:n % pick first Efield
         for j = 1:n % pick second Efield

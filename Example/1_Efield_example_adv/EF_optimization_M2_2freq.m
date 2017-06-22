@@ -12,7 +12,7 @@ if strcmp(which('Yggdrasil.Octree'), '')
 end
 
 % Get root path
-filename = which('EF_optimization_adv');
+filename = which('EF_optimization_M2_2freq');
 [rootpath,~,~] = fileparts(filename);
 resultpath = [rootpath filesep '..' filesep '1_Efield_results_adv'];
 datapath = [rootpath filesep '..' ...

@@ -76,8 +76,8 @@ disp('Iteration 1 done.')
 % end
 
 % Set goal power in tumor
-P = P*goal_power_tumor;
-e_opt = e_opt*sqrt(goal_power_tumor);
+P = P*goal_power_tumor;                 % skalar P med goal_power_tumor
+e_opt = e_opt*sqrt(goal_power_tumor);   % skalar e_opt med goal_power_tumor
 
 % Find amplitudes of active E-fields
 amp = e_opt.C.values;
