@@ -110,7 +110,7 @@ for j = 1:n
         e_opt = optimize_M2(e,tumor_oct);
         p_opt = abs_sq(e_opt);
 
-        quad_htq_mat(j,jtilde) = HTQ(p_opt_mat,tumor_oct,head_minus_tumor_vol,0.01)
+        quad_htq_mat(j,jtilde) = HTQ(p_opt_mat,tumor_oct,0.01) % old version has head_minus_tumor_vol as input and is multiplied with *tumor_vol/(head_minus_tumor_vol*perc); 
         quad_m1_mat(j,jtilde) = M_1(p_opt, tumor_oct)*tumor_vol/head_vol
         quad_m2_mat(j,jtilde) = M_2(p_opt, tumor_oct)*(tumor_vol^2)/head_vol
     end

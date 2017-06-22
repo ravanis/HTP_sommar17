@@ -112,7 +112,7 @@ for j = 1:n
         p_opt_alt_mat = to_mat(abs_sq(e_opt_alt));
         perc = 0.01;
          f = @(x)(HTQ(x^2 * p_opt_mat + (1-x)^2 * p_opt_alt_mat...
-            ,tumor_mat,head_minus_tumor_vol,perc));
+            ,tumor_mat,perc)); % old verion has head_minus_tumor_vol as input
         
         % Combine them
         %x = fmincon(f,[0.8],[],[],[],[], 0,1)
@@ -124,7 +124,7 @@ for j = 1:n
         %x = particleswarm(f,1, 0,1)
         e_opt = x*e_opt_main+(1-x)*e_opt_alt;
         p_opt_final = abs_sq(e_opt);
-        lin_htq_mat(j,jtilde) = f(x)*tumor_vol/(head_minus_tumor_vol*perc);
+        lin_htq_mat(j,jtilde) = f(x); % for old version: *tumor_vol/(head_minus_tumor_vol*perc);
         lin_m1_mat(j,jtilde) = M_1(p_opt_final, tumor_oct)*tumor_vol/head_vol;
         lin_m2_mat(j,jtilde) = M_2(p_opt_final, tumor_oct)*(tumor_vol^2)/head_vol;
         
