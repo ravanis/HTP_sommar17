@@ -45,12 +45,13 @@ for j = 1:length(freq)
     end
     
     % Save settings
-    settings = [settings amp/max(amp(:)) fas]; 
+    settings = [settings amp/max(amp(:)) fas];
 end
 
+freq = [str2num(used_freq(1:3)) str2num(used_freq(4:6))];
 fileID=fopen([resultpath filesep 'settings_' modelType '_1_' used_freq(1:3) '_2_' used_freq(4:6) 'MHz.txt'],'w');
 fprintf(fileID,'%s %.2f %.2f\r\n','time quota:',settings_time);
-fprintf(fileID,'%s %d %d\r\n','frequencies:',freq);
+fprintf(fileID,'%s %d %d\r\n','frequencies:', freq);
 for i=1:length(settings)
     fprintf(fileID,'%.2f %.2f %.2f %.2f\r\n',settings(i,:));
 end
