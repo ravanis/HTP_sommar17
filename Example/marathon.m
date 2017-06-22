@@ -7,7 +7,7 @@
 % ------------------------------------------------------
 % ---- Enter data --------------------------------------
 % ------------------------------------------------------
-freq = 400; % MHz, IF SIMPLE USE ONE FREQUENCY
+freq = 600; % MHz, IF SIMPLE USE ONE FREQUENCY
 freq_vec = [400, 400]; % MHz, IF ADVANCED USE TWO
 
 nbrEfields = 16; 
@@ -26,7 +26,7 @@ hyp_init;
 disp('Done!')
 
 %% run_1
-run_1(freq, nbrEfields, modelType, goal_power_tumor)
+run_1(freq, nbrEfields,  modelType, goal_power_tumor)
 disp('Done!')
 
 %% run_1_adv
@@ -63,4 +63,4 @@ plot_myslice_temp(scale, modelType, freq)
 %% Quality indicators
 % Stå i HTP_sommar17
 
-x = quality_indicators(modelType, freq_vec) % Kan köras med freq eller freq_vec
+quality_indicators(modelType, freq, goal_power_tumor) % Kan köras med freq eller freq_vec

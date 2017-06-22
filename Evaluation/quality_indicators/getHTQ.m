@@ -4,9 +4,11 @@
 % divided by the mean in the tumor.
 % TC is the tumor volume cover percentage of 25,50 and 75% of the maximum
 % SAR value in healthy tissue.
+% To find SARmaxTum from PLDmaxTum, divide with rho
+
 % Created by JW 01-14
 
- function [HTQ, SARmaxTum, TC]=getHTQ(TissueMatrix, SARMatrix, modelType)
+ function [HTQ, PLDmaxTum, TC]=getHTQ(TissueMatrix, PLD, modelType)
  
 %----INPUT PARAMETERS----
 % TissueMatrix - voxel data tissue matrix
@@ -23,7 +25,7 @@ if startsWith(modelType, 'duke') == 1
 elseif modelType == 'child'
     tissue_filepath = ([datapath 'df_chHead_cst_400MHz.txt']);
 else
-    error('Assumed to retrieve indices for frequency 400 MHz, the tissuefile for this frequency is missing')
+    error('Assumed to retrieve indices for frequency 400 MHz (no matter which frequency you use), the tissuefile for this frequency is missing.')
 end
 
 [tissueData, tissue_names]=importTissueFile(tissue_filepath);
@@ -59,7 +61,7 @@ for i=1:length(tissue_names)
 % nonTissueValues=tissueData(nonTissueIndeces,1);
 end        
 
-A=SARMatrix;
+A=PLD;
 B=TissueMatrix;
 sizeA=size(A);
 
@@ -111,7 +113,7 @@ sizeTum=size(tumorVector);
 meanSARtarget=mean(tumorVector);
 
 HTQ=SARv1/meanSARtarget;
-SARmaxTum=tumorVector(1);
+PLDmaxTum=tumorVector(1);
 
 % Tumor coverage
 TC(1)=sum(tumorVector>0.25*sortHealthyVector(1))/sizeTum(1); % TC25
