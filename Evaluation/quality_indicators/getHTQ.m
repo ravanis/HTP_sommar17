@@ -6,57 +6,66 @@
 % SAR value in healthy tissue.
 % Created by JW 01-14
 
-%tissue_filepath='F:\Models\Duke-tumorModels\tissue_files\test_duke_debye_600MHz.txt';
-
- function [HTQ, SARmaxTum, TC]=getHTQ(TissueMatrix, SARMatrix, modelType, freq, x)
+ function [HTQ, SARmaxTum, TC]=getHTQ(TissueMatrix, SARMatrix, modelType)
  
 %----INPUT PARAMETERS----
 % TissueMatrix - voxel data tissue matrix
 % SARMatrix - Specific Absorption Rate matrix
 % NOTE: The SARMatrix and TissueMatrix need to have the same size and
 % resolution
-if length(freq)==1
+
+filename = which('create_sigma_mat');
+[scriptpath,~,~] = fileparts(filename);
+datapath = [scriptpath filesep '..' filesep 'Data' filesep];
+
 if startsWith(modelType, 'duke') == 1
-    tissue_filepath = ([datapath filesep 'df_duke_neck_cst_' num2str(freq) 'MHz.txt']);
-    elseif modelType == 'child'
-        tissue_filepath = ([datapath filesep 'df_chHead_cst_' num2str(freq) 'MHz.txt']);
-    else
-        error('Model not available. Add to quality_indicators.')
+    tissue_filepath = ([datapath 'df_duke_neck_cst_400MHz.txt']);
+elseif modelType == 'child'
+    tissue_filepath = ([datapath 'df_chHead_cst_400MHz.txt']);
+else
+    error('Assumed to retrieve indices for frequency 400 MHz, the tissuefile for this frequency is missing')
 end
+
 [tissueData, tissue_names]=importTissueFile(tissue_filepath);
-elseif length(freq)>1
-    if startsWith(modelType, 'duke') == 1
-        for i = length(freq)
-    tissue_filepath(i) = ([datapath filesep 'df_duke_neck_cst_' num2str(freq(i)) 'MHz.txt']);
-        end
-    elseif modelType == 'child'
-        for i = length(freq)
-        tissue_filepath(i) = ([datapath filesep 'df_chHead_cst_' num2str(i) 'MHz.txt']);
-        end
-    else
-        error('Model not available. Add to quality_indicators.')
+
+nonTissueValues=[];
+tumorValue=[];
+cystTumorValue=[];
+
+for i=1:length(tissue_names)
+    
+    tissue_name=tissue_names{i};
+    tissue_name=tissue_name(~isspace(tissue_name));
+    
+    if strcmpi('Tumor',tissue_name)
+        tumorValue=tissueData(i,1);
+    elseif strcmpi('Cyst-Tumor',tissue_name)
+        cystTumorValue=tissueData(i,1);
+    elseif contains(lower(tissue_name),'air')
+        nonTissueValues=[nonTissueValues tissueData(i,1)];
+    elseif contains(lower(tissue_name),'water')
+        nonTissueValues=[nonTissueValues tissueData(i,1)];
     end
-    [tissueData, tissue_names]=weightedTissuefile(tissue_filepath, x);
-end
+    
+% tumorIndex=find(strcmpi('Tumor',tissue_names));
+% cystTumorIndex=find(strcmpi('Cyst-Tumor',tissue_names));
+% tumorValue=tissueData(tumorIndex,1);
+% cystTumorValue=tissueData(cystTumorIndex,1);
+% 
+% airIndex=find(~cellfun('isempty',(strfind(lower(tissue_names),'air'))));
+% waterIndex=find(~cellfun('isempty',(strfind(lower(tissue_names),'water'))));
+% exteriorIndex=find(~cellfun('isempty',(strfind(lower(tissue_names),'exterior'))));
+% nonTissueIndeces=[airIndex;waterIndex;exteriorIndex];
+% nonTissueValues=tissueData(nonTissueIndeces,1);
+end        
 
-tumorIndex=find(strcmp('Tumor',tissue_names));
-cystTumorIndex=find(strcmp('Cyst-Tumor',tissue_names));
-tumorValue=tissueData(tumorIndex,1);
-cystTumorValue=tissueData(cystTumorIndex,1);
-
-airIndex=find(~cellfun('isempty',(strfind(lower(tissue_names),'air'))));
-waterIndex=find(~cellfun('isempty',(strfind(lower(tissue_names),'water'))));
-exteriorIndex=find(~cellfun('isempty',(strfind(lower(tissue_names),'exterior'))));
-nonTissueIndeces=[airIndex;waterIndex;exteriorIndex];
-nonTissueValues=tissueData(nonTissueIndeces,1);
-        
 A=SARMatrix;
 B=TissueMatrix;
 sizeA=size(A);
 
 %Creating 0/1 tumor tissue matrix 
 
-tumorTissue= B== tumorValue;
+tumorTissue= B == tumorValue;
 if ~isempty(cystTumorValue)
      tumorTissue= tumorTissue + (B==cystTumorValue);
 end
@@ -69,7 +78,7 @@ tumorMatrix=tumorTissue.*A;
 %SAR matrix
 
 onlyTissue=ones(size(A));
-for i=1:length(nonTissueIndeces)
+for i=1:length(nonTissueValues)
            onlyTissue=onlyTissue.*(TissueMatrix~=nonTissueValues(i)); 
 end
 

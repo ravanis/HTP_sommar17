@@ -116,6 +116,8 @@ for j = 1:n
         
         % Combine them
         x = fminsearch(f,1);
+        x = x/(x+(1-x))
+        %x = particleswarm(f,1, 0,1)
         e_opt = x*e_opt_main+(1-x)*e_opt_alt;
         p_opt_final = abs_sq(e_opt);
         lin_htq_mat(j,jtilde) = f(x)*tumor_vol/(head_minus_tumor_vol*perc);
@@ -135,7 +137,7 @@ for j = 1:n
 end
 
 % save best p_opt
-save([resultpath filesep 'P_opt_' modelType '_1_' num2str(frequencies(bestHTQ(2))) ...
+save([resultpath filesep 'P_' modelType '_1_' num2str(frequencies(bestHTQ(2))) ...
     '_2_' num2str(frequencies(bestHTQ(3))) 'MHz.mat'], 'best_p_opt_final')
 
 % save settings_complex
