@@ -8,7 +8,7 @@
 % ---- Enter data --------------------------------------
 % ------------------------------------------------------
 freq = 400; % MHz, IF SIMPLE USE ONE FREQUENCY
-freq_vec = [400, 600]; % MHz, IF ADVANCED USE TWO
+freq_vec = [400, 400]; % MHz, IF ADVANCED USE TWO
 
 nbrEfields = 16; 
 modelType = 'duke_tongue'; % Current alternatives: 

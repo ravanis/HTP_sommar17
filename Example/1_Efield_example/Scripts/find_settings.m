@@ -11,24 +11,24 @@ resultpath = [rootpath filesep '1_Efield_results'];
 
 % Load complex settings matrix
 if exist([rootpath filesep '1_Efield_results' filesep ...
-        'settings_complex_' modelType '_' num2str(freq) 'MHz.mat'], 'file')
+        'settings_complex_' modelType '_' num2str(freq) 'MHz_GP' num2str(goal_power_tumor) '.mat'], 'file')
 load_name = [rootpath filesep '1_Efield_results' filesep ...
-        'settings_complex_' modelType '_' num2str(freq) 'MHz.mat'];
+        'settings_complex_' modelType '_' num2str(freq) 'MHz_GP' num2str(goal_power_tumor) 'mat'];
 else
     error('Cannot find settings_complex file. Check name or number of frequencies in input.')
 end
 settings_complex = Yggdrasil.Utils.load(load_name);
 
 % Load time settings matrix if there are more than 2 frequencies
-if(length(freq)>1)
-if exist([rootpath filesep '1_Efield_results' filesep ...
-        'settings_' modelType '_' num2str(freq) 'MHz.mat'], 'file')
-load_name = [rootpath filesep '1_Efield_results' filesep ...
-        'settings_complex_' modelType '_' num2str(freq) 'MHz.mat'];
-else
-    error('Cannot find settings_complex file. Check name or number of frequencies in input.')
-end
-settings_complex = Yggdrasil.Utils.load(load_name);
+% if(length(freq)>1)
+% if exist([rootpath filesep '1_Efield_results' filesep ...
+%         'settings_' modelType '_' num2str(freq) 'MHz.mat'], 'file')
+% load_name = [rootpath filesep '1_Efield_results' filesep ...
+%         'settings_complex_' modelType '_' num2str(freq) 'MHz.mat'];
+% else
+%     error('Cannot find settings_complex file. Check name or number of frequencies in input.')
+% end
+% settings_complex = Yggdrasil.Utils.load(load_name);
 delete(load_name);
 
 % Calculate phase and amplitude
