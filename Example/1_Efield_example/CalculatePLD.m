@@ -3,6 +3,7 @@
 % Alternative: run addpath(genpath('HTP_sommar17')) from folder over HTP
 
 freq=[400]; % Enter frequencies in MHz
+whichCase='duke_tongue';
 
 filename=which('CalculatePLD');
 [scriptpath,~,~] = fileparts(filename);
@@ -15,9 +16,11 @@ for j=freq
     sigma_mat = Yggdrasil.Utils.load([folderPathEfields 'sigma_' num2str(j) '.mat']);
     count=count+1;
     % Load Efields for each antenna and add them
-    e_tot = Yggdrasil.Utils.load([folderPathEfields, 'Efield_F', num2str(j), '_A', num2str(1), '.mat']);
+    e_tot = Yggdrasil.Utils.load([folderPathEfields, 'Efield_', num2str(j), ...
+        'MHz_A', num2str(1), '_', whichCase,'.mat']);
     for i=2:16
-        e_tot=e_tot + Yggdrasil.Utils.load([folderPathEfields, 'Efield_F', num2str(j), '_A', num2str(i), '.mat']);
+        e_tot=e_tot + Yggdrasil.Utils.load([folderPathEfields, 'Efield_', num2str(j), ...
+            'MHz_A', num2str(i), '_', whichCase,'.mat']);
     end
     PLD_Matlab{count}=sum(abs(e_tot).^2,4).*sigma_mat/2;
 end
