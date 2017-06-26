@@ -36,17 +36,6 @@ sigma     = @(f)[datapath filesep 'sigma_adv_' modelType '_' num2str(f) 'MHz'];
 rel_eps = 0.1;
 Yggdrasil.Utils.Efield.load_maestro('init', Efilename, sigma, rel_eps);
 
-frequencies = freq_vec;
-n = length(frequencies);
-
-% Convert sigma from .txt to a volumetric matrix
-for f = frequencies
-    create_sigma_mat_adv(f, modelType);
-end
-htq_mat = zeros(n);
-m1_mat = zeros(n);
-m2_mat = zeros(n);
-
 % Load information of where tumor is
 tissue_mat = Yggdrasil.Utils.load([datapath filesep 'tissue_mat_' modelType '.mat']);
 
@@ -73,31 +62,27 @@ tumor_vol = tumor_oct.integral();
 head_minus_tumor_vol = head_vol - tumor_vol;
 
 % Create the E-fields used during optimization
+n = length(freq_vec);
 e_primary = cell(n,1);
 e_secondary = cell(n,1);
 for j = 1:n
     % Create Efield objects
-    num_ant = nbrEfields;
-    e_j = cell(num_ant,1);
-    for i = 1:num_ant
-        e_j{i}  = Yggdrasil.SF_Efield(frequencies(j), i);
+    e_j = cell(nbrEfields,1);
+    for i = 1:nbrEfields
+        e_j{i}  = Yggdrasil.SF_Efield(freq_vec(j), i);
     end
-    disp(['Loading E-field at frequency ' num2str(frequencies(j)) '.'])
+    disp(['Loading E-field at frequency ' num2str(freq_vec(j)) '.'])
     e_primary{j} = select_best(e_j,3,tumor_oct);
-    e_j = cell(num_ant,1);
-    for i = 1:num_ant
-        e_j{i}  = Yggdrasil.SF_Efield(frequencies(j), i, 2);
+    e_j = cell(nbrEfields,1);
+    for i = 1:nbrEfields
+        e_j{i}  = Yggdrasil.SF_Efield(freq_vec(j), i, 2);
     end
     e_secondary{j} = select_best(e_j,3,tumor_oct);
 end
 
 % starting values for finding best combination
 bestHTQ = [100 0 0];
-%
-%
-%
 time_settings = zeros(2,1);
-
 
 % optimize M2
 for j = 1:n
@@ -107,7 +92,7 @@ for j = 1:n
             num2str(n) ',' num2str(n) ').'])
         N = length(e_primary{j});
         M = length(e_secondary{jtilde});
-
+        
         e = cell(N+M,1);
         for i = 1:N
             e{i} = e_primary{j}{i};
@@ -117,41 +102,37 @@ for j = 1:n
         end
         e_opt = optimize_M2(e,tumor_oct);
         p_opt = abs_sq(e_opt);
-
-        if HTQ (p_opt, tumor_oct, 0.01) => bestHTQ(1)
-            bestHTQ(1)= HTQ(p_opt, tumor_oct, 0.01);
-            %bestHTQ(2)= 
-            
-        end
         
-%         quad_htq_mat(j,jtilde) = HTQ(p_opt_mat,tumor_oct,0.01) % old version has head_minus_tumor_vol as input and is multiplied with *tumor_vol/(head_minus_tumor_vol*perc); 
-%         quad_m1_mat(j,jtilde) = M_1(p_opt, tumor_oct)*tumor_vol/head_vol
-%         quad_m2_mat(j,jtilde) = M_2(p_opt, tumor_oct)*(tumor_vol^2)/head_vol
+        %if HTQ (p_opt, tumor_oct, 0.01) <= bestHTQ(1)
+        %bestHTQ(1)= HTQ(p_opt, tumor_oct, 0.01);
+        HTQ = getHTQ(tissue_mat, p_opt, modelType);
+        if HTQ <= bestHTQ(1)
+            bestHTQ(1)= HTQ;
+            bestHTQ(2)= freq(j);
+            bestHTQ(3)= freq(jtilde);
+            p_opt_best = p_opt;
+        end
+        %         quad_htq_mat(j,jtilde) = HTQ(p_opt_mat,tumor_oct,0.01) % old version has head_minus_tumor_vol as input and is multiplied with *tumor_vol/(head_minus_tumor_vol*perc);
+        %         quad_m1_mat(j,jtilde) = M_1(p_opt, tumor_oct)*tumor_vol/head_vol
+        %         quad_m2_mat(j,jtilde) = M_2(p_opt, tumor_oct)*(tumor_vol^2)/head_vol
     end
 end
 
-% % starting values for finding best combination
-% bestHTQ = [100 0 0]; % starting value for HTQ and indeces
-% best_e_opt_main = optimize_M1(e_primary{1},tumor_oct);
-% best_p_opt_final = abs_sq(best_e_opt_main);
-% best_e_opt_alt = optimize_M1(e_secondary{1},tumor_oct,best_p_opt_final);
-% time_settings=zeros(2,1);
-
-% % save best p_opt
-% save([resultpath filesep 'P_' modelType '_1_' num2str(frequencies(bestHTQ(2))) ...
-%     '_2_' num2str(frequencies(bestHTQ(3))) 'MHz.mat'], 'best_p_opt_final')
+% save best p_opt
+save([resultpath filesep 'P_M2_' modelType '_1_' num2str(bestHTQ(2)) ...
+    '_2_' num2str(bestHTQ(3)) 'MHz.mat'], 'p_opt_best')
 
 % % save settings_complex
 % amp1 = best_e_opt_main.C.values;
 % amp2 = best_e_opt_alt.C.values;
 % ant1 = best_e_opt_main.C.keys;
 % ant2 = best_e_opt_alt.C.keys;
-% 
+%
 % settings_complex1=zeros(nbrEfields,1);
 % settings_complex2=zeros(nbrEfields,1);
 % settings_complex1(ant1) = amp1;
 % settings_complex2(ant2) = amp2;
-% 
+%
 % % saves complex antenna settings and time settings
 % save([resultpath filesep 'time_settings_' modelType '_1_' num2str(frequencies(bestHTQ(2))) ...
 %     '_2_' num2str(frequencies(bestHTQ(3))) 'MHz.mat'], 'time_settings', '-v7.3');

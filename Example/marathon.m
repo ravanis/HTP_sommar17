@@ -7,8 +7,8 @@
 % ------------------------------------------------------
 % ---- Enter data --------------------------------------
 % ------------------------------------------------------
-freq = 450; % MHz, IF SIMPLE USE ONE FREQUENCY
-%freq_vec = [400, 400]; % MHz, IF ADVANCED USE TWO
+%freq = 450; % MHz, IF SIMPLE USE ONE FREQUENCY
+freq_vec = [450, 450]; % MHz, IF ADVANCED USE TWO
 
 nbrEfields = 16; 
 modelType = 'duke_tongue'; % Current alternatives: 
@@ -31,7 +31,7 @@ run_1(freq, nbrEfields,  modelType, goal_power_tumor)
 disp('Done!')
 
 %% run_1_adv
-run_1_adv(freq_vec, nbrEfields, modelType)
+run_1_adv(freq_vec, nbrEfields, modelType) % för nuvarande EF_opt_M2_2freq, byt i run_1_adv
 disp('Done!')
 
 %% run_1_summer
