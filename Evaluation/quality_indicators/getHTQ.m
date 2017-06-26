@@ -16,9 +16,9 @@
 % NOTE: The PLD and TissueMatrix need to have the same size and
 % resolution
 
-filename = which('find_settings');
+filename = which('getHTQ');
 [scriptpath,~,~] = fileparts(filename);
-datapath = [scriptpath filesep '..' filesep 'Data' filesep];
+datapath = [scriptpath filesep '..' filesep '..' filesep 'Example\1_Efield_example\Data' filesep];
 
 if startsWith(lower(modelType), 'duke') == 1
     tissue_filepath = ([datapath 'df_duke_neck_cst_400MHz.txt']);
@@ -49,32 +49,30 @@ for i=1:length(tissue_names)
         nonTissueValues=[nonTissueValues tissueData(i,1)];
     end
     
-end        
+end
 
-A=PLD;
-B=TissueMatrix;
-sizeA=size(A);
+sizePLD=size(PLD);
 
 %Creating 0/1 tumor tissue matrix 
 
-tumorTissue= B == tumorValue;
+tumorTissue= TissueMatrix == tumorValue;
 if ~isempty(cystTumorValue)
-     tumorTissue= tumorTissue + (B==cystTumorValue);
+     tumorTissue= tumorTissue + (TissueMatrix==cystTumorValue);
 end
  
 %Creating tumor PLD matrix by multiplying PLD-matrix and tumor tissue matrix
-tumorMatrix=tumorTissue.*A;
+tumorMatrix=tumorTissue.*PLD;
 
 
 %Creating 0/1 healthy tissue matrix excluding Tumor and multiplying it with
 %PLD matrix
 
-onlyTissue=ones(size(A));
+onlyTissue=ones(size(PLD));
 for i=1:length(nonTissueValues)
            onlyTissue=onlyTissue.*(TissueMatrix~=nonTissueValues(i)); 
 end
 
-healthyPLD=A.*onlyTissue.*(tumorMatrix==0);
+healthyPLD=PLD.*onlyTissue.*(tumorMatrix==0);
 
 
 % ----- Sort and get PLDv1 value ------
@@ -83,7 +81,7 @@ healthyPLD=A.*onlyTissue.*(tumorMatrix==0);
 [rowTissue, ~]=find(PLD);
 
 % Reshape PLD matrix to a vector to be able to sort
-PLD_vec=reshape(PLD,sizeA(1).*sizeA(2).*sizeA(3),1);
+PLD_vec=reshape(PLD,sizePLD(1).*sizePLD(2).*sizePLD(3),1);
 sortPLD_vec=sort(PLD_vec,'descend');
 %Create correct length on healthy vector
 sortPLD_vec=sortPLD_vec(1:size(rowTissue));
@@ -92,7 +90,7 @@ sortPLD_vec=sortPLD_vec(1:size(rowTissue));
 [rowHealthyTissue, ~]=find(healthyPLD);
 
 % Reshape healthy PLD matrix to a vector to be able to sort
-healthyPLD_vec=reshape(healthyPLD,sizeA(1).*sizeA(2).*sizeA(3),1);
+healthyPLD_vec=reshape(healthyPLD,sizePLD(1).*sizePLD(2).*sizePLD(3),1);
 sortHealthyPLD_vec=sort(healthyPLD_vec,'descend');
 %Create correct length on healthy vector
 sortHealthyPLD_vec=sortHealthyPLD_vec(1:size(rowHealthyTissue));
@@ -102,7 +100,7 @@ PLDv1=mean(sortHealthyPLD_vec(1:round(length(sortHealthyPLD_vec).*0.01)));
 
 % Create sorted tumor vector
 [rowTUM, ~]=find(tumorMatrix);
-tumorVector=reshape(tumorMatrix,sizeA(1).*sizeA(2).*sizeA(3),1);
+tumorVector=reshape(tumorMatrix,sizePLD(1).*sizePLD(2).*sizePLD(3),1);
 sortTumorVector=sort(tumorVector,'descend');
 tumorVector=sortTumorVector(1:length(rowTUM));
 meanPLDtarget=mean(tumorVector);
