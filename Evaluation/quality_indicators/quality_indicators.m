@@ -11,8 +11,13 @@ rootpath = [evalpath filesep '..' filesep '..' filesep 'Example'];
 datapath = [rootpath filesep '1_Efield_example' filesep 'Data'];
 
 % Load matrices
+if nargin >2
 PLD = Yggdrasil.Utils.load([rootpath filesep '1_Efield_results' filesep 'P_' modelType '_' num2str(freq) ...
     'MHz_GP' num2str(goal_power_tumor) '.mat']);
+else
+    PLD = Yggdrasil.Utils.load([rootpath filesep '1_Efield_results' filesep 'P_' modelType '_' num2str(freq) ...
+    'MHz.mat']);
+end
 tissue_mat = Yggdrasil.Utils.load([datapath filesep 'tissue_mat_' modelType '.mat']);
 
 % Get Q.I.
