@@ -16,9 +16,9 @@
 % NOTE: The PLD and TissueMatrix need to have the same size and
 % resolution
 
-filename = which('find_settings');
+filename = which('getHTQ');
 [scriptpath,~,~] = fileparts(filename);
-datapath = [scriptpath filesep '..' filesep 'Data' filesep];
+datapath = [scriptpath filesep '..' filesep '..' filesep 'Example\1_Efield_example\Data' filesep];
 
 if startsWith(lower(modelType), 'duke') == 1
     tissue_filepath = ([datapath 'df_duke_neck_cst_400MHz.txt']);
