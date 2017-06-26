@@ -4,20 +4,20 @@
 
 modelType='duke_tongue';
 
-freq=400; % Frequency in MHz
+freq=450; % Frequency in MHz
 
 isSingle=1; % Boolean that states if there is only one frequency
 
-% Path to result location
+% Path to result location, not ending with \
 resultpath = '';
 
 numAnts=16; % Number of antennas
 
 % Absolute path to optimization settings ends with .txt
-settingPath1='';
+settingPath1='C:\Users\annae\Documents\MATLAB\Sommar17\settings_duke-tongue_450MHz_none.txt';
 
 % Absolute path to time reversal settings ends with .txt
-settingPath2='';
+settingPath2='C:\Users\annae\Documents\MATLAB\Sommar17\settings_duke_tongue_450MHz_TR.txt';
 
 %---------------------------
 
@@ -25,6 +25,8 @@ settingPath2='';
 filename = which('create_sigma_mat');
 [scriptpath,~,~] = fileparts(filename);
 datapath = [scriptpath filesep '..' filesep 'Data'];
+
+resultpath=datapath;
 
 disp('loads initial data ...')
 % reads settings
@@ -47,46 +49,67 @@ for i=1:length(freq)
     
 end
 
-disp('loads and applies settings to Efields ...')
-% loads and applies settings to fields fields
+%%
+disp('loads Efields ...')
+% loads Efields
+
+Efields=cell(numAnts,length(freq));
+
+for i=1:length(freq)
+    
+    for j=1:numAnts
+            Efields{j,i}=Yggdrasil.Utils.load([resultpath filesep 'Efield_' num2str(freq(i)) 'MHz_A' num2str(j) '_' modelType '.mat']);
+    end
+    
+end
+
+%%
+disp('applies settings to Efields ...')
+% allplies settings to Efields
 
 E1=cell(length(freq),1);
 E2=cell(length(freq),1);
 
 for i=1:length(freq)    
     
-    E=Yggdrasil.Utils.load([resultPath 'Efield_' num2str(freq(i)) 'MHz_A' num2str(1) '_' modelType '.mat']);
+    E=Efields{1,i};
     
-    E1{i}=sum(E,4)*settings1(1,1)*exp(-1i*settings1(1,2));
+    E1{i}=E*settings1(1,1)*exp(-1i*settings1(1,2));
     
-    E2{i}=sum(E,4)*settings2(1,1)*exp(-1i*settings2(1,2));
+    E2{i}=E*settings2(1,1)*exp(-1i*settings2(1,2));
+    
     
     for j=2:numAnts
         
-        E=Yggdrasil.Utils.load([resultPath 'Efield_' num2str(freq(i)) 'MHz_A' num2str(1) '_' modelType '.mat']);
-                
-        E1{i}=E1{i}+sum(E,4)*settings1(1,2*i-1)*exp(-1i*settings1(1,2*i));
+        E=Efields{j,i};
         
-        E2{i}=E2{i}+sum(E,4)*settings2(1,2*i-1)*exp(-1i*settings2(1,2*i));
+        E1{i}=E1{i}+E*settings1(j,2*i-1)*exp(-1i*settings1(j,2*i));
+        
+        E2{i}=E2{i}+E*settings2(j,2*i-1)*exp(-1i*settings2(j,2*i));
         
     end
     
 end
+
 
 disp('calculates PLD ...')
 % calculates PLD
 
 if isSingle
     
-    PLD1=abs(E1{1}).^2.*SigmaMat{1};
-    PLD2=abs(E2{1}).^2.*SigmaMat{1};
+    E1=E1{1};E2=E2{1};
+    PLD1=sum(abs(E1).^2,4).*SigmaMat{1};
+    PLD2=sum(abs(E2).^2,4).*SigmaMat{1};
     
 else
     
-    PLD1=abs(E1{1}*timeShare1(1).*sqrt(SigmaMat{1})+E1{2}*timeShare1(2).*sqrt(SigmaMat{1})).^2;
-    PLD2=abs(E2{1}*timeShare2(1).*sqrt(SigmaMat{1})+E2{2}*timeShare2(2).*sqrt(SigmaMat{1})).^2;
+    SigmaMat1=cat(4,SigmaMat{1},SigmaMat{1},SigmaMat{1});
+    SigmaMat2=cat(4,SigmaMat{2},SigmaMat{2},SigmaMat{2});
+    PLD1=sum(abs(E1{1}*timeShare1(1).*sqrt(SigmaMat1)+E1{2}*timeShare1(2).*sqrt(SigmaMat2)).^2,4);
+    PLD2=sum(abs(E2{1}*timeShare2(1).*sqrt(SigmaMat1)+E2{2}*timeShare2(2).*sqrt(SigmaMat2)).^2,4);
     
 end
+
 
 disp('calculates QI ...')
 
@@ -94,7 +117,7 @@ disp('calculates QI ...')
 
 [HTQ1, PLDmaxTum1, TC1]=getHTQ(tissue_mat, PLD1, modelType);
 
-[HTQ2, PLDmaxTum2, TC2]=getHTQ(tissue_mat, PLD1, modelType);
+[HTQ2, PLDmaxTum2, TC2]=getHTQ(tissue_mat, PLD2, modelType);
 
 disp(['HTQ for setting 1 is ' num2str(HTQ1)])
 disp(['TC25 for setting 1 is ' num2str(TC1(1))])
