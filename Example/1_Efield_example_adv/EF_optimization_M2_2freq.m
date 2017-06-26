@@ -91,7 +91,15 @@ for j = 1:n
     e_secondary{j} = select_best(e_j,3,tumor_oct);
 end
 
-optimize M2
+% starting values for finding best combination
+bestHTQ = [100 0 0];
+%
+%
+%
+time_settings = zeros(2,1);
+
+
+% optimize M2
 for j = 1:n
     for jtilde = j:n
         disp(['Optimizing M2 on (' num2str(j) ...
@@ -110,9 +118,15 @@ for j = 1:n
         e_opt = optimize_M2(e,tumor_oct);
         p_opt = abs_sq(e_opt);
 
-        quad_htq_mat(j,jtilde) = HTQ(p_opt_mat,tumor_oct,0.01) % old version has head_minus_tumor_vol as input and is multiplied with *tumor_vol/(head_minus_tumor_vol*perc); 
-        quad_m1_mat(j,jtilde) = M_1(p_opt, tumor_oct)*tumor_vol/head_vol
-        quad_m2_mat(j,jtilde) = M_2(p_opt, tumor_oct)*(tumor_vol^2)/head_vol
+        if HTQ (p_opt, tumor_oct, 0.01) => bestHTQ(1)
+            bestHTQ(1)= HTQ(p_opt, tumor_oct, 0.01);
+            %bestHTQ(2)= 
+            
+        end
+        
+%         quad_htq_mat(j,jtilde) = HTQ(p_opt_mat,tumor_oct,0.01) % old version has head_minus_tumor_vol as input and is multiplied with *tumor_vol/(head_minus_tumor_vol*perc); 
+%         quad_m1_mat(j,jtilde) = M_1(p_opt, tumor_oct)*tumor_vol/head_vol
+%         quad_m2_mat(j,jtilde) = M_2(p_opt, tumor_oct)*(tumor_vol^2)/head_vol
     end
 end
 
