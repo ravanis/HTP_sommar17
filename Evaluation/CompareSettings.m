@@ -14,10 +14,10 @@ resultpath = '';
 numAnts=16; % Number of antennas
 
 % Absolute path to optimization settings ends with .txt
-settingPath1='C:\Users\annae\Documents\MATLAB\Sommar17\settings_duke-tongue_450MHz_none.txt';
+settingPath1='';
 
 % Absolute path to time reversal settings ends with .txt
-settingPath2='C:\Users\annae\Documents\MATLAB\Sommar17\settings_duke_tongue_450MHz_TR.txt';
+settingPath2='';
 
 %---------------------------
 
@@ -25,8 +25,6 @@ settingPath2='C:\Users\annae\Documents\MATLAB\Sommar17\settings_duke_tongue_450M
 filename = which('create_sigma_mat');
 [scriptpath,~,~] = fileparts(filename);
 datapath = [scriptpath filesep '..' filesep 'Data'];
-
-resultpath=datapath;
 
 disp('loads initial data ...')
 % reads settings
@@ -49,7 +47,7 @@ for i=1:length(freq)
     
 end
 
-%%
+
 disp('loads Efields ...')
 % loads Efields
 
@@ -63,7 +61,7 @@ for i=1:length(freq)
     
 end
 
-%%
+
 disp('applies settings to Efields ...')
 % allplies settings to Efields
 
@@ -76,7 +74,7 @@ for i=1:length(freq)
     
     E1{i}=E*settings1(1,1)*exp(-1i*settings1(1,2));
     
-    E2{i}=E*settings2(1,1)*exp(-1i*settings2(1,2));
+    E2{i}=E*settings2(1,1)*exp(1i*settings2(1,2));
     
     
     for j=2:numAnts
@@ -85,7 +83,7 @@ for i=1:length(freq)
         
         E1{i}=E1{i}+E*settings1(j,2*i-1)*exp(-1i*settings1(j,2*i));
         
-        E2{i}=E2{i}+E*settings2(j,2*i-1)*exp(-1i*settings2(j,2*i));
+        E2{i}=E2{i}+E*settings2(j,2*i-1)*exp(1i*settings2(j,2*i));
         
     end
     
