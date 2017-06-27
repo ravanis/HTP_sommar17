@@ -77,15 +77,14 @@ e_primary = cell(n,1);
 e_secondary = cell(n,1);
 for j = 1:n
     % Create Efield objects
-    num_ant = nbrEfields;
-    e_j = cell(num_ant,1);
-    for i = 1:num_ant
+    e_j = cell(nbrEfields,1);
+    for i = 1:nbrEfields
         e_j{i}  = Yggdrasil.SF_Efield(frequencies(j), i);
     end
     disp(['Loading E-field at frequency ' num2str(frequencies(j)) '.'])
     e_primary{j} = select_best(e_j,3,tumor_oct);
-    e_j = cell(num_ant,1);
-    for i = 1:num_ant
+    e_j = cell(nbrEfields,1);
+    for i = 1:nbrEfields
         e_j{i}  = Yggdrasil.SF_Efield(frequencies(j), i, 2);
     end
     e_secondary{j} = select_best(e_j,3,tumor_oct);
@@ -115,13 +114,10 @@ for j = 1:n
             ,tumor_mat,perc)); % old verion has head_minus_tumor_vol as input
         
         % Combine them
-        %x = fmincon(f,[0.8],[],[],[],[], 0,1)
         x = fminsearch(f,1);
-        a = 0; b = 1;
-        z = a +(b-a)*sin(x).^2;
+        z = sin(x).^2;
         x = z;
 
-        %x = particleswarm(f,1, 0,1)
         e_opt = x*e_opt_main+(1-x)*e_opt_alt;
         p_opt_final = abs_sq(e_opt);
         lin_htq_mat(j,jtilde) = f(x); % for old version: *tumor_vol/(head_minus_tumor_vol*perc);
@@ -141,8 +137,9 @@ for j = 1:n
 end
 
 % save best p_opt
+best_p = to_mat(best_p_opt_final);
 save([resultpath filesep 'P_' modelType '_1_' num2str(frequencies(bestHTQ(2))) ...
-    '_2_' num2str(frequencies(bestHTQ(3))) 'MHz.mat'], 'best_p_opt_final')
+    '_2_' num2str(frequencies(bestHTQ(3))) 'MHz.mat'], 'best_p')
 
 % save settings_complex
 amp1 = best_e_opt_main.C.values;

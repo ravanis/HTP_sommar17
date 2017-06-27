@@ -1,9 +1,12 @@
 classdef MF_Efield < Yggdrasil.AbstractOctreePriority
     properties
         E = Yggdrasil.YggMap();
+        %C; % obs tillagt
     end
     methods
-        function self = MF_Efield()
+        function self = MF_Efield()%antenna_id)             
+            %self.C = Yggdrasil.YggMap();        % Tillagt
+            %self.C = self.C + {antenna_id, 1};  % Tillagt
         end
         
         function disp(sf_e)

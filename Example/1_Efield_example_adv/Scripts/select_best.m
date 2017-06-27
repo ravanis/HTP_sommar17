@@ -23,10 +23,10 @@ Q = zeros(length(Efield_objects),1);
         Q(i) = a/b;
     end
     
-    Q = Q(Q>=max(Q)/10);
-    [~,I] = sort(Q,'descend');
+   % Q = Q(Q>=max(Q)/10); % Indexen överensstämmer inte vid borttagningav Q
+    [~,I] = sort(Q, 'descend'); 
     
-    pick_out = min(top,length(Q));
+    pick_out= min(top,length(Q));
     E_out = cell(pick_out,1);
     for i = 1:pick_out
         E_out{i} = Efield_objects{I(i)};

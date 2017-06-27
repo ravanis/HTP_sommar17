@@ -43,11 +43,7 @@ tumor_oct = Yggdrasil.Octree(single(tissue_mat==tumor_ind));
 
 % Optimize
 % A simple easy optimization used for testing purposes.
-%--------------------
-%--------------------
 iter = 10;
-%--------------------
-%--------------------
 disp(['Optimizating E-fields, ' num2str(iter) ' iterations.'])
 e_opt = Yggdrasil.Utils.Efield.optimize_Efield(e,tumor_oct);
 

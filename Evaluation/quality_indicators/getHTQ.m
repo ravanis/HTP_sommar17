@@ -54,7 +54,6 @@ end
 sizePLD=size(PLD);
 
 %Creating 0/1 tumor tissue matrix 
-
 tumorTissue= TissueMatrix == tumorValue;
 if ~isempty(cystTumorValue)
      tumorTissue= tumorTissue + (TissueMatrix==cystTumorValue);
@@ -66,7 +65,6 @@ tumorMatrix=tumorTissue.*PLD;
 
 %Creating 0/1 healthy tissue matrix excluding Tumor and multiplying it with
 %PLD matrix
-
 onlyTissue=ones(size(PLD));
 for i=1:length(nonTissueValues)
            onlyTissue=onlyTissue.*(TissueMatrix~=nonTissueValues(i)); 

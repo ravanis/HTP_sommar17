@@ -2,7 +2,6 @@ function [ E_opt ] = optimize_M2( E, weight1, weight2 )
 %OPTIMIZE_M1 Summary of this function goes here
 %   Detailed explanation goes here
     narginchk(2,3);
-    
     if ~isa(weight1,'Yggdrasil.Octree')
         weight1 = Yggdrasil.Octree(weight1);
     end
@@ -80,12 +79,10 @@ function [ E_opt ] = optimize_M2( E, weight1, weight2 )
         k = KEYS{i};
         imZ(k) = imZ(k)/largest;
     end
-    
     E_opt = coeff(reZ,imZ,1)*E{1};
     for i = 2:length(E)
         E_opt = E_opt + coeff(reZ,imZ,i)*E{i};
     end
-    
 end
 
 function [Z] = coeff(reZ,imZ,id)

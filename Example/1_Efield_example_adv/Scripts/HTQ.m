@@ -9,17 +9,17 @@ end
 
 PLDtumor=P.*tumor;
 [hasValues, ~]=find(PLDtumor);
-PLDtumor_vec=reshape(tumorMatrix,size(P,1)*size(P,2)*size(P,3),1);
+PLDtumor_vec=reshape(tumor,size(P,1)*size(P,2)*size(P,3),1); % Ändrade tumorMatrix till tumor
 PLDtumor_vec=sort(PLDtumor_vec,'descend');
 PLDtumor_vec=PLDtumor_vec(1:length(hasValues));
 meanPLDtumor = mean(PLDtumor_vec);
 
 PLDhealthy=P.*(~tumor);
 [hasValues, ~]=find(PLDhealthy);
-PLDhealthy_vec=reshape(tumorMatrix,size(P,1)*size(P,2)*size(P,3),1);
+PLDhealthy_vec=reshape(tumor,size(P,1)*size(P,2)*size(P,3),1); % Ändrade tumorMatrix till tumor
 PLDhealthy_vec=sort(PLDhealthy_vec,'descend');
 PLDhealthy_vec=PLDhealthy_vec(1:length(hasValues));
-PLDv1=mean(PLDhealthy_vec(1:round(length(sortHealthyPLD_vec).*per)));
+PLDv1=mean(PLDhealthy_vec(1:round(length(PLDhealthy_vec).*per))); % Ändrade sortHealthyPLD_vec till PLDhealthy_vec
 
 q=double(meanPLDtumor/PLDv1);
 

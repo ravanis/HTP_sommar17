@@ -88,7 +88,6 @@ disp(['Removed ' num2str(sum(Q<=max(Q)/10)) ' Efields.'])
     for i = 2:length(Efield_objects)
         E_opt = E_opt + coeff(reZ,imZ,i)*Efield_objects{i};
     end
-    
 end
 
 function [Z] = coeff(reZ,imZ,id)

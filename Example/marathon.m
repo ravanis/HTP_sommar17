@@ -27,10 +27,11 @@ disp('Done!')
 
 %% run_1
 clc
-run_1(freq, nbrEfields,  modelType, goal_power_tumor)
+run_1(freq, nbrEfields, modelType, goal_power_tumor)
 disp('Done!')
 
 %% run_1_adv
+clc
 run_1_adv(freq_vec, nbrEfields, modelType) % för nuvarande EF_opt_M2_2freq, byt i run_1_adv
 disp('Done!')
 
@@ -63,5 +64,4 @@ plot_myslice_temp(scale, modelType, freq)
 
 %% Quality indicators
 % Stå i HTP_sommar17
-
-quality_indicators(modelType, freq)%, goal_power_tumor) % Kan köras med freq eller freq_vec
+quality_indicators(modelType, freq_vec, goal_power_tumor) % Kan köras med freq eller freq_vec

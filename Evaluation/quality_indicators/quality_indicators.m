@@ -12,11 +12,16 @@ datapath = [rootpath filesep '1_Efield_example' filesep 'Data'];
 
 % Load matrices
 if nargin >2
+    if length(freq)==1
 PLD = Yggdrasil.Utils.load([rootpath filesep '1_Efield_results' filesep 'P_' modelType '_' num2str(freq) ...
     'MHz_GP' num2str(goal_power_tumor) '.mat']);
+    elseif length(freq)>1
+        PLD = Yggdrasil.Utils.load([rootpath filesep '1_Efield_results_adv' filesep 'P_' modelType '_1_' num2str(freq(1)) ...
+    '_2_' num2str(freq(2)) 'MHz.mat']);
+    end
 else
-    PLD = Yggdrasil.Utils.load([rootpath filesep '1_Efield_results' filesep 'P_' modelType '_' num2str(freq) ...
-    'MHz.mat']);
+    [freq_comb_filename]= find_freq_comb(modelType, freq, 'P');
+    PLD = Yggdrasil.Utils.load([rootpath filesep '1_Efield_results_adv' filesep freq_comb_filename]);
 end
 tissue_mat = Yggdrasil.Utils.load([datapath filesep 'tissue_mat_' modelType '.mat']);
 

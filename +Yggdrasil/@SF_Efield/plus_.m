@@ -1,5 +1,5 @@
 function [a] = plus_(a,b)
-%Adds two SF_Efield
+%Adds two SF_Efields
 
     if ~isa(a, 'Yggdrasil.SF_Efield') || ~isa(b, 'Yggdrasil.SF_Efield')
         error('Can single frequency Efields only add with itself.')
@@ -7,7 +7,7 @@ function [a] = plus_(a,b)
     
     % If they are orthogonal time wise
     if a.frequency ~= b.frequency || a.arrangement ~= b.arrangement
-        mf_obj = Yggdrasil.MF_Efield();
+        mf_obj = Yggdrasil.MF_Efield(); %tillagt
         
         t = mf_obj + a;
         a = t + b;
