@@ -47,7 +47,7 @@ for i=1:length(freq)
     
 end
 
-%%
+
 disp('loads Efields ...')
 % loads Efields
 
@@ -61,7 +61,7 @@ for i=1:length(freq)
     
 end
 
-%%
+
 disp('applies settings to Efields ...')
 % allplies settings to Efields
 
