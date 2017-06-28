@@ -17,7 +17,7 @@ function writeSettings( resultpath, settings, settings_time, modelType, freq, go
 
 if nargin == 5
     if length(freq)==1
-        fileID=fopen([resultpath filesep 'settings_' modelType '_' num2str(freq) 'MHz_TR.txt'],'w');
+        fileID=fopen([resultpath filesep 'settings_' modelType '_' num2str(freq) 'MHz.txt'],'w');
         fprintf(fileID,'%s %d\r\n','frequency:',freq);
     else
         fileID=fopen([resultpath filesep 'settings_' modelType '_1_' num2str(freq(1)) '_2_' num2str(freq(2)) 'MHz.txt'],'w');

@@ -13,8 +13,10 @@ datapath = [scriptpath filesep '..' filesep 'Data' filesep];
 
 if startsWith(modelType, 'duke')==1
     parampath = [datapath 'df_duke_neck_cst_' num2str(freq) 'MHz.txt'];
-elseif modelType == 'child'
+elseif strcmp(modelType, 'child')
     parampath = [datapath 'df_chHead_cst_' num2str(freq) 'MHz.txt'];
+elseif strcmp(modelType, 'cylinder')
+    parampath = [datapath 'df_cylinder_cst_' num2str(freq) 'MHz.txt'];
 else
     error('Model type not available. Enter the full name of your model tissue_file in create_sigma_mat.')
 end
@@ -39,10 +41,14 @@ if startsWith(modelType, 'duke') == 1
     water_ind = 81;
     ext_air_ind = 1;
     int_air_ind = 2;
-elseif modelType == 'child'
+elseif strcmp(modelType, 'child')
     water_ind = 30;
     ext_air_ind = 1;
     int_air_ind = 5;
+elseif strcmp(modelType, 'cylinder')
+    water_ind = 81;
+    ext_air_ind = 1;
+    int_air_ind = 1;
 else
     error('Model type not available. Enter your model indices in create_sigma_mat.')
 end

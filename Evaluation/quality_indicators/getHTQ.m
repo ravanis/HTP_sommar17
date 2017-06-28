@@ -24,6 +24,8 @@ if startsWith(lower(modelType), 'duke') == 1
     tissue_filepath = ([datapath 'df_duke_neck_cst_400MHz.txt']);
 elseif strcmpi(modelType,'child')
     tissue_filepath = ([datapath 'df_chHead_cst_400MHz.txt']);
+elseif strcmpi(modelType,'cylinder')
+    tissue_filepath = ([datapath 'df_cylinder_cst_400MHz.txt']);    
 else
     error('Assumed to retrieve indices for frequency 400 MHz (no matter which frequency you use), the tissuefile for this frequency is missing.')
 end
