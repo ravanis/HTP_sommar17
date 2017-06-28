@@ -10,8 +10,8 @@
 %freq = 450; % MHz, IF SIMPLE USE ONE FREQUENCY
 freq_vec = [450, 450]; % MHz, IF ADVANCED USE TWO
 
-nbrEfields = 16; 
-modelType = 'duke_tongue'; % Current alternatives: 
+nbrEfields = 10; 
+modelType = 'duke_cylinder'; % Current alternatives: 
 %    duke_tongue/duke_nasal/duke_neck/child
 goal_power_tumor = 0.5; % Goal power in tumor [W]
 % ------------------------------------------------------
@@ -32,7 +32,9 @@ disp('Done!')
 
 %% run_1_adv
 clc
-run_1_adv(freq_vec, nbrEfields, modelType) % för nuvarande EF_opt_M2_2freq, byt i run_1_adv
+M = 'M1'; % which optimization method to use for run_1_adv
+
+run_1_adv(freq_vec, nbrEfields, modelType, M)
 disp('Done!')
 
 %% run_1_summer
@@ -53,9 +55,9 @@ disp('Done!')
 
 %% OPTIONAL EVALUATION %%%%%%%%%%%%%%%%%%%%
 %% myslicer PLD
-scale = 200;
-
-plot_myslice_PLD(scale, modelType, freq)
+scale = 50;
+clc
+plot_myslice_PLD(scale, modelType, freq, goal_power_tumor)
 
 %% myslicer T
 scale = 1000;

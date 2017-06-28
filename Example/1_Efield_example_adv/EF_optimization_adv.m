@@ -3,8 +3,11 @@ function EF_optimization_adv(freq_vec, nbrEfields, modelType)
 %   Calculates a optimization of E-fields to maximize power in tumor while
 %   minimizing hotspots. The resulting power loss density will then be
 %   saved to the results folder.
-
 % freq_vec is a vector with TWO frequencies
+
+% force top value according to warning
+top = [];
+top = 5;
 
 % Ensure Yggdrasil is available
 if strcmp(which('Yggdrasil.Octree'), '')
@@ -81,13 +84,28 @@ for j = 1:n
     for i = 1:nbrEfields
         e_j{i}  = Yggdrasil.SF_Efield(frequencies(j), i);
     end
+    % Calculates the recommended top(number of active antennas) value and
+    % set to 3 if no other value is given (3 takes not too long time).
+    if j == 1
+        recommendedTop = chkQuality(e_j, tumor_oct);
+        if recommendedTop <= 3
+            top = recommendedTop;
+        elseif isempty(top)
+            top = 3;
+            disp(['Recommended value for top is ' num2str(recommendedTop) '. ' ...
+                'Set value is 3 due to time demand.'])
+            disp(['For higher accuracy and better results manually set top in EF_optimization_adv.'])
+        else
+            disp(['Top is set to ' num2str(top) ', calculations will take a long time.'])
+        end
+    end
     disp(['Loading E-field at frequency ' num2str(frequencies(j)) '.'])
-    e_primary{j} = select_best(e_j,3,tumor_oct);
+    e_primary{j} = select_best(e_j,top,tumor_oct);
     e_j = cell(nbrEfields,1);
     for i = 1:nbrEfields
         e_j{i}  = Yggdrasil.SF_Efield(frequencies(j), i, 2);
     end
-    e_secondary{j} = select_best(e_j,3,tumor_oct);
+    e_secondary{j} = select_best(e_j,top,tumor_oct);
 end
 
 % starting values for finding best combination
@@ -110,14 +128,14 @@ for j = 1:n
         e_opt_alt = optimize_M1(e_secondary{jtilde},tumor_oct,p_opt);
         p_opt_alt_mat = to_mat(abs_sq(e_opt_alt));
         perc = 0.01;
-         f = @(x)(HTQ(x^2 * p_opt_mat + (1-x)^2 * p_opt_alt_mat...
+        f = @(x)(HTQ(x^2 * p_opt_mat + (1-x)^2 * p_opt_alt_mat...
             ,tumor_mat,perc)); % old verion has head_minus_tumor_vol as input
         
         % Combine them
         x = fminsearch(f,1);
         z = sin(x).^2;
         x = z;
-
+        
         e_opt = x*e_opt_main+(1-x)*e_opt_alt;
         p_opt_final = abs_sq(e_opt);
         lin_htq_mat(j,jtilde) = f(x); % for old version: *tumor_vol/(head_minus_tumor_vol*perc);
@@ -160,10 +178,10 @@ save([resultpath filesep 'settings_complex_' modelType '_1_' num2str(frequencies
 save([resultpath filesep 'settings_complex_' modelType '_1_' num2str(frequencies(bestHTQ(2))) ...
     '_2_' num2str(frequencies(bestHTQ(3))) 'MHz_(2).mat'], 'settings_complex2', '-v7.3');
 
-% Show indicators
-lin_htq_mat
-lin_m1_mat
-lin_m2_mat
+% % Show indicators
+% lin_htq_mat
+% lin_m1_mat
+% lin_m2_mat
 
 % Empty load_maestro
 Yggdrasil.Utils.Efield.load_maestro('empty');

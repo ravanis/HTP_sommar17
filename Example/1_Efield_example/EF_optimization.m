@@ -43,7 +43,7 @@ tumor_oct = Yggdrasil.Octree(single(tissue_mat==tumor_ind));
 
 % Optimize
 % A simple easy optimization used for testing purposes.
-iter = 10;
+iter = 5;
 disp(['Optimizating E-fields, ' num2str(iter) ' iterations.'])
 e_opt = Yggdrasil.Utils.Efield.optimize_Efield(e,tumor_oct);
 
@@ -56,20 +56,20 @@ P_mean = P;
 
 disp('Iteration 1 done.')
 
-% for i = 2:iter
-%     % Find the optimal combination of Efields using the mean from prev
-%     % iterations
-%     e_opt = Yggdrasil.Utils.Efield.optimize_Efield(e,tumor_oct, P_mean);
-%     
-%     % Calculate power loss density
-%     P = abs_sq(e_opt);
-%     power_in_tumor = scalar_prod_integral(P, tumor_oct)/1E9;
-%     P = P/power_in_tumor; % Normalize to 1W in tumor
-%     e_opt = e_opt*(1/sqrt(power_in_tumor)); % Same with Efield
-%     P_mean = ((i-1)*P_mean + P)/(i); % Mean
-%     %P_mean = (P_mean + P)/2; % Exponential mean
-%     disp(['Iteration ' num2str(i) ' done.'])
-% end
+for i = 2:iter
+    % Find the optimal combination of Efields using the mean from prev
+    % iterations
+    e_opt = Yggdrasil.Utils.Efield.optimize_Efield(e,tumor_oct, P_mean);
+    
+    % Calculate power loss density
+    P = abs_sq(e_opt);
+    power_in_tumor = scalar_prod_integral(P, tumor_oct)/1E9;
+    P = P/power_in_tumor; % Normalize to 1W in tumor
+    e_opt = e_opt*(1/sqrt(power_in_tumor)); % Same with Efield
+    P_mean = ((i-1)*P_mean + P)/(i); % Mean
+    %P_mean = (P_mean + P)/2; % Exponential mean
+    disp(['Iteration ' num2str(i) ' done.'])
+end
 
 % Set goal power in tumor
 P = P*goal_power_tumor;                 % skalar P med goal_power_tumor

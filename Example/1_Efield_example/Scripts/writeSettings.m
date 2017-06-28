@@ -20,7 +20,7 @@ if nargin == 5
         fileID=fopen([resultpath filesep 'settings_' modelType '_' num2str(freq) 'MHz_TR.txt'],'w');
         fprintf(fileID,'%s %d\r\n','frequency:',freq);
     else
-        fileID=fopen([resultpath filesep 'settings_' modelType '_1_' num2str(used_freq(1:3)) '_2_' num2str(used_freq(4:6)) 'MHz.txt'],'w');
+        fileID=fopen([resultpath filesep 'settings_' modelType '_1_' num2str(freq(1)) '_2_' num2str(freq(2)) 'MHz.txt'],'w');
         fprintf(fileID,'%s %.2f %.2f\r\n','time quota:',settings_time);
         fprintf(fileID,'%s %d %d\r\n','frequencies:', freq);
     end
