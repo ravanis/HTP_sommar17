@@ -2,23 +2,23 @@
 
 %------- INPUT PARAM -------
 
-modelType='duke_tongue';
+modelType='cylinder';
 
 freq=450; % Frequency in MHz
 
 isSingle=1; % Boolean that states if there is only one frequency
 
 % Path to result location, not ending with \
-resultpath = '';
+resultpath = 'D:\kandFFT\Results\Cylinder\450MHz';
 
-numAnts=16; % Number of antennas
+numAnts=10; % Number of antennas
 
 % Absolute path to optimization settings ends with .txt
-settingPath1='';
+settingPath1='settings_cylinder_450MHz_none.txt';
 
 % Absolute path to time reversal settings ends with .txt
-settingPath2='';
-
+%settingPath2='D:\MATLAB\Focus ability of antenna placement\output_files\settings_cylinder_450MHz.txt';
+settingPath2='D:\MATLAB\Phase and Amplitude\output_files\settings_cylinder_450MHz.txt';
 %---------------------------
 
 % generates data path
@@ -130,10 +130,10 @@ disp(['TC25 difference is ' num2str(abs(TC1(1)-TC2(1)))])
 disp(['Difference in Maximum PLD in tumor is ' num2str(abs(PLDmaxTum1-PLDmaxTum2)) ' W'])
 
 figure(1)
-myslicer(1000*PLD1/(max(PLD1(:))));
+myslicer(100*PLD1/(max(PLD1(:))));
 title('PLD distribution for settings 1')
 figure(2)
-myslicer(1000*PLD2/(max(PLD2(:))));
+myslicer(100*PLD2/(max(PLD2(:))));
 title('PLD distribution for settings 2')
 
 disp('done!')
