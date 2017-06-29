@@ -7,7 +7,7 @@ function EF_optimization_adv(freq_vec, nbrEfields, modelType)
 
 % force top value according to warning
 top = [];
-top = 5;
+%top = 3;
 
 % Ensure Yggdrasil is available
 if strcmp(which('Yggdrasil.Octree'), '')

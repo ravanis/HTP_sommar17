@@ -7,10 +7,10 @@
 % ------------------------------------------------------
 % ---- Enter data --------------------------------------
 % ------------------------------------------------------
-%freq = 450; % MHz, IF SIMPLE USE ONE FREQUENCY
+freq = 450; % MHz, IF SIMPLE USE ONE FREQUENCY
 freq_vec = [450, 450]; % MHz, IF ADVANCED USE TWO
 
-nbrEfields = 10; 
+nbrEfields = 5; 
 modelType = 'duke_cylinder'; % Current alternatives: 
 %    duke_tongue/duke_nasal/duke_neck/child
 goal_power_tumor = 0.5; % Goal power in tumor [W]
@@ -37,10 +37,6 @@ M = 'M1'; % which optimization method to use for run_1_adv
 run_1_adv(freq_vec, nbrEfields, modelType, M)
 disp('Done!')
 
-%% run_1_summer
-run_1_summer(freq_vec, nbrEfields, modelType)
-disp('Done!')
-
 %% run_2
 % Only needs to be run once for each model! Only P-matrix that changes.
 run_2(modelType, freq) % IF SIMPLE USE FREQ, IF ADVANCED USE FREQ_VEC
@@ -55,8 +51,7 @@ disp('Done!')
 
 %% OPTIONAL EVALUATION %%%%%%%%%%%%%%%%%%%%
 %% myslicer PLD
-scale = 50;
-clc
+scale = 500;
 plot_myslice_PLD(scale, modelType, freq, goal_power_tumor)
 
 %% myslicer T
@@ -66,4 +61,4 @@ plot_myslice_temp(scale, modelType, freq)
 
 %% Quality indicators
 % Stå i HTP_sommar17
-quality_indicators(modelType, freq_vec, goal_power_tumor) % Kan köras med freq eller freq_vec
+quality_indicators(modelType, freq_vec);%, goal_power_tumor)%, goal_power_tumor) % Kan köras med freq eller freq_vec

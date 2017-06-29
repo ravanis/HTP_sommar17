@@ -1,6 +1,4 @@
-function [ E_opt ] = optimize_Efield( Efield_objects, weight1, weight2 )
-%OPTIMIZE_EFIELD Summary of this function goes here
-%   Detailed explanation goes here
+function [E_opt] = choose_Efields(Efield_objects, weight1, weight2)
 narginchk(2,3);
 
 if ~isa(weight1,'Yggdrasil.Octree')
@@ -27,8 +25,8 @@ for i = 1:length(Efield_objects)
 end
 disp('Removing unnecessary Efields to save time.')
 % Remove Efields with low score to reduce computation time
-Efield_objects = Efield_objects(Q>=max(Q)/3);
-disp(['Removed ' num2str(sum(Q<=max(Q)/10)) ' Efields.'])
+Efield_objects = Efield_objects(Q>max(Q)/3);
+disp(['Removed ' num2str(sum(Q<=max(Q)/3)) ' Efields.'])
 
 % Create the two square matrices for the gen. eigenvalue representation
 A = zeros(length(Efield_objects));
@@ -83,10 +81,10 @@ for i = 1:length(KEYS)
     k = KEYS{i};
     imZ(k) = imZ(k)/largest;
 end
-
-E_opt = coeff(reZ,imZ,1)*Efield_objects{1};
-for i = 2:length(Efield_objects)
-    E_opt = E_opt + coeff(reZ,imZ,i)*Efield_objects{i};
+E_opt = cell(size(length(Q)));
+%E_opt(1) = coeff(reZ,imZ,1)*Efield_objects{1};
+for i = 1:length(Efield_objects)
+    E_opt{i} = coeff(reZ,imZ,i)*Efield_objects{i};% E_opt +
 end
 
 end
@@ -99,4 +97,5 @@ end
 if isKey(imZ,id)
     Z = Z + 1i*imZ(id);
 end
+
 end

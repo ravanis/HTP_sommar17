@@ -2,7 +2,7 @@ function [a] = plus_(a,b)
 %Adds two SF_Efields
 
     if ~isa(a, 'Yggdrasil.SF_Efield') || ~isa(b, 'Yggdrasil.SF_Efield')
-        error('Can single frequency Efields only add with itself.')
+        error('Can single frequency Efields only add with itself?')
     end
     
     % If they are orthogonal time wise
