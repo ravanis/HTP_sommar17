@@ -57,6 +57,13 @@ k_tis    = load_data("../2_Prep_FEniCS_results/thermal_cond.mat")
 w_c_b    = load_data("../2_Prep_FEniCS_results/perfusion_heatcapacity.mat")
 alpha    = load_data("../2_Prep_FEniCS_results/bnd_heat_transfer.mat", 0)
 T_out_ht = load_data("../2_Prep_FEniCS_results/bnd_temp_times_ht.mat", 0)
+
+#-----------------------
+Tmax= 8  # 45 for duke
+Tmin=7   # 44 for duke
+scale= 0.1
+maxIter=5
+#-----------------------
 print("Done loading.")
 
 # Define solution space to be continuous piecewise linear
@@ -64,33 +71,55 @@ V = FunctionSpace(mesh, "CG", 1)
 u = TrialFunction(V)
 v = TestFunction(V)
 
-# Variation formulation of Pennes heat equation
-a = v*u*alpha*ds + k_tis*inner(grad(u), grad(v))*dx + w_c_b*v*u*dx
-L = T_out_ht*v*ds + P*v*dx # + w_c_b*T_b*v*dx not needed due to T_b = 0
+scaleTot=1;
+nbrIter=0;
 
-u = Function(V)
-solve(a == L, u, solver_parameters={'linear_solver':'mumps'})
+while ((u.max()<Tmin or u.max>Tmax) and nbrIter<maxIter):    # WHILE
+    nbrIter= nbrIter+1
+    # Variation formulation of Pennes heat equation
+    a = v*u*alpha*ds + k_tis*inner(grad(u), grad(v))*dx + w_c_b*v*u*dx
+    L = T_out_ht*v*ds + P*v*dx # + w_c_b*T_b*v*dx not needed due to T_b = 0
 
-# Plot solution and mesh
-plot(u)
-plot(mesh)
-# Dump solution to file in VTK format
-file = File("../3_FEniCS_results/temperature.pvd")
-u.rename('Temperature','ThisIsSomeString')
-file << u
+    u = Function(V)
+    solve(a == L, u, solver_parameters={'linear_solver':'mumps'})
+    
+    if(u.max()<0.8*Tmin):
+        P=P*(3*scale)
+        scaleTot=scaleTot*3*scale
+    else:
+        P=P*scale
+        scaleTot=scaleTot*scale
+    if(u.max()>2*Tmax):
+        P=P*(1-2*scale)
+        scaleTot=scaleTot*(1-scale)
+    else:
+        P=P*(1-scale)
+        scaleTot=scaleTot*(1-scale)
 
-# Save data in a format readable by matlab
-T = u.vector().array()
-Coords = mesh.coordinates()
-Cells  = mesh.cells()
+if (u.max()>Tmin and u.max()<Tmax):   # IF Tmax okey
+    # Plot solution and mesh
+    plot(u)
+    plot(mesh)
+    # Dump solution to file in VTK format
+    file = File("../3_FEniCS_results/temperature.pvd")
+    u.rename('Temperature','ThisIsSomeString')
+    file << u
 
-f = h5py.File('../3_FEniCS_results/temperature.h5','w')
+    # Save data in a format readable by matlab
+    T = u.vector().array()
+    Coords = mesh.coordinates()
+    Cells  = mesh.cells()
 
-f.create_dataset(name='Temp', data=T)
-f.create_dataset(name='P',    data=Coords)
-f.create_dataset(name='T',    data=Cells)
-# Need a dof(degree of freedom)-map to permutate Temp
-f.create_dataset(name='Map',  data=dof_to_vertex_map(V))
+    f = h5py.File('../3_FEniCS_results/temperature.h5','w')
 
-f.close()
+    f.create_dataset(name='Temp', data=T)
+    f.create_dataset(name='P',    data=Coords)
+    f.create_dataset(name='T',    data=Cells)
+    # Need a dof(degree of freedom)-map to permutate Temp
+    f.create_dataset(name='Map',  data=dof_to_vertex_map(V))
+
+    f.close()
+
+else:
+    print "Not enough iterations"
 
