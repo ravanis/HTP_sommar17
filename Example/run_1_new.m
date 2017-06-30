@@ -5,7 +5,7 @@ function run_1_new(freq, nbrEfields, modelType)
     [rootpath,~,~] = fileparts(mfilename('fullpath'));
     cd([rootpath filesep '..'])
     addpath([rootpath filesep '1_Efield_example'])
-    best_Efields(freq, nbrEfields, modelType)
-% 
+    %best_Efields(freq, nbrEfields, modelType)
+    best_Efields_M1(freq, nbrEfields, modelType)
     
 end

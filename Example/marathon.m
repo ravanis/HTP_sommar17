@@ -10,9 +10,9 @@
 freq = 450; % MHz, IF SIMPLE USE ONE FREQUENCY
 freq_vec = [450, 450]; % MHz, IF ADVANCED USE TWO
 
-nbrEfields = 5; 
+nbrEfields = 10; 
 modelType = 'duke_cylinder'; % Current alternatives: 
-%    duke_tongue/duke_nasal/duke_neck/child
+%    duke_tongue/duke_nasal/duke_neck/duke_cylinder/child
 goal_power_tumor = 0.5; % Goal power in tumor [W]
 % ------------------------------------------------------
 % ------------------------------------------------------
@@ -32,9 +32,10 @@ disp('Done!')
 
 %% run_1_adv
 clc
-M = 'M1'; % which optimization method to use for run_1_adv
+M = 'radical'; % which optimization method to use for run_1_adv
+goal_function = 'M1'; % Only for radical: M1/M2/HTQ
 
-run_1_adv(freq_vec, nbrEfields, modelType, M)
+run_1_adv(freq, nbrEfields, modelType, M, goal_function)
 disp('Done!')
 
 %% run_2
@@ -51,8 +52,8 @@ disp('Done!')
 
 %% OPTIONAL EVALUATION %%%%%%%%%%%%%%%%%%%%
 %% myslicer PLD
-scale = 500;
-plot_myslice_PLD(scale, modelType, freq, goal_power_tumor)
+scale = 50;
+plot_myslice_PLD(scale, modelType, freq_vec)%, goal_power_tumor)
 
 %% myslicer T
 scale = 1000;
@@ -61,4 +62,4 @@ plot_myslice_temp(scale, modelType, freq)
 
 %% Quality indicators
 % Stå i HTP_sommar17
-quality_indicators(modelType, freq_vec);%, goal_power_tumor)%, goal_power_tumor) % Kan köras med freq eller freq_vec
+quality_indicators(modelType, freq, goal_power_tumor)%, goal_power_tumor) % Kan köras med freq eller freq_vec

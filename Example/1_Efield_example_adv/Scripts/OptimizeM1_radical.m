@@ -1,4 +1,4 @@
-function [X, E_opt] = OptimizeM2(Efield_objects,tumor_oct,healthy_tissue_oct)
+function [X, E_opt] = OptimizeM1(Efield_objects,tumor_oct,healthy_tissue_oct)
 
     weight1 = tumor_oct;
     
@@ -86,7 +86,7 @@ end
     = CPoly.real_to_fmap({numer_realP, denom_realP});
 
 
-f = @(X)M_1(X,tumor_oct,healthy_tissue_oct,Efield_objects,mapp_real_to_Cpoly,mapp_imag_to_Cpoly,mapp_fvar_to_realvar,n);
+f = @(X)M_1_radical(X,tumor_oct,healthy_tissue_oct,Efield_objects,mapp_real_to_Cpoly,mapp_imag_to_Cpoly,mapp_fvar_to_realvar,n);
 
 
 % lb = -1*ones(n,1);
@@ -101,11 +101,11 @@ f = @(X)M_1(X,tumor_oct,healthy_tissue_oct,Efield_objects,mapp_real_to_Cpoly,map
 
 lb = -ones(n,1);
 ub = ones(n,1);
-options = optimoptions('particleswarm','SwarmSize',20,'PlotFcn',@pswplotbestf);
+options = optimoptions('particleswarm','SwarmSize',20,'PlotFcn',@pswplotbestf, 'MaxIterations', 20, 'MaxStallIterations', 5);
 [X,fval,exitflag,output] = particleswarm(f,n,lb,ub,options);
 
 % X = ga(f,n,options)
-[fval,E_opt] = M_1(X,tumor_oct,healthy_tissue_oct, Efield_objects,mapp_real_to_Cpoly,mapp_imag_to_Cpoly,mapp_fvar_to_realvar,n);
+[fval,E_opt] = M_1_radical(X,tumor_oct,healthy_tissue_oct, Efield_objects,mapp_real_to_Cpoly,mapp_imag_to_Cpoly,mapp_fvar_to_realvar,n);
 
 disp(strcat('Post-optimization:', num2str(fval)))
 

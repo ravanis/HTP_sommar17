@@ -1,15 +1,16 @@
 function best_Efields_M1(freq, nbrEfields, modelType)
 
-addpath C:\Users\Andrea\Documents\Kod\HTP_sommar17\Example\1_Efield_example_adv\Scripts
+addpath C:\Users\Andrea\Documents\Kod\HTP_sommar17\Example\1_Efield_example_adv\Scripts  % obs ändra
 % Ensure Yggdrasil is available
 if strcmp(which('Yggdrasil.Octree'), '')
     error('Need addpath to the self-developed package ''Yggdrasil''.')
 end
 
 % Get root path
-filename = which('EF_optimization');
+filename = which('best_Efields_M1');
 [rootpath,~,~] = fileparts(filename);
 datapath = [rootpath filesep 'Data'];
+resultpath = [rootpath filesep '..' filesep '1_Efield_results_adv'];
 %scriptpath = [rootpath filesep 'Scripts'];
 %addpath(scriptpath)
 freq_vec = [freq freq];
@@ -133,6 +134,7 @@ for j = 1:n
     end
 end
 p = to_mat(best_p_opt_final);
+save([resultpath filesep 'P_M1mod_' num2str(freq) 'MHz.mat'], 'p')
 getHTQ(tissue_mat, p, modelType)
 
 % Empty load_maestro

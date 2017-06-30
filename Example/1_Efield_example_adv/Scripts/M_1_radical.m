@@ -46,7 +46,7 @@ largest = 0;
         E_opt_sum = E_opt_sum + E_opt{i};
     end
     
-    y = M1(abs_sq(E_opt_sum),tumor_oct,healthy_tissue_oct);
+    y = M1_radical(abs_sq(E_opt_sum),tumor_oct,healthy_tissue_oct);
     
    
     

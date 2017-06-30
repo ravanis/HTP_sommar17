@@ -1,4 +1,4 @@
-function [y, E_opt] = M_2(X,tumor_oct,healthy_tissue_oct, Efield_objects,mapp_real_to_Cpoly,mapp_imag_to_Cpoly,mapp_fvar_to_realvar,n)
+function [y,E_opt] = HTQ_(X,tumor_oct,healthy_tissue_oct, Efield_objects,mapp_real_to_Cpoly,mapp_imag_to_Cpoly,mapp_fvar_to_realvar,n)
 
 
 realZ = containers.Map('KeyType','int64','ValueType','double');
@@ -46,7 +46,7 @@ largest = 0;
         E_opt_sum = E_opt_sum + E_opt{i};
     end
     
-    y = M2(abs_sq(E_opt_sum),tumor_oct);
+    y = HTQ_radical(abs_sq(E_opt_sum),tumor_oct,healthy_tissue_oct);
     
    
     

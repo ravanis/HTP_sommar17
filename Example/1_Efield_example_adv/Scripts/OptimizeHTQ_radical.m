@@ -86,7 +86,7 @@ end
     = CPoly.real_to_fmap({numer_realP, denom_realP});
 
 
-f = @(X)HTQ_(X,tumor_oct,healthy_tissue_oct,Efield_objects,mapp_real_to_Cpoly,mapp_imag_to_Cpoly,mapp_fvar_to_realvar,n);
+f = @(X)HTQ_radical_(X,tumor_oct,healthy_tissue_oct,Efield_objects,mapp_real_to_Cpoly,mapp_imag_to_Cpoly,mapp_fvar_to_realvar,n);
 
 
 % lb = -1*ones(n,1);
@@ -101,11 +101,11 @@ f = @(X)HTQ_(X,tumor_oct,healthy_tissue_oct,Efield_objects,mapp_real_to_Cpoly,ma
 % 
 lb = -ones(n,1);
 ub = ones(n,1);
-options = optimoptions('particleswarm','SwarmSize',50,'PlotFcn',@pswplotbestf);
+options = optimoptions('particleswarm','SwarmSize',20,'PlotFcn',@pswplotbestf, 'MaxIterations', 50, 'MaxStallIterations', 7);
 [X,fval,exitflag,output] = particleswarm(f,n,lb,ub,options);
 
 % X = ga(f,n,options)
-[fval,E_opt] = HTQ_(X,tumor_oct,healthy_tissue_oct, Efield_objects,mapp_real_to_Cpoly,mapp_imag_to_Cpoly,mapp_fvar_to_realvar,n);
+[fval,E_opt] = HTQ_radical_(X,tumor_oct,healthy_tissue_oct, Efield_objects,mapp_real_to_Cpoly,mapp_imag_to_Cpoly,mapp_fvar_to_realvar,n);
 
 
 

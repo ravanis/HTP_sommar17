@@ -30,6 +30,6 @@ addpath Evaluation\quality_indicators
 [HTQ, PLDmaxTum, TC]=getHTQ(tissue_mat, PLD, modelType);
 
 disp(['HTQ is ' num2str(HTQ)])
-disp(['TC25 is ' num2str(TC(1))])
+disp(['TC is 25:' num2str(TC(1)) ', 50:' num2str(TC(2)) ',75:' num2str(TC(3))])
 disp(['Maximum PLD in tumor is ' num2str(PLDmaxTum) ' W'])
 end
