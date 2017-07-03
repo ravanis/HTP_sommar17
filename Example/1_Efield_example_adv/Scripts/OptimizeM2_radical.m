@@ -101,7 +101,7 @@ f = @(X)M_2_radical(X,tumor_oct,healthy_tissue_oct,Efield_objects,mapp_real_to_C
 
 lb = -ones(n,1);
 ub = ones(n,1);
-options = optimoptions('particleswarm','SwarmSize',20,'PlotFcn',@pswplotbestf, 'MaxIterations', 50, 'MaxStallIterations', 7);
+options = optimoptions('particleswarm','SwarmSize',20,'PlotFcn',@pswplotbestf, 'MaxIterations', 50, 'MaxStallIterations', 5);
 [X,fval,exitflag,output] = particleswarm(f,n,lb,ub,options);
 
 % X = ga(f,n,options)

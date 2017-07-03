@@ -210,7 +210,7 @@ switch goal_function
         settings_3 = [ant_opt' Amp' Pha']; %For first frequency
         [values,order] = sort(settings_3(:,1));
         sortedsettings_3 = settings_3(order,:)
-        settings_HTQ = [sortedsettings_3(:,2), sortedsettings_3(:,3)];
+        settings_htq = [sortedsettings_3(:,2), sortedsettings_3(:,3)];
         
         writeSettings(resultpath, settings_htq, 1, modelType, f_1);
         save([resultpath filesep 'P_HTQ_' modelType '_' num2str(freq) 'MHz.mat'], 'mat_3', '-v7.3');

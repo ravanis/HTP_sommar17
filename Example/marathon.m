@@ -10,8 +10,8 @@
 freq = 450; % MHz, IF SIMPLE USE ONE FREQUENCY
 freq_vec = [450, 450]; % MHz, IF ADVANCED USE TWO
 
-nbrEfields = 10; 
-modelType = 'duke_cylinder'; % Current alternatives: 
+nbrEfields = 16; 
+modelType = 'duke_tongue'; % Current alternatives: 
 %    duke_tongue/duke_nasal/duke_neck/duke_cylinder/child
 goal_power_tumor = 0.5; % Goal power in tumor [W]
 % ------------------------------------------------------
@@ -33,7 +33,7 @@ disp('Done!')
 %% run_1_adv
 clc
 M = 'radical'; % which optimization method to use for run_1_adv
-goal_function = 'M1'; % Only for radical: M1/M2/HTQ
+goal_function = 'HTQ'; % Only for radical: M1/M2/HTQ
 
 run_1_adv(freq, nbrEfields, modelType, M, goal_function)
 disp('Done!')
