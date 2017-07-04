@@ -1,5 +1,6 @@
 List of files:
 
+E-FÄLT
 Efield_400MHz_A1_modelType.mat
 Efield_400MHz_A2_modelType.mat
 Efield_400MHz_A3_modelType.mat
@@ -7,8 +8,13 @@ Efield_400MHz_A4_modelType.mat
 ...
 Efield_400MHz_An_modelType.mat	% n = antal antenner
 
+TISSUE-MATRIS
 tissue_mat_modelType.mat
-df_duke_neck_cst_400MHz.txt % child df_chHead_cst_400MHz.txt
+
+TISSUE-FIL
+df_duke_neck_cst_400MHz.txt % För alla duke-modeller
+child df_chHead_cst_400MHz.txt % För alla child-modeller
+
 
 --------------------
 All files are expected to be version 7.3 MAT files.

@@ -49,8 +49,8 @@ end
 f = @(X)(CPoly.eval_f(X,numer_CPoly,mapp_CPoly_to_real,mapp_CPoly_to_imag,mapp_realvar_to_fvar) ...
     / CPoly.eval_f(X,denom_CPoly,mapp_CPoly_to_real,mapp_CPoly_to_imag,mapp_realvar_to_fvar));
 
-X = ones(n);
-%X = fminsearch(f,rand(n,1));
+%X = ones(n);
+X = fminsearch(f,rand(n,1));
 
 realZ = containers.Map('KeyType','int64','ValueType','double');
 imagZ = containers.Map('KeyType','int64','ValueType','double');

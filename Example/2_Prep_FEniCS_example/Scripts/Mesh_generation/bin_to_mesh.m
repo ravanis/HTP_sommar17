@@ -32,7 +32,7 @@ end
 [no,el,regions,holes] = v2s(bin_mat, 0.5, opt, 'cgalsurf');
 [no,el,fa] = s2m(no, el, 1, tet_vol, 'tetgen', regions, holes);
 figure
-plotmesh(no, fa, el, 'x>100');
+plotmesh(no, fa, el, 'x>0'); %100
 axis equal
 
 

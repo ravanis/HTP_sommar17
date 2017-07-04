@@ -1,10 +1,16 @@
 List of files:
 
 boundary_condition.m
-df_duke_neck_cst_400MHz.txt
-tissue_mat_modelType.mat
 temperature.m
 thermal_db_index_to_mat_index.m
+
+TISSUE-MATRIS
+tissue_mat_modelType.mat
+
+TISSUE-FIL
+df_duke_neck_cst_400MHz.txt % För alla duke-modeller
+child df_chHead_cst_400MHz.txt % För alla child-modeller
+
 
 2 choices, need either a database to generate parameters
 
@@ -14,4 +20,10 @@ or a premade compilation of all thermal parameters
 
 	thermal_compilation.txt
 
---------------------------------
+
+
+--------------------
+All files are expected to be version 7.3 MAT files.
+Efields are expected to be A*B*C*3 matrices.
+The fourth dimension corresponds to vector components in x,y,z.
+

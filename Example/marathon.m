@@ -11,8 +11,8 @@ freq = 450; % MHz, IF SIMPLE USE ONE FREQUENCY
 freq_vec = [450, 450]; % MHz, IF ADVANCED USE TWO
 
 nbrEfields = 16; 
-modelType = 'duke_tongue'; % Current alternatives: 
-%    duke_tongue/duke_nasal/duke_neck/duke_cylinder/child
+modelType = 'duke_tongue_salt'; % Current alternatives: 
+%    duke_tongue/duke_tongue_salt/duke_nasal/duke_neck/duke_cylinder/child
 goal_power_tumor = 0.5; % Goal power in tumor [W]
 % ------------------------------------------------------
 % ------------------------------------------------------
@@ -47,7 +47,7 @@ disp('Done!')
 disp('Run_3 should be done in FEniCS, you fool!')
 
 %% run_4
-run_4(modelType, freq_vec); % IF SIMPLE USE FREQ, IF ADVANCED USE FREQ_VEC
+run_4(modelType, freq); % IF SIMPLE USE FREQ, IF ADVANCED USE FREQ_VEC
 disp('Done!')
 
 %% OPTIONAL EVALUATION %%%%%%%%%%%%%%%%%%%%
@@ -62,4 +62,4 @@ plot_myslice_temp(scale, modelType, freq)
 
 %% Quality indicators
 % Stå i HTP_sommar17
-quality_indicators(modelType, freq, goal_power_tumor)%, goal_power_tumor) % Kan köras med freq eller freq_vec
+quality_indicators(modelType, freq_vec)%, goal_power_tumor)% Kan köras med freq eller freq_vec

@@ -17,7 +17,7 @@ end
 if nargin < 4
     overwriteModel = false;
 end
-if startsWith(modelType,'duke') == 0; % Needs to be redone once for a new model, not only not-duke
+if startsWith(modelType,'duke') == 0 % Needs to be redone once for a new model, not only not-duke
     disp('Model needs to be recreated. Set overwriteOutput and overwriteModel to true in run_2.')
 end
 

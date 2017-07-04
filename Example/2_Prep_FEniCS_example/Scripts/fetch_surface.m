@@ -1,6 +1,6 @@
 function [surface_inner, surface_outer] = fetch_surface(tissue_matrix, water_ind)
 % [surface_inner, surface_outer] = FETCH_SURFACE(tissue_matrix)
-%   Marks boundary material adjacent to skin. 1 for air, 2 for body and 3 
+%   Marks boundary material adjacent to skin. 1 for air, 2 for body and 3
 %   for water. Two boundary matrices are created, surface_inner and
 %   surface_outer. The inner is covered by the outer to enable
 %   gradually transition between different adjecent materials.

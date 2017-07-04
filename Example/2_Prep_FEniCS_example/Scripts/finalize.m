@@ -7,7 +7,7 @@ function finalize(keyword, nearest_points, modelType, freq)
 
 if nargin == 4
     mat = Extrapolation.load(get_path(keyword, modelType, freq));
-    if class(mat)=='Yggdrasil.Octree'
+    if length(class(mat))==length('Yggdrasil.Octree')
         mat=to_mat(mat);
     end
     mat = extrapolate_data(mat, nearest_points);
