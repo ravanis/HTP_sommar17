@@ -187,7 +187,7 @@ switch goal_function
         end
         
         p_opt_htq = abs_sq(e_tot_opt_htq);
-        p_opt_htq = p_opt_htq*0.799718;
+        %p_opt_htq = p_opt_htq*0.799718;
         
         disp(strcat('Post-optimization, HTQ= ',num2str(HTQ_radical(p_opt_htq,tumor_mat,healthy_tissue_mat))))
         mat_3 = p_opt_htq.to_mat;
