@@ -116,11 +116,14 @@ else % If stage 1 is turned off then use premade compilation
 end
 [thermal_conductivity, rest_perf_cap, modified_perf_cap, bnd_heat_trans, bnd_temp] =...
     get_parameter_vectors(thermal_comp_keyword);
+if endsWith(modelType, 'salt')
+    thermal_conductivity(82) = 0.596; % Salt water conductivity OBS fel salthalt
+end
 
 % Finalize boundary condition
 create_bnd_matrices(overwriteOutput, tissue_mat, water_ind, bnd_heat_trans, bnd_temp);
 
-create_vol_matrices(overwriteOutput, tissue_mat, thermal_conductivity, modified_perf_cap);
+create_vol_matrices(overwriteOutput, tissue_mat, thermal_conductivity, modified_perf_cap, modelType);
 disp('Matrices done.')
 %% 5. Final
 disp('5. Final stage: Extrapolating data.')

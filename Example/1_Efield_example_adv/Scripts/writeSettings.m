@@ -1,4 +1,4 @@
-function writeSettings( resultpath, settings, settings_time, modelType, freq, goal_power_tumor)
+function writeSettings(resultpath, settings, settings_time, modelType, freq, goal_power_tumor)
 %writeSettings: writes txt-file out of settings that can be used in LabView
 %   INPUT:
 %   resultpath - path to where results are to be stored, not ending with

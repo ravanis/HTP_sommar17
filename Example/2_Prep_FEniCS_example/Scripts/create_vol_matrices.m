@@ -1,10 +1,10 @@
-function create_vol_matrices(overwriteOutput, tissue_mat, thermal_conductivity, perf_cap)
+function create_vol_matrices(overwriteOutput, tissue_mat, thermal_conductivity, perf_cap, modelType)
 %CREATE_VOL_MATRICES(overwriteOutput, thermal_conductivity, perf_cap, tissue_mat)
 %   Creates and saves volumetric (non-boundary) parameter matrices. 
 %   Input: lists of material properties for each tissue index.
 
-    if nargin ~= 4
-            error('Needs three input arguments.')
+    if nargin ~= 5
+            error('Needs five input arguments.')
     end
 
     if ~exist(get_path('stage2'), 'dir')
@@ -18,6 +18,9 @@ function create_vol_matrices(overwriteOutput, tissue_mat, thermal_conductivity, 
     end
 
     if ~exist(get_path('perfusion_heatcapacity_mat'),'var') || overwriteOutput
+        if endsWith(modelType, 'salt')
+            perf_cap(82) = 0; % Satte samma som vatten??
+        end
         perf_cap_mat = perf_cap(tissue_mat);
         save(get_path('perfusion_heatcapacity_mat'), 'perf_cap_mat', '-v7.3');
     end

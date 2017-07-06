@@ -89,11 +89,11 @@ end
 f = @(X)HTQ_radical_(X,tumor_oct,healthy_tissue_oct,Efield_objects,mapp_real_to_Cpoly,mapp_imag_to_Cpoly,mapp_fvar_to_realvar,n);
 
 
-% lb = -1*ones(n,1);
-% ub = ones(n,1);
-% 
-% [X,fval] = particleswarm(f,n,lb,ub)
-%  options = optimset('Plotfcn',@gaplotbestf,'MaxTime',60);
+lb = -1*ones(n,1);
+ub = ones(n,1);
+
+%[X,fval] = particleswarm(f,n,lb,ub)
+%  options = optimset('Plotfcn',@gaplotbestf,'MaxTime',30);
 % X = fminsearch(f,ones(n,1),options);
 
 
@@ -101,7 +101,7 @@ f = @(X)HTQ_radical_(X,tumor_oct,healthy_tissue_oct,Efield_objects,mapp_real_to_
 % 
 lb = -ones(n,1);
 ub = ones(n,1);
-options = optimoptions('particleswarm','SwarmSize',20,'PlotFcn',@pswplotbestf, 'MaxIterations', 50, 'MaxStallIterations', 7);
+options = optimoptions('particleswarm','SwarmSize',20,'PlotFcn',@pswplotbestf, 'MaxTime', 1800); %'MaxIterations', 50, 'MaxStallIterations', 7,
 [X,fval,exitflag,output] = particleswarm(f,n,lb,ub,options);
 
 % X = ga(f,n,options)
