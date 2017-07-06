@@ -1,3 +1,4 @@
+# coding: latin-1
 import sys
 import h5py
 
@@ -59,10 +60,10 @@ alpha    = load_data("../2_Prep_FEniCS_results/bnd_heat_transfer.mat", 0)
 T_out_ht = load_data("../2_Prep_FEniCS_results/bnd_temp_times_ht.mat", 0)
 
 #-----------------------
-Tmax= 8  # 45 for duke
-Tmin=7   # 44 for duke
-scale= 0.1
-maxIter=5
+Tmax= 8  # 8=45 for duke
+Tmin=7   # 7=44 for duke
+scale= 1.2
+maxIter=60
 #-----------------------
 print("Done loading.")
 
@@ -71,33 +72,55 @@ V = FunctionSpace(mesh, "CG", 1)
 u = TrialFunction(V)
 v = TestFunction(V)
 
-scaleTot=1;
-nbrIter=0;
+scaleTot=scale;
+nbrIter=1;
+T=0
 
-while ((u.max()<Tmin or u.max>Tmax) and nbrIter<maxIter):    # WHILE
+
+while ((np.max(T)<Tmin or np.max(T)>Tmax) and nbrIter<maxIter):    # WHILE
     nbrIter= nbrIter+1
+    V = FunctionSpace(mesh, "CG", 1) # repeated
+    u = TrialFunction(V) # repeated
+    v = TestFunction(V) # repeated
     # Variation formulation of Pennes heat equation
     a = v*u*alpha*ds + k_tis*inner(grad(u), grad(v))*dx + w_c_b*v*u*dx
     L = T_out_ht*v*ds + P*v*dx # + w_c_b*T_b*v*dx not needed due to T_b = 0
 
     u = Function(V)
-    solve(a == L, u, solver_parameters={'linear_solver':'mumps'})
+    solve(a == L, u, solver_parameters={'linear_solver':'gmres'}) #gmres is fast
     
-    if(u.max()<0.8*Tmin):
-        P=P*(3*scale)
-        scaleTot=scaleTot*3*scale
-    else:
-        P=P*scale
-        scaleTot=scaleTot*scale
-    if(u.max()>2*Tmax):
-        P=P*(1-2*scale)
-        scaleTot=scaleTot*(1-scale)
-    else:
-        P=P*(1-scale)
-        scaleTot=scaleTot*(1-scale)
+    if(np.max(T)<Tmin):
+        if(np.max(T)<0.4*Tmin):
+            P=P*(1.5*scale)
+            scaleTot=scaleTot*1.5*scale
+        elif (np.max(T)>=0.4*Tmin and np.max(T)<0.8*Tmin):
+            P=P*(1.3*scale)
+            scaleTot=scaleTot*1.3*scale
+        elif (np.max(T)>=0.8*Tmin):
+            P=P*scale
+            scaleTot=scaleTot*scale
+        print "Scale:"
+        print scaleTot
 
-if (u.max()>Tmin and u.max()<Tmax):   # IF Tmax okey
-    # Plot solution and mesh
+    if(np.max(T)>Tmax):
+       if(np.max(T)>1.4*Tmax):
+           P=P*(0.5*scale)
+           scaleTot=scaleTot*(0.5*scale)
+       elif(np.max(T)>1.2*Tmax and np.max(T)<=1.4*Tmax):
+            P=P*(0.65*scale)
+            scaleTot=scaleTot*(0.65*scale)
+       elif (np.max(T)<=1.2*Tmax):
+           P=P*(0.8*scale)
+           scaleTot=scaleTot*(0.8*scale)
+
+    T =u.vector().array()
+    print "Tmax:"
+    print np.max(T)
+#print "Scale:"
+#print scaleTot
+
+if (np.max(T)>Tmin and np.max(T)<Tmax):
+# Plot solution and mesh
     plot(u)
     plot(mesh)
     # Dump solution to file in VTK format
@@ -106,7 +129,17 @@ if (u.max()>Tmin and u.max()<Tmax):   # IF Tmax okey
     file << u
 
     # Save data in a format readable by matlab
-    T = u.vector().array()
+    #T = u.vector().array()
+    print "Tmax:"
+    print np.max(T)
+    print "Scale:"
+    print scaleTot
+    fileScale=open('../3_FEniCS_results/scaleP.txt','w')
+    fileScale.write(str(scaleTot) + ' is the scale of P.')
+    fileScale.close()
+    #scaleTot.rename('scaleP', 'ThisIsSomeString')
+    #fileScale << scaleTot
+    
     Coords = mesh.coordinates()
     Cells  = mesh.cells()
 
@@ -119,7 +152,8 @@ if (u.max()>Tmin and u.max()<Tmax):   # IF Tmax okey
     f.create_dataset(name='Map',  data=dof_to_vertex_map(V))
 
     f.close()
+    print nbrIter
 
 else:
-    print "Not enough iterations"
+   print "Not enough iterations"
 
