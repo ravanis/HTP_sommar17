@@ -14,6 +14,7 @@ nbrEfields = 16;
 modelType = 'duke_tongue_NP'; % Current alternatives: 
 %    duke_tongue/duke_tongue_salt/duke_nasal/duke_neck/duke_cylinder/child
 goal_power_tumor = 0.5; % Goal power in tumor [W]
+PwrLimit = 1; % [% of 150 W] 
 % ------------------------------------------------------
 % ------------------------------------------------------
 

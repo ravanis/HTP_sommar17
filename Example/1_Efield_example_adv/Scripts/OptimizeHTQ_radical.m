@@ -1,9 +1,9 @@
-function [X,E_opt] = OptimizeHTQ(Efield_objects,tumor_oct,healthy_tissue_oct)
+function [X,E_opt] = OptimizeHTQ(Efield_objects,tumor_oct,healthy_tissue_oct, nbrEfields)
 
   weight1 = tumor_oct;
     
     %PUT IN SELECT_BEST HERE
-    Efield_objects = select_best(Efield_objects,10,weight1);
+    Efield_objects = select_best(Efield_objects,nbrEfields,weight1);
     
     % Create the two square matrices for the gen. eigenvalue representation
     A = zeros(length(Efield_objects));
@@ -22,7 +22,7 @@ function [X,E_opt] = OptimizeHTQ(Efield_objects,tumor_oct,healthy_tissue_oct)
             P = scalar_prod(e_i,e_j);
 
             A(i,j) = scalar_prod_integral(P,weight1)/1e9;
-            if nargin == 3
+            if nargin >= 3
                 B(i,j) = integral(P)/1e9;
             else
                 B(i,j) = scalar_prod_integral(P,weight2)/1e9;
@@ -101,7 +101,7 @@ ub = ones(n,1);
 % 
 lb = -ones(n,1);
 ub = ones(n,1);
-options = optimoptions('particleswarm','SwarmSize',20,'PlotFcn',@pswplotbestf, 'MaxTime', 1800); %'MaxIterations', 50, 'MaxStallIterations', 7,
+options = optimoptions('particleswarm','SwarmSize',20,'PlotFcn',@pswplotbestf, 'MaxIterations', 50, 'MaxStallIterations', 7);
 [X,fval,exitflag,output] = particleswarm(f,n,lb,ub,options);
 
 % X = ga(f,n,options)

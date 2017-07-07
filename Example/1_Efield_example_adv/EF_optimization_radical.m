@@ -95,7 +95,7 @@ switch goal_function
     case 'M1'
         %----------------------- M1 -----------------------------
         %Optimization step.
-        [X, E_opt] = OptimizeM1_radical(e_f1,tumor_oct,healthy_tissue_oct);
+        [X, E_opt] = OptimizeM1_radical(e_f1,tumor_oct,healthy_tissue_oct, nbrEfields);
         
         %End of optimization, cancelling untouched
         e_tot_opt = E_opt{1};
@@ -138,7 +138,7 @@ switch goal_function
         %----------------------------- M2 ------------------------------
         disp('OPTIMIZATION - M2')
         
-        [X, E_opt] = OptimizeM2_radical(e_f1,tumor_oct,healthy_tissue_oct);
+        [X, E_opt] = OptimizeM2_radical(e_f1,tumor_oct,healthy_tissue_oct, nbrEfields);
         
         e_tot_opt_m2 = E_opt{1};
         for i=2:length(E_opt)
@@ -180,7 +180,7 @@ switch goal_function
         
         disp('OPTIMIZATION - HTQ')
         
-        [X, E_opt] = OptimizeHTQ_radical(e_f1,tumor_oct,healthy_tissue_oct);
+        [X, E_opt] = OptimizeHTQ_radical(e_f1,tumor_oct,healthy_tissue_oct, nbrEfields);
         e_tot_opt_htq = E_opt{1};
         for i=2:length(E_opt)
             e_tot_opt_htq = e_tot_opt_htq + E_opt{i};
