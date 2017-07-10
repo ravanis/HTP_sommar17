@@ -24,8 +24,6 @@ for i=1:nbrEfields
 end
 end
 
-%göra om pwrlim till amp och spara som txt
-
 fileID2=fopen([resultpath 'ampLimit.txt'],'w');
 ampLimit = sqrt(2*PwrLimit*150); % 150 W is the max power per antenna
 fprintf(fileID2,'%f\r\n',ampLimit);

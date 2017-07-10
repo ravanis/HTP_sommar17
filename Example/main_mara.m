@@ -5,6 +5,7 @@
 % ------------------------------------------------------------------
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %-------------------------------------------------------------------
+addpath Example
 InputData % flytta till HTP_sommar17
 
 hyp_compile
@@ -29,6 +30,7 @@ addpath ../Libs/iso2mesh
 addpath 2_Prep_FEniCS_example
 
 generate_fenics_parameters(modelType, freq, true) % Default: (modelType, freq, false, false)
+generate_amp_files(modelType, freq, nbrEfields, PwrLimit)
 cd(olddir)
 
 %% FEniCS

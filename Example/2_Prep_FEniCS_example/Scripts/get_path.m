@@ -71,7 +71,8 @@ elseif nargin==2
 else
     switch(lower(str))
         case 'pld'
-            path = [sourcepath 'P_' modelType '_' num2str(freq) 'MHz.mat'];
+            path = [sourcepath '..' filesep '1_Efield_results_adv' filesep ...
+                'P_' modelType '_' num2str(freq) 'MHz.mat'];
         case 'pld_adv'
             [freq_comb_filename1] = find_freq_comb(modelType, freq, 'P');
             path = [sourcepath '..' filesep '1_Efield_results_adv' filesep ...

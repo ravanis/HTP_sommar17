@@ -11,7 +11,7 @@ freq = 450; % MHz, IF SIMPLE USE ONE FREQUENCY
 freq_vec = [450, 450]; % MHz, IF ADVANCED USE TWO
 
 nbrEfields = 16; 
-modelType = 'duke_tongue_NP'; % Current alternatives: 
+modelType = 'duke_tongue_salt'; % Current alternatives: 
 %    duke_tongue/duke_tongue_salt/duke_nasal/duke_neck/duke_cylinder/child
 goal_power_tumor = 0.5; % Goal power in tumor [W]
 PwrLimit = 1; % [% of 150 W] 
@@ -40,14 +40,15 @@ disp('Done!')
 
 %% run_2
 % Only needs to be run once for each model! Only P-matrix that changes.
-run_2(modelType, freq) % IF SIMPLE USE FREQ, IF ADVANCED USE FREQ_VEC
+run_2(modelType, freq, nbrEfields, PwrLimit) % IF SIMPLE USE FREQ, IF ADVANCED USE FREQ_VEC
 disp('Done!')
 
 %% run_3
 disp('Run_3 should be done in FEniCS, you fool!')
 
 %% run_4
-run_4(modelType, freq); % IF SIMPLE USE FREQ, IF ADVANCED USE FREQ_VEC
+clc
+run_4(modelType, freq, nbrEfields); % IF SIMPLE USE FREQ, IF ADVANCED USE FREQ_VEC
 disp('Done!')
 
 %% OPTIONAL EVALUATION %%%%%%%%%%%%%%%%%%%%
