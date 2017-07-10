@@ -60,12 +60,30 @@ alpha    = load_data("../2_Prep_FEniCS_results/bnd_heat_transfer.mat", 0)
 T_out_ht = load_data("../2_Prep_FEniCS_results/bnd_temp_times_ht.mat", 0)
 
 #-----------------------
-Tmax= 8  # 8=45 for duke
-Tmin=7   # 7=44 for duke
-scale= 1.2
+Tmax= 8  # 0 = 37C
+Tmin=7.5   # 0 = 37C
+scale= 1
 maxIter=60
 #-----------------------
+
+with open("../2_Prep_FEniCS_results/amplitudes.txt") as file:
+    amplitudes = []
+    for line in file:
+        amplitudes.append(line.rstrip().split(","))
+
+with open("../2_Prep_FEniCS_results/ampLimit.txt") as file:
+    ampLimit = []
+    for line in file:
+        ampLimit.append(line.rstrip().split(","))
+
 print("Done loading.")
+
+#Change type of data
+al=ampLimit[0][0]
+ampLimit=int(float(al))
+maxAmpl=max(amplitudes)
+maxAmp=int(maxAmpl[0][0])
+maxAmp=int(float(maxAmp))
 
 # Define solution space to be continuous piecewise linear
 V = FunctionSpace(mesh, "CG", 1)
@@ -73,73 +91,100 @@ u = TrialFunction(V)
 v = TestFunction(V)
 
 scaleTot=scale;
-nbrIter=1;
+nbrIter=0;
 T=0
+done=False
 
-
-while ((np.max(T)<Tmin or np.max(T)>Tmax) and nbrIter<maxIter):    # WHILE
-    nbrIter= nbrIter+1
-    V = FunctionSpace(mesh, "CG", 1) # repeated
-    u = TrialFunction(V) # repeated
-    v = TestFunction(V) # repeated
-    # Variation formulation of Pennes heat equation
-    a = v*u*alpha*ds + k_tis*inner(grad(u), grad(v))*dx + w_c_b*v*u*dx
-    L = T_out_ht*v*ds + P*v*dx # + w_c_b*T_b*v*dx not needed due to T_b = 0
-
-    u = Function(V)
-    solve(a == L, u, solver_parameters={'linear_solver':'gmres'}) #gmres is fast
+while ((np.max(T)<Tmin or np.max(T)>Tmax) and nbrIter<maxIter):
     
-    if(np.max(T)<Tmin):
-        if(np.max(T)<0.4*Tmin):
-            P=P*(1.5*scale)
-            scaleTot=scaleTot*1.5*scale
-        elif (np.max(T)>=0.4*Tmin and np.max(T)<0.8*Tmin):
-            P=P*(1.3*scale)
-            scaleTot=scaleTot*1.3*scale
-        elif (np.max(T)>=0.8*Tmin):
-            P=P*scale
-            scaleTot=scaleTot*scale
+    #If amplitude is too high, maxAmp is set to amlitude limit
+    if (maxAmp>ampLimit and np.max(T)<Tmax):
+        nbrIter= nbrIter+1
+        scaleAmp=(ampLimit/maxAmp)**2
+        maxAmp=ampLimit
+        scaleTot=scaleTot*(scaleAmp)
+        P=P*scaleAmp
+    
+        V = FunctionSpace(mesh, "CG", 1)
+        u = TrialFunction(V)
+        v = TestFunction(V)
+        # Variation formulation of Pennes heat equation
+        a = v*u*alpha*ds + k_tis*inner(grad(u), grad(v))*dx + w_c_b*v*u*dx
+        L = T_out_ht*v*ds + P*v*dx # + w_c_b*T_b*v*dx not needed due to T_b = 0
+        
+        u = Function(V)
+        solve(a == L, u, solver_parameters={'linear_solver':'gmres'}) #gmres is fast
+        T =u.vector().array()
+        print "Tmax:"
+        print np.max(T)
         print "Scale:"
         print scaleTot
+        done = True # exit loop
+    
+    elif (maxAmp<=ampLimit):
+        nbrIter= nbrIter+1
+        V = FunctionSpace(mesh, "CG", 1)
+        u = TrialFunction(V)
+        v = TestFunction(V)
+        # Variation formulation of Pennes heat equation
+        a = v*u*alpha*ds + k_tis*inner(grad(u), grad(v))*dx + w_c_b*v*u*dx
+        L = T_out_ht*v*ds + P*v*dx # + w_c_b*T_b*v*dx not needed due to T_b = 0
+        u = Function(V)
+        solve(a == L, u, solver_parameters={'linear_solver':'gmres'}) #gmres is fast
+    
+        #Use T to find the scale for P and maxAmp (increase T)
+        if(np.max(T)<Tmin):
+            if(np.max(T)<0.4*Tmin):
+                P=P*(1.5*scale)
+                scaleTot=scaleTot*1.5*scale
+                maxAmp=sqrt(1.5*scale)*maxAmp
+            elif (np.max(T)>=0.4*Tmin and np.max(T)<0.8*Tmin):
+                P=P*(1.3*scale)
+                scaleTot=scaleTot*1.3*scale
+                maxAmp=sqrt(1.3*scale)*maxAmp
+            elif (np.max(T)>=0.8*Tmin):
+                P=P*1.05*scale
+                scaleTot=1.05*scaleTot*scale
+                maxAmp=sqrt(1.05*scale)*maxAmp
+        #Use T to find the scale for P and maxAmp (decrease T)
+        if(np.max(T)>Tmax):
+            if(np.max(T)>1.4*Tmax):
+                P=P*(0.5*scale)
+                scaleTot=scaleTot*(0.5*scale)
+                maxAmp=sqrt(0.5*scale)*maxAmp
+            elif(np.max(T)>1.2*Tmax and np.max(T)<=1.4*Tmax):
+                P=P*(0.65*scale)
+                scaleTot=scaleTot*(0.65*scale)
+                maxAmp=sqrt(0.65*scale)*maxAmp
+            elif (np.max(T)<=1.2*Tmax):
+                P=P*(0.8*scale)
+                scaleTot=scaleTot*(0.8*scale)
+                maxAmp=sqrt(0.8*scale)*maxAmp
 
-    if(np.max(T)>Tmax):
-       if(np.max(T)>1.4*Tmax):
-           P=P*(0.5*scale)
-           scaleTot=scaleTot*(0.5*scale)
-       elif(np.max(T)>1.2*Tmax and np.max(T)<=1.4*Tmax):
-            P=P*(0.65*scale)
-            scaleTot=scaleTot*(0.65*scale)
-       elif (np.max(T)<=1.2*Tmax):
-           P=P*(0.8*scale)
-           scaleTot=scaleTot*(0.8*scale)
-
-    T =u.vector().array()
-    print "Tmax:"
-    print np.max(T)
-#print "Scale:"
-#print scaleTot
-
-if (np.max(T)>Tmin and np.max(T)<Tmax):
-# Plot solution and mesh
-    plot(u)
-    plot(mesh)
-    # Dump solution to file in VTK format
-    file = File("../3_FEniCS_results/temperature.pvd")
-    u.rename('Temperature','ThisIsSomeString')
-    file << u
-
-    # Save data in a format readable by matlab
-    #T = u.vector().array()
+        T =u.vector().array()
+    
     print "Tmax:"
     print np.max(T)
     print "Scale:"
     print scaleTot
-    fileScale=open('../3_FEniCS_results/scaleP.txt','w')
-    fileScale.write(str(scaleTot) + ' is the scale of P.')
-    fileScale.close()
-    #scaleTot.rename('scaleP', 'ThisIsSomeString')
-    #fileScale << scaleTot
+    print "MaxAmp:"
+    print maxAmp
+
+    if(done):
+        break
+
+# Last step
+if ((np.max(T)>Tmin and np.max(T)<Tmax and maxAmp<=ampLimit) or maxAmp==ampLimit):
+    # Plot solution and mesh
+    plot(u)
+    plot(mesh)
     
+    # Dump solution to file in VTK format         Pvd is used for Paraview, not needed in MATLAB
+    #file = File("../3_FEniCS_results/temperature.pvd")
+    #u.rename('Temperature','ThisIsSomeString')
+    #file << u
+
+    # Save data in a format readable by matlab
     Coords = mesh.coordinates()
     Cells  = mesh.cells()
 
@@ -152,7 +197,27 @@ if (np.max(T)>Tmin and np.max(T)<Tmax):
     f.create_dataset(name='Map',  data=dof_to_vertex_map(V))
 
     f.close()
+    
+    #Scale amplitudes and save in a new file
+    amplitudeVec=[]
+    fileAmp=open('../3_FEniCS_results/scaledAmplitudes.txt','w')
+    for x in amplitudes:
+        a=float(x[0])
+        a=(round(a*100))*sqrt(scaleTot)/100
+        amplitudeVec.append(a)
+        fileAmp.write(str(a) + " ")
+
+    fileAmp.close()
+
+    #Print parameters
+    print "Tmax:"
+    print np.max(T)
+    print "Scale:"
+    print scaleTot
+    print "Nbr of iterations:"
     print nbrIter
+    print "MaxAmp:"
+    print maxAmp
 
 else:
    print "Not enough iterations"
