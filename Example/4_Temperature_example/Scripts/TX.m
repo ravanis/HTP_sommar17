@@ -5,7 +5,10 @@ function [ tx ] = TX( X, temp_mat, tissue_mat, indeces_of_interest )
 % Pick out the temperatures in the volume of interest
 max_ind = max(tissue_mat(:));
 vol_index = false(1,max_ind);
-vol_index(indeces_of_interest) = true;
+
+for i=1:length(indeces_of_interest)
+    vol_index(indeces_of_interest) = true;
+end
 temps = temp_mat(vol_index(tissue_mat));
 
 % Get the percentile
