@@ -101,7 +101,7 @@ ub = ones(n,1);
 % 
 lb = -ones(n,1);
 ub = ones(n,1);
-options = optimoptions('particleswarm','SwarmSize',20,'PlotFcn',@pswplotbestf, 'MaxIterations', 50, 'MaxStallIterations', 7);
+options = optimoptions('particleswarm','PlotFcn',@pswplotbestf, 'SwarmSize',20, 'MaxStallIterations', 15); %, 'MaxIterations', 50,
 [X,fval,exitflag,output] = particleswarm(f,n,lb,ub,options);
 
 % X = ga(f,n,options)
