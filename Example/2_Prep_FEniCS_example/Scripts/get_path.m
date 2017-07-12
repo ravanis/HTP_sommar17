@@ -34,10 +34,6 @@ if nargin < 2
             path = [stage1path(1:end-1)];
         case 'stage2'
             path = [stage2path(1:end-1)];
-        case 'stage1_thermal_compilation'
-            path = [stage1path 'thermal_compilation.txt'];
-        case 'premade_thermal_compilation'
-            path = [tissuepath 'thermal_compilation.txt'];
         case 'thermal_cond_mat'
             path = [stage2path 'thermal_cond.mat'];
         case 'perfusion_heatcapacity_mat'
@@ -65,6 +61,19 @@ elseif nargin==2
             path = [tissuepath 'tissue_mat_' modelType '.mat'];
         case 'rho'
             path = [tissuepath 'rho_' modelType '.mat'];
+        case 'stage1_thermal_compilation'
+            if startsWith(modelType,'duke')
+                path = [stage1path 'thermal_compilation_duke.txt'];
+            elseif modelType == 'child'
+                path = [stage1path 'thermal_compilation_child.txt'];
+            end
+        case 'premade_thermal_compilation'
+            if startsWith(modelType,'duke')
+                path = [tissuepath 'thermal_compilation_duke.txt'];
+            elseif modelType == 'child'
+                path = [tissuepath 'thermal_compilation_child.txt'];
+            end
+            
         otherwise
             error(['Unknown path to file: ''' str '''.'])
     end

@@ -8,11 +8,12 @@
 % ---- Enter data --------------------------------------
 % ------------------------------------------------------
 freq = 450; % MHz, IF SIMPLE USE ONE FREQUENCY
-freq_vec = [450, 450]; % MHz, IF ADVANCED USE TWO
+freq_vec = [450]; % MHz, IF ADVANCED USE TWO
 
 nbrEfields = 16; 
-modelType = 'duke_tongue_salt'; % Current alternatives: 
+modelType = 'duke_tongue'; % Current alternatives: 
 %    duke_tongue/duke_tongue_salt/duke_nasal/duke_neck/duke_cylinder/child
+% See error for information about where to add new
 goal_power_tumor = 0.5; % Goal power in tumor [W]
 PwrLimit = 1; % [% of 150 W] 
 % ------------------------------------------------------
@@ -32,6 +33,7 @@ run_1(freq, nbrEfields, modelType, goal_power_tumor)
 disp('Done!')
 
 %% run_1_adv
+clc
 M = 'radical'; % which optimization method to use for run_1_adv
 goal_function = 'HTQ'; % Only for radical: M1/M2/HTQ
 
@@ -47,13 +49,12 @@ disp('Done!')
 disp('Run_3 should be done in FEniCS, you fool!')
 
 %% run_4
-clc
 run_4(modelType, freq, nbrEfields); % IF SIMPLE USE FREQ, IF ADVANCED USE FREQ_VEC
 disp('Done!')
 
 %% OPTIONAL EVALUATION %%%%%%%%%%%%%%%%%%%%
 %% myslicer PLD
-scale = 50;
+scale = 2000;
 plot_myslice_PLD(scale, modelType, freq_vec)%, goal_power_tumor)
 
 %% myslicer T
