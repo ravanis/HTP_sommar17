@@ -1,9 +1,13 @@
-# coding: latin-1
-import sys
 import h5py
 
 from dolfin import *
 import numpy as np
+
+# This function calculates temperature from Pld. A loop is used to scale amplitudes, in order to make sure that the goal temperature is reached inside the tumor.
+#  Data needed: P-matrix, original amplitude settings in a text file, amplitude limit in a text file, bnd_heat_transfer.mat, bnd_temp_times_ht.mat, bnd_temp.mat, mesh.xml, perfusion_heatcapacity.mat, thermal_cond.mat and tumor_mesh.obj.
+#  Output(saved): scaled amplitude settings and temperature.h5 file for further calculations and plots in MATLAB. Temperaturefiles as .pvd and .vtu can be generated as well (for ParaView).
+
+
 
 # Load in .mat parameter
 # The optional input argument 'degree' is FEniCS internal interpolation type.
@@ -60,10 +64,10 @@ alpha    = load_data("../2_Prep_FEniCS_results/bnd_heat_transfer.mat", 0)
 T_out_ht = load_data("../2_Prep_FEniCS_results/bnd_temp_times_ht.mat", 0)
 
 #-----------------------
-Tmax= 8  # 0 = 37C
-Tmin=7.5   # 0 = 37C
-scale= 1
-maxIter=60
+Tmax= 15 # 0 = 37C
+Tmin= 14 # 0 = 37C
+#scale= 1
+maxIter=180
 #-----------------------
 
 with open("../2_Prep_FEniCS_results/amplitudes.txt") as file:
@@ -80,26 +84,27 @@ print("Done loading.")
 
 #Change type of data
 al=ampLimit[0][0]
-ampLimit=int(float(al))
+ampLimit=float(al)
 maxAmpl=max(amplitudes)
+maxAmp=maxAmpl[0][0]
 maxAmp=int(maxAmpl[0][0])
-maxAmp=int(float(maxAmp))
+maxAmp=float(maxAmp)
 
 # Define solution space to be continuous piecewise linear
 V = FunctionSpace(mesh, "CG", 1)
 u = TrialFunction(V)
 v = TestFunction(V)
 
-scaleTot=scale;
+scaleTot=1;
 nbrIter=0;
 T=0
 done=False
 
-while ((np.max(T)<Tmin or np.max(T)>Tmax) and nbrIter<maxIter):
+while (((np.max(T)<Tmin or np.max(T)>Tmax) and nbrIter<=maxIter) or maxAmp>ampLimit):
     
     #If amplitude is too high, maxAmp is set to amlitude limit
-    if (maxAmp>ampLimit and np.max(T)<Tmax):
-        nbrIter= nbrIter+1
+    if (maxAmp>ampLimit):# and np.max(T)<Tmax):
+        print np.max(T)
         scaleAmp=(ampLimit/maxAmp)**2
         maxAmp=ampLimit
         scaleTot=scaleTot*(scaleAmp)
@@ -119,10 +124,10 @@ while ((np.max(T)<Tmin or np.max(T)>Tmax) and nbrIter<maxIter):
         print np.max(T)
         print "Scale:"
         print scaleTot
-        done = True # exit loop
+        if (np.max(T)<Tmax):
+            done = True # exit loop
     
     elif (maxAmp<=ampLimit):
-        nbrIter= nbrIter+1
         V = FunctionSpace(mesh, "CG", 1)
         u = TrialFunction(V)
         v = TestFunction(V)
@@ -133,36 +138,37 @@ while ((np.max(T)<Tmin or np.max(T)>Tmax) and nbrIter<maxIter):
         solve(a == L, u, solver_parameters={'linear_solver':'gmres'}) #gmres is fast
     
         #Use T to find the scale for P and maxAmp (increase T)
-        if(np.max(T)<Tmin):
+        if(np.max(T)<=Tmin):
             if(np.max(T)<0.4*Tmin):
-                P=P*(1.5*scale)
-                scaleTot=scaleTot*1.5*scale
-                maxAmp=sqrt(1.5*scale)*maxAmp
+                P=P*(1.6)
+                scaleTot=scaleTot*1.6
+                maxAmp=sqrt(1.6)*maxAmp
             elif (np.max(T)>=0.4*Tmin and np.max(T)<0.8*Tmin):
-                P=P*(1.3*scale)
-                scaleTot=scaleTot*1.3*scale
-                maxAmp=sqrt(1.3*scale)*maxAmp
+                P=P*(1.3)
+                scaleTot=scaleTot*1.3
+                maxAmp=sqrt(1.3)*maxAmp
             elif (np.max(T)>=0.8*Tmin):
-                P=P*1.05*scale
-                scaleTot=1.05*scaleTot*scale
-                maxAmp=sqrt(1.05*scale)*maxAmp
+                P=P*1.05
+                scaleTot=1.05*scaleTot
+                maxAmp=sqrt(1.05)*maxAmp
         #Use T to find the scale for P and maxAmp (decrease T)
-        if(np.max(T)>Tmax):
+        if(np.max(T)>=Tmax):
             if(np.max(T)>1.4*Tmax):
-                P=P*(0.5*scale)
-                scaleTot=scaleTot*(0.5*scale)
-                maxAmp=sqrt(0.5*scale)*maxAmp
+                P=P*0.5
+                scaleTot=scaleTot*0.5
+                maxAmp=sqrt(0.5)*maxAmp
             elif(np.max(T)>1.2*Tmax and np.max(T)<=1.4*Tmax):
-                P=P*(0.65*scale)
-                scaleTot=scaleTot*(0.65*scale)
-                maxAmp=sqrt(0.65*scale)*maxAmp
+                P=P*0.7
+                scaleTot=scaleTot*0.7
+                maxAmp=sqrt(0.7)*maxAmp
             elif (np.max(T)<=1.2*Tmax):
-                P=P*(0.8*scale)
-                scaleTot=scaleTot*(0.8*scale)
-                maxAmp=sqrt(0.8*scale)*maxAmp
+                P=P*0.85
+                scaleTot=scaleTot*(0.85)
+                maxAmp=sqrt(0.85)*maxAmp
 
         T =u.vector().array()
-    
+
+    nbrIter=nbrIter+1
     print "Tmax:"
     print np.max(T)
     print "Scale:"
@@ -173,13 +179,14 @@ while ((np.max(T)<Tmin or np.max(T)>Tmax) and nbrIter<maxIter):
     if(done):
         break
 
-# Last step
+# Plot and save
 if ((np.max(T)>Tmin and np.max(T)<Tmax and maxAmp<=ampLimit) or maxAmp==ampLimit):
+
     # Plot solution and mesh
     plot(u)
     plot(mesh)
     
-    # Dump solution to file in VTK format         Pvd is used for Paraview, not needed in MATLAB
+    # Dump solution to file in VTK format         Pvd is used for ParaView, not needed in MATLAB
     #file = File("../3_FEniCS_results/temperature.pvd")
     #u.rename('Temperature','ThisIsSomeString')
     #file << u
@@ -218,6 +225,9 @@ if ((np.max(T)>Tmin and np.max(T)<Tmax and maxAmp<=ampLimit) or maxAmp==ampLimit
     print nbrIter
     print "MaxAmp:"
     print maxAmp
+
+    if (np.max(T)>Tmax and ampLimit==maxAmp):
+        print " High temperature. Try to increase the interval [Tmin,Tmax] or try a higher maxIter."
 
 else:
    print "Not enough iterations"
